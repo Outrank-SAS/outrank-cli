@@ -1,0 +1,25 @@
+{
+  "name": "outrank-cli",
+  "version": "0.1.0",
+  "description": "Agent-first CLI for the Outrank agent API",
+  "type": "module",
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "SKILL.md"
+  ],
+  "bin": {
+    "outrank-cli": "./bin/outrank-cli.js"
+  },
+  "scripts": {
+    "start": "node ./src/index.js",
+    "help": "node ./src/index.js --help",
+    "link:local": "npm link",
+    "unlink:local": "npm unlink -g outrank-cli"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
