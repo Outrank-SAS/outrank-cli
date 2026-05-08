@@ -205,9 +205,16 @@ Use the returned `data.scope`, `data.scheduled`, and `data.stored` structure lit
 When the user asks for keyword ideas:
 
 - use `outrank-cli keywords suggest --product <productId> --theme "<theme>"` for related-keyword exploration around a theme or seed term
-- use `outrank-cli keywords generate --product <productId> --theme "<theme>"` for raw generated candidate ideas
+- use `outrank-cli keywords generate --product <productId> --count <n> --source competitors|audiences|both` for the dashboard-equivalent Generate Keywords flow
 
-Treat both commands as candidate-generation only. They do not change the content plan until you add keywords.
+Treat `keywords suggest` as candidate-generation only. It does not change the content plan until you add keywords.
+Treat `keywords generate` as the dashboard Generate Keywords action. It creates scheduled keywords through the same backend pipeline.
+
+Before `keywords generate`:
+
+- if the human did not specify how many keywords to generate, ask them
+- the allowed range is 5-30, but the real maximum depends on free scheduler slots
+- check `outrank-cli keywords generation-status --product <productId>` when you need the current slot capacity
 
 To add keywords:
 

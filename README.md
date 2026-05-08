@@ -60,7 +60,7 @@ outrank-cli subscription status
 outrank-cli usage stats
 outrank-cli products get 00000000-0000-0000-0000-000000000000
 outrank-cli keywords suggest --product 00000000-0000-0000-0000-000000000000 --theme "email marketing"
-outrank-cli keywords generate --product 00000000-0000-0000-0000-000000000000 --theme "lead generation" --count 5
+outrank-cli keywords generate --product 00000000-0000-0000-0000-000000000000 --count 10 --source both
 outrank-cli keywords add --product 00000000-0000-0000-0000-000000000000 --json-file .\keywords.json
 outrank-cli keywords export --product 00000000-0000-0000-0000-000000000000
 outrank-cli products create --json-file .\product.json
@@ -77,6 +77,8 @@ outrank-cli billing purchase-products quote --additional-products 2
 ## Keyword mutation rules
 
 - Run `outrank-cli keywords generation-status --product <product-id>` before keyword writes when you are not sure the product is writable.
+- `keywords generate` now mirrors the dashboard Generate Keywords flow. Ask the human how many keywords to generate before calling it if they did not specify a count.
+- The allowed generation count is 5-30, but the real upper bound depends on free scheduler slots. Check `keywords generation-status` first when you need the current capacity.
 - Stored keywords are read-only inventory. They can be promoted into the plan with `keywords add`, but they cannot be deleted directly.
 - Scheduled keywords with created or pre-created articles are read-only.
 - Keywords in `generating_article` are read-only until generation finishes.
