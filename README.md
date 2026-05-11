@@ -11,6 +11,7 @@ This repo currently targets the agent endpoints that already exist in `outrank`:
 - `products output-settings get|update` for product article settings
 - `products target-audiences list|replace`
 - `products competitors list|replace`
+- `products gsc status|connect|poll|reconnect|disconnect|accounts|properties|set-property|performance|search-analytics|inspect-url|cannibalization`
 - `keywords list|get|export|generation-status|add|suggest|generate|reschedule|bulk-reschedule|delete|bulk-delete`
 - `articles list|get|get-content|update|update-content|replace|bulk-replace|upload-image|upload-featured-image|retry-publish|delete|precreate|generate`
 - `subscription status`
@@ -70,9 +71,33 @@ outrank-cli products update 00000000-0000-0000-0000-000000000000 --json '{"daily
 outrank-cli products output-settings update 00000000-0000-0000-0000-000000000000 --json-file .\output-settings.json
 outrank-cli products target-audiences replace 00000000-0000-0000-0000-000000000000 --json-file .\target-audiences.json
 outrank-cli products competitors replace 00000000-0000-0000-0000-000000000000 --json-file .\competitors.json
+outrank-cli products gsc status 00000000-0000-0000-0000-000000000000
+outrank-cli products gsc connect 00000000-0000-0000-0000-000000000000
+outrank-cli products gsc poll 00000000-0000-0000-0000-000000000000 --attempt-id <attempt-id>
+outrank-cli products gsc accounts 00000000-0000-0000-0000-000000000000
+outrank-cli products gsc properties 00000000-0000-0000-0000-000000000000 --email owner@example.com
+outrank-cli products gsc set-property 00000000-0000-0000-0000-000000000000 --email owner@example.com --site-url sc-domain:example.com
+outrank-cli products gsc performance 00000000-0000-0000-0000-000000000000 --months 3
+outrank-cli products gsc search-analytics 00000000-0000-0000-0000-000000000000 --dimensions query,page --limit 50 --query "brand"
+outrank-cli products gsc inspect-url 00000000-0000-0000-0000-000000000000 --url https://example.com/blog/post
+outrank-cli products gsc cannibalization 00000000-0000-0000-0000-000000000000
 outrank-cli keywords reschedule 00000000-0000-0000-0000-000000000000 --scheduled-for 2026-05-20
 outrank-cli billing purchase-products quote --additional-products 2
 ```
+
+## Google Search Console workflow
+
+- Start with `outrank-cli products gsc connect <product-id>`.
+- Open the returned `connect_url` in a browser and complete the Google OAuth flow with a human.
+- Poll with `outrank-cli products gsc poll <product-id> --attempt-id <attempt-id>` until the response reports completion.
+- Inspect connected Google identities with `outrank-cli products gsc accounts <product-id>`.
+- List Search Console properties for one account with `outrank-cli products gsc properties <product-id> --email owner@example.com`.
+- Save the verified property with `outrank-cli products gsc set-property <product-id> --email owner@example.com --site-url <verified-site-url>`.
+- Read performance summaries with `outrank-cli products gsc performance <product-id>`.
+- Run custom keyword/page/device reports with `outrank-cli products gsc search-analytics <product-id>`.
+- Inspect one page's indexing and canonical state with `outrank-cli products gsc inspect-url <product-id> --url <url>`.
+- Analyze overlapping-query cannibalization with `outrank-cli products gsc cannibalization <product-id>`.
+- Use `reconnect` when the token is expired and `disconnect` to remove the product connection.
 
 ## Keyword mutation rules
 

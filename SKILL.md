@@ -1,6 +1,6 @@
 ﻿---
 name: outrank
-description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage keyword plans, inspect or edit articles, manage article settings, target audiences, competitors, or quote/buy product slots. Requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
+description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage keyword plans, inspect or edit articles, manage article settings, target audiences, competitors, Google Search Console connections, or quote/buy product slots. Requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
 ---
 
 # Outrank Skill
@@ -49,6 +49,9 @@ Prefer inspecting before mutating:
 - `outrank-cli keywords export --product <productId>`
 - `outrank-cli products target-audiences list <productId>`
 - `outrank-cli products competitors list <productId>`
+- `outrank-cli products gsc status <productId>`
+- `outrank-cli products gsc accounts <productId>`
+- `outrank-cli products gsc performance <productId>`
 - `outrank-cli subscription status`
 - `outrank-cli usage stats`
 
@@ -74,6 +77,13 @@ Write commands currently supported:
 - `outrank-cli products output-settings update <productId> --json-file output-settings.json`
 - `outrank-cli products target-audiences replace <productId> --json-file target-audiences.json`
 - `outrank-cli products competitors replace <productId> --json-file competitors.json`
+- `outrank-cli products gsc connect <productId>`
+- `outrank-cli products gsc reconnect <productId>`
+- `outrank-cli products gsc disconnect <productId>`
+- `outrank-cli products gsc set-property <productId> --email owner@example.com --site-url <verified-site-url>`
+- `outrank-cli products gsc search-analytics <productId> --dimensions query,page --limit 50`
+- `outrank-cli products gsc inspect-url <productId> --url https://example.com/blog/post`
+- `outrank-cli products gsc cannibalization <productId>`
 - `outrank-cli keywords add --product <productId> --json-file keywords.json`
 - `outrank-cli keywords bulk-reschedule --json-file keyword-reschedule.json`
 - `outrank-cli keywords bulk-delete --json-file keyword-delete.json`
@@ -184,6 +194,35 @@ For a new product:
 8. Re-read the product, article settings, target audiences, and competitors to confirm the final state.
 
 When you only need a small change, use `products update` rather than recreating the product.
+
+## Google Search Console workflow
+
+Use the product-scoped Google Search Console commands when the human needs to connect, inspect, select, reconnect, or remove a Search Console property.
+
+Recommended flow:
+
+1. Inspect current status with `outrank-cli products gsc status <productId>`.
+2. Start OAuth with `outrank-cli products gsc connect <productId>`.
+3. Tell the human to open the returned `connect_url` and finish the Google flow in a browser.
+4. Poll with `outrank-cli products gsc poll <productId> --attempt-id <attempt-id>` until the response reports completion.
+5. Inspect available connected Google identities with `outrank-cli products gsc accounts <productId>`.
+6. List properties for one identity with `outrank-cli products gsc properties <productId> --email owner@example.com`.
+7. Save the verified property with `outrank-cli products gsc set-property <productId> --email owner@example.com --site-url <verified-site-url>`.
+8. Read live/cached search performance with `outrank-cli products gsc performance <productId>` or run custom reports with `outrank-cli products gsc search-analytics <productId>`.
+9. Inspect one page's indexing details with `outrank-cli products gsc inspect-url <productId> --url <url>`.
+10. Inspect overlapping-query issues with `outrank-cli products gsc cannibalization <productId>`.
+
+Important behavior:
+
+- `accounts` returns stored connected Google identities already known to Outrank for the organization. It does not query the browser or operating system for every Google account.
+- `properties` requires an `--email` that matches one of those connected identities.
+- `set-property` only succeeds for verified properties. If the property is unverified, keep the current selection unchanged and ask the human to verify access in Google Search Console first.
+- `performance` is the fastest high-level read for clicks, impressions, CTR, position, trend lines, top pages, and top queries.
+- `search-analytics` is the flexible raw report endpoint for keyword/page/country/device exploration.
+- `inspect-url` is the indexing/debug endpoint for canonical, crawl, AMP, mobile, rich-result, sitemap, and referring-URL details on one page.
+- `cannibalization` highlights queries where multiple pages from the same site compete against each other.
+- Use `reconnect` when the status shows an expired token or refresh failure.
+- Use `disconnect` to remove the product's Search Console connection.
 
 ## Keyword workflow
 

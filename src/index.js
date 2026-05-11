@@ -32,7 +32,7 @@ Usage:
 
 Groups:
   auth        Store or verify API-key authentication.
-  products    List, create, inspect, and configure products and article settings.
+  products    List, create, inspect, and configure products, article settings, and Google Search Console.
   keywords    Inspect, check write status, add, reschedule, delete, suggest, generate, and export keyword plans.
   articles    Inspect article metadata and bodies, edit content, retry publish, precreate, and generate.
   subscription Inspect plan, trial, quota, and add-on status.
@@ -61,6 +61,8 @@ Examples:
   outrank-cli billing portal-url
   outrank-cli products output-settings update <product-id> --json-file output-settings.json
   outrank-cli products target-audiences replace <product-id> --json-file target-audiences.json
+  outrank-cli products gsc connect <product-id>
+  outrank-cli products gsc performance <product-id>
   outrank-cli billing purchase-products quote --additional-products 2
 `;
 
