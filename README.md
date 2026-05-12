@@ -28,11 +28,6 @@ The CLI can read credentials from either:
 - `OUTRANK_API_KEY`
 - `~/.outrank/config.json` after `outrank-cli auth login <api-key>`
 
-Optional base URL overrides:
-
-- `OUTRANK_BASE_URL`
-- `--base-url <url>`
-
 Optional config storage override:
 
 - `OUTRANK_CONFIG_DIR`
@@ -122,28 +117,18 @@ outrank-cli billing purchase-products quote --additional-products 2
 - `articles update --json '{"status":"published"}'` cannot be used to manually publish a future scheduled article before its due date.
 - `articles retry-publish <article-id>` is only valid for generated articles with a publish error.
 
-## Custom API target
+## Custom API target (advanced)
 
-If your agent API is hosted somewhere other than the production default host, set `OUTRANK_BASE_URL` to that deployment:
+The CLI talks to `https://outrank.so` by default and you should not need to change that. The override below exists only for Outrank staff debugging against a staging deployment.
 
 ```powershell
-$env:OUTRANK_BASE_URL="https://outrank.so"
-outrank-cli auth login outr_live_xxx --no-verify
-outrank-cli auth status
+$env:OUTRANK_BASE_URL="https://staging.example"
 outrank-cli auth whoami
 ```
 
-Recommended workflow when targeting a non-default host:
+`--base-url <url>` is the per-command form.
 
-```powershell
-$env:OUTRANK_BASE_URL="https://outrank.so"
-npm link
-outrank-cli auth login outr_live_xxx
-outrank-cli auth whoami
-outrank-cli products list --limit 3
-```
-
-The current agent API expects product UUIDs, not numeric ids like `88`.
+The agent API expects product UUIDs, not numeric ids like `88`.
 
 ## Notes on `whoami`
 
@@ -152,7 +137,6 @@ The current agent API expects product UUIDs, not numeric ids like `88`.
 If you do not want a global link yet, you can run the CLI directly from this repo:
 
 ```powershell
-$env:OUTRANK_BASE_URL="https://outrank.so"
 node .\src\index.js auth whoami --api-key outr_live_xxx
 ```
 

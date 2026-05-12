@@ -7,7 +7,8 @@
     "bin",
     "src",
     "README.md",
-    "SKILL.md"
+    "SKILL.md",
+    "LICENSE"
   ],
   "bin": {
     "outrank-cli": "./bin/outrank-cli.js"
@@ -18,8 +19,28 @@
     "link:local": "npm link",
     "unlink:local": "npm unlink -g outrank-cli"
   },
+  "keywords": [
+    "outrank",
+    "cli",
+    "agent",
+    "seo",
+    "content",
+    "ai"
+  ],
+  "author": "Outrank SAS",
+  "license": "MIT",
+  "homepage": "https://github.com/Outrank-SAS/outrank-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Outrank-SAS/outrank-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Outrank-SAS/outrank-cli/issues"
+  },
   "engines": {
     "node": ">=18"
   },
-  "license": "UNLICENSED"
+  "publishConfig": {
+    "access": "public"
+  }
 }
