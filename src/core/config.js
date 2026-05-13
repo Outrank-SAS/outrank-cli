@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 
 import { ensureDirectory, fileExists } from './io.js';
 
-const DEFAULT_BASE_URL = 'https://outrank.so';
+const DEFAULT_BASE_URL = 'https://www.outrank.so';
 
 const getConfigDir = () => process.env.OUTRANK_CONFIG_DIR || path.join(os.homedir(), '.outrank');
 export const getConfigPath = () => path.join(getConfigDir(), 'config.json');

@@ -2,6 +2,33 @@
 
 Agent-first CLI for the Outrank agent API.
 
+## Install
+
+Requires Node.js 18+.
+
+```powershell
+npm install -g outrank-cli
+outrank-cli --help
+```
+
+Or run it from a clone without installing globally:
+
+```powershell
+git clone https://github.com/Outrank-SAS/outrank-cli.git
+cd outrank-cli
+npm install
+node .\src\index.js --help
+```
+
+## Get an API key
+
+1. Sign in to your Outrank account at <https://www.outrank.so>.
+2. Open **Settings → API keys**: <https://www.outrank.so/dashboard/settings/api-keys>.
+3. Click **Create key**, give it a name, and copy the `outr_live_...` value. The key is shown only once — store it somewhere safe.
+4. Revoke a key from the same page if it ever leaks. Generate a fresh one and re-run `auth login`.
+
+You can also rotate keys at any time; each key is independent and can be revoked without affecting the others.
+
 ## Current scope
 
 This repo currently targets the agent endpoints that already exist in `outrank`:
@@ -23,14 +50,33 @@ The broader roadmap from the internal implementation plan is larger than the liv
 
 ## Auth
 
-The CLI can read credentials from either:
+The CLI reads credentials in this order of precedence:
 
-- `OUTRANK_API_KEY`
-- `~/.outrank/config.json` after `outrank-cli auth login <api-key>`
+1. `--api-key <key>` on the command line (highest priority, per-call)
+2. `OUTRANK_API_KEY` environment variable
+3. `~/.outrank/config.json`, populated by `outrank-cli auth login <api-key>` (lowest priority, persistent)
 
-Optional config storage override:
+Pick one. For interactive use on your own machine, `auth login` is simplest. For CI / ephemeral environments, prefer the env var.
 
-- `OUTRANK_CONFIG_DIR`
+```powershell
+# One-time persistent setup
+outrank-cli auth login outr_live_xxx
+outrank-cli auth status     # confirms the key is stored
+outrank-cli auth whoami     # round-trips it against the server
+
+# OR per-shell env var (no config file written)
+$env:OUTRANK_API_KEY = "outr_live_xxx"
+outrank-cli auth whoami
+
+# OR per-call (useful in scripts)
+outrank-cli auth whoami --api-key outr_live_xxx
+```
+
+Sign out / rotate:
+
+```powershell
+outrank-cli auth logout     # clears apiKey from ~/.outrank/config.json
+```
 
 ## Examples
 
@@ -119,7 +165,7 @@ outrank-cli billing purchase-products quote --additional-products 2
 
 ## Custom API target (advanced)
 
-The CLI talks to `https://outrank.so` by default and you should not need to change that. The override below exists only for Outrank staff debugging against a staging deployment.
+The CLI talks to `https://www.outrank.so` by default and you should not need to change that. The override below exists only for Outrank staff debugging against a staging deployment.
 
 ```powershell
 $env:OUTRANK_BASE_URL="https://staging.example"
@@ -149,4 +195,31 @@ Every command writes a single JSON object to stdout.
 - Invalid usage and local runtime failures also emit JSON and exit non-zero.
 
 This makes the CLI easier for AI agents to drive reliably.
+
+## Using the agent skill (`SKILL.md`)
+
+`SKILL.md` ships alongside this CLI as a Claude Code skill. It tells an AI agent how to drive `outrank-cli` end-to-end — when to inspect before writing, how to interpret `agent_guidance`, the new-product preflight, the GSC flow, keyword/article rules, and how to handle 401/402/403/409 errors.
+
+You do not need it if you are using the CLI by hand from a terminal. You want it when you are letting an AI assistant operate the CLI for you.
+
+### Claude Code
+
+1. Install `outrank-cli` globally so the agent can call it: `npm install -g outrank-cli`.
+2. Make `SKILL.md` available to Claude Code as a skill. Either:
+   - **Project-scoped** — copy `SKILL.md` into `.claude/skills/outrank/SKILL.md` inside the project you want the agent to work in, or
+   - **User-scoped** — copy it into `~/.claude/skills/outrank/SKILL.md` (Windows: `C:\Users\<you>\.claude\skills\outrank\SKILL.md`) so it is available in every Claude Code session.
+3. Provide the API key once via env var or `outrank-cli auth login` (see [Auth](#auth)).
+4. In Claude Code, ask the agent to do something Outrank-shaped (e.g. "list my products", "create a new product for example.com", "regenerate next week's keyword plan"). The skill's `description` triggers it automatically; Claude will run `outrank-cli` commands and follow the rules in `SKILL.md`.
+
+### Other agents (Cursor, custom Anthropic SDK apps, etc.)
+
+`SKILL.md` is plain Markdown — feed it as a system prompt, a tool description, or load it into the model's context however your runtime expects. The key contract is:
+
+- Every command returns JSON with `ok`, `data`, and `agent_guidance`.
+- The agent should always read `agent_guidance` before deciding the next step.
+- Mutations should be preceded by an inspect call (`products get`, `keywords list`, `articles get`, etc.).
+
+### Updating the skill
+
+The CLI and `SKILL.md` are versioned together. When you upgrade `outrank-cli`, also refresh the copy of `SKILL.md` in your `.claude/skills/...` directory from the installed package (`<global node_modules>/outrank-cli/SKILL.md`) or from this repo.
 
