@@ -1,15 +1,16 @@
 ﻿---
 name: outrank
-description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage keyword plans, inspect or edit articles, manage article settings, target audiences, competitors, Google Search Console connections, or quote/buy product slots. Requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
+description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage publishing integrations, inspect or manage keyword plans, inspect or edit articles, manage article settings, target audiences, competitors, Google Search Console connections, internal linking configuration, or quote/buy product slots. Requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
 ---
 
 # Outrank Skill
 
 Use `outrank-cli` to drive Outrank from the terminal. The CLI is JSON-first and every command returns `agent_guidance`, so read that field after each step and let it steer the next call.
 
-In human-facing responses, call `products get` / `products update` the product's General settings. These cover the non-editorial product basics such as name, URL, description, sitemap URL, blog root URL, publishing cadence, backlink toggles, and similar core product fields.
+In human-facing responses, call `products get` / `products update` the product's General settings. These cover the non-editorial product basics such as name, URL, description, sitemap URL, blog root URL, publishing cadence, and similar core product fields.
 
 In human-facing responses, call product `output-settings` article settings or article preferences. Use `output-settings` only when you are quoting the literal CLI command or API path.
+Use `products backlinks ...` for backlink exchange settings, credits, review queues, and reverification actions.
 
 ## Setup
 
@@ -49,9 +50,33 @@ Prefer inspecting before mutating:
 - `outrank-cli keywords export --product <productId>`
 - `outrank-cli products target-audiences list <productId>`
 - `outrank-cli products competitors list <productId>`
+- `outrank-cli products integrations providers`
+- `outrank-cli products integrations list <productId>`
+- `outrank-cli products integrations get <productId> <integrationId>`
+- `outrank-cli products integrations prepare wordpress-plugin <productId>`
+- `outrank-cli products integrations connect wordpress-com <productId> --json-file wordpress-com-connect.json`
+- `outrank-cli products integrations connect notion <productId>`
+- `outrank-cli products integrations poll wordpress-com <productId> --attempt-id <attempt-id>`
+- `outrank-cli products integrations poll notion <productId> --attempt-id <attempt-id>`
+- `outrank-cli products integrations notion databases <productId> <integrationId>`
+- `outrank-cli products integrations notion schema <productId> <integrationId> <databaseId>`
+- `outrank-cli products integrations webflow sites --json-file webflow-sites.json`
+- `outrank-cli products integrations webflow collections --json-file webflow-collections.json`
+- `outrank-cli products integrations webflow fields --json-file webflow-fields.json`
+- `outrank-cli products integrations webflow items --json-file webflow-items.json`
+- `outrank-cli products integrations framer collections --json-file framer-collections.json`
+- `outrank-cli products integrations framer fields --json-file framer-fields.json`
 - `outrank-cli products gsc status <productId>`
 - `outrank-cli products gsc accounts <productId>`
 - `outrank-cli products gsc performance <productId>`
+- `outrank-cli products linking sources get <productId>`
+- `outrank-cli products linking targets list <productId>`
+- `outrank-cli products linking target-config get <productId>`
+- `outrank-cli products backlinks get <productId>`
+- `outrank-cli products backlinks credits <productId>`
+- `outrank-cli products backlinks earned <productId>`
+- `outrank-cli products backlinks unverified <productId>`
+- `outrank-cli products backlinks subscription <productId>`
 - `outrank-cli subscription status`
 - `outrank-cli usage stats`
 
@@ -77,6 +102,23 @@ Write commands currently supported:
 - `outrank-cli products output-settings update <productId> --json-file output-settings.json`
 - `outrank-cli products target-audiences replace <productId> --json-file target-audiences.json`
 - `outrank-cli products competitors replace <productId> --json-file competitors.json`
+- `outrank-cli products integrations validate <provider> --json-file integration.json`
+- `outrank-cli products integrations create <productId> --json-file integration-create.json`
+- `outrank-cli products integrations update <productId> <integrationId> --json-file integration-update.json`
+- `outrank-cli products integrations test <productId> <integrationId>`
+- `outrank-cli products integrations delete <productId> <integrationId>`
+- `outrank-cli products integrations connect wordpress-com <productId> --json-file wordpress-com-connect.json`
+- `outrank-cli products integrations poll wordpress-com <productId> --attempt-id <attempt-id>`
+- `outrank-cli products integrations connect notion <productId>`
+- `outrank-cli products integrations poll notion <productId> --attempt-id <attempt-id>`
+- `outrank-cli products integrations notion databases <productId> <integrationId>`
+- `outrank-cli products integrations notion schema <productId> <integrationId> <databaseId>`
+- `outrank-cli products integrations webflow sites --json-file webflow-sites.json`
+- `outrank-cli products integrations webflow collections --json-file webflow-collections.json`
+- `outrank-cli products integrations webflow fields --json-file webflow-fields.json`
+- `outrank-cli products integrations webflow items --json-file webflow-items.json`
+- `outrank-cli products integrations framer collections --json-file framer-collections.json`
+- `outrank-cli products integrations framer fields --json-file framer-fields.json`
 - `outrank-cli products gsc connect <productId>`
 - `outrank-cli products gsc reconnect <productId>`
 - `outrank-cli products gsc disconnect <productId>`
@@ -84,6 +126,17 @@ Write commands currently supported:
 - `outrank-cli products gsc search-analytics <productId> --dimensions query,page --limit 50`
 - `outrank-cli products gsc inspect-url <productId> --url https://example.com/blog/post`
 - `outrank-cli products gsc cannibalization <productId>`
+- `outrank-cli products linking sources update <productId> --json-file linking-sources.json`
+- `outrank-cli products linking detect <productId>`
+- `outrank-cli products linking target-config update <productId> --json-file target-config.json`
+- `outrank-cli products linking targets add-manual <productId> --json-file manual-target.json`
+- `outrank-cli products linking targets upsert <productId> --json-file target-upsert.json`
+- `outrank-cli products linking targets clear-customizations <productId> <targetId>`
+- `outrank-cli products linking targets delete <productId> <targetId>`
+- `outrank-cli products backlinks update <productId> --json-file backlinks.json`
+- `outrank-cli products backlinks check-removal <productId> <backlinkId>`
+- `outrank-cli products backlinks reverify <productId> <backlinkId>`
+- `outrank-cli products backlinks subscribe-quote <productId> --plan premium|enterprise`
 - `outrank-cli keywords add --product <productId> --json-file keywords.json`
 - `outrank-cli keywords bulk-reschedule --json-file keyword-reschedule.json`
 - `outrank-cli keywords bulk-delete --json-file keyword-delete.json`
@@ -158,7 +211,7 @@ If the live API or current repo context does not expose the full allowed option 
 - if helpful, show the current value from an existing product as a reference point
 - say clearly when the CLI exposes the field's current value but not the full enum catalog
 
-Business-critical settings that may matter even if the current CLI surface cannot set them yet:
+Business-critical settings that may matter before article generation:
 
 - blog URL or publishing destination
 - internal linking preferences
@@ -166,7 +219,7 @@ Business-critical settings that may matter even if the current CLI surface canno
 - article examples or brand-writing examples
 - publishing workflow preferences such as draft-first vs direct publish
 
-If the human has not provided those business-critical settings yet, say so clearly. Explain which of them are currently exposed by `outrank-cli` and which are not. For settings that are not yet supported by the current CLI surface, do not invent commands. Instead, ask the human whether to:
+If the human has not provided those business-critical settings yet, say so clearly. Explain which of them are currently exposed by `outrank-cli` and which are not. Internal linking is now exposed through the `products linking ...` subtree. For settings that are not yet supported by the current CLI surface, do not invent commands. Instead, ask the human whether to:
 
 - proceed with existing/default Outrank settings for now, or
 - stop product creation until those settings are provided and/or configured elsewhere
@@ -223,6 +276,99 @@ Important behavior:
 - `cannibalization` highlights queries where multiple pages from the same site compete against each other.
 - Use `reconnect` when the status shows an expired token or refresh failure.
 - Use `disconnect` to remove the product's Search Console connection.
+
+## Linking workflow
+
+Use the product-scoped linking commands when the human needs to define where Outrank should discover internal-link candidates, inspect detected URLs, save a priority list, or constrain linking behavior.
+
+Recommended flow:
+
+1. Inspect current source settings with `outrank-cli products linking sources get <productId>`.
+2. Save or change the primary source with `outrank-cli products linking sources update <productId> --json-file linking-sources.json`.
+3. Re-run discovery with `outrank-cli products linking detect <productId>`.
+4. Review saved targets with `outrank-cli products linking targets list <productId>`.
+5. Add missing on-domain URLs with `outrank-cli products linking targets add-manual <productId> --json-file manual-target.json`.
+6. Prioritize or add anchor text with `outrank-cli products linking targets upsert <productId> --json-file target-upsert.json`.
+7. Inspect product-wide behavior with `outrank-cli products linking target-config get <productId>`.
+8. Enable or relax priority-only behavior with `outrank-cli products linking target-config update <productId> --json-file target-config.json`.
+9. Clear stale anchor-text overrides with `outrank-cli products linking targets clear-customizations <productId> <targetId>`.
+10. Delete stale targets with `outrank-cli products linking targets delete <productId> <targetId>`.
+
+Important behavior:
+
+- Linking writes are gated by the product's backlink subscription. If the API returns `subscription_management_url`, stop retrying and ask the human to manage that billing change in the dashboard.
+- `source_type` is not free-form. Use the exact backend values: `sitemap`, `root_url`, or `integration`.
+- `additional_linking_sources` is a replacement list, not a patch. Keep existing items you still want.
+- Manual and upserted target URLs must stay on the product's own domain.
+- `only_prioritized` may fail until enough prioritized targets exist. If the API returns a conflict, add or prioritize more URLs first.
+- `clear-customizations` only clears custom anchor text. It does not delete the target.
+
+## Backlinks workflow
+
+Use the product-scoped backlink commands when the human needs to inspect or change backlink exchange participation, review earned placements, work through unverified items, or inspect subscription state.
+
+Recommended flow:
+
+1. Inspect current settings with `outrank-cli products backlinks get <productId>`.
+2. Inspect credits with `outrank-cli products backlinks credits <productId>`.
+3. Review earned backlinks with `outrank-cli products backlinks earned <productId> --limit 20`.
+4. Add `--include-article` or `--include-summary` on the earned list when the human needs more article context.
+5. Review the unverified queue with `outrank-cli products backlinks unverified <productId> --limit 20`.
+6. Update settings with `outrank-cli products backlinks update <productId> --json-file backlinks.json`.
+7. Trigger a removal check with `outrank-cli products backlinks check-removal <productId> <backlinkId>`.
+8. Trigger a reverification with `outrank-cli products backlinks reverify <productId> <backlinkId>`.
+9. Inspect the current backlink subscription with `outrank-cli products backlinks subscription <productId>`.
+10. Quote a plan with `outrank-cli products backlinks subscribe-quote <productId> --plan premium|enterprise`.
+
+Important behavior:
+
+- Do not use `products update` for `backlinks_enabled` or `min_backlink_domain_rating`.
+- Backlink writes are blocked when the product is hidden for inappropriate content, but reads still work.
+- Setting `min_domain_rating` requires an active backlink subscription.
+- `subscribe-quote` is read-only. Purchasing or changing the add-on still requires dashboard checkout.
+- `earned` uses cursor pagination through `data.next_cursor`.
+- `unverified` is the deduped article-level manual-review stream.
+
+## Integrations workflow
+
+Use the current integrations commands when the human needs to inspect connected publishing integrations, validate direct credentials, run the WordPress.com or Notion OAuth handoff, inspect discovery data for Notion, Webflow, or Framer, test a saved integration row, or remove a stale one.
+
+Recommended flow:
+
+1. Inspect connected integrations with `outrank-cli products integrations list <productId>`.
+2. Inspect provider availability with `outrank-cli products integrations providers`.
+3. For webhook, ask only for `endpoint` and `access_token`. Outrank sends `Authorization: Bearer <access_token>` on each request. Do not ask for an HMAC secret because the current webhook integration does not implement HMAC signing.
+4. For WordPress Plugin, do not ask the human to invent or provide an `api_key`. Start with `outrank-cli products integrations prepare wordpress-plugin <productId>` to generate the integration token, then tell the human to paste that token into the installed plugin and save it in WordPress.
+5. For WordPress.com, start with `outrank-cli products integrations connect wordpress-com <productId> --json-file wordpress-com-connect.json`, tell the human to open the returned `connect_url`, then poll with `outrank-cli products integrations poll wordpress-com <productId> --attempt-id <attempt-id>` until the handoff completes.
+6. For Notion, start with `outrank-cli products integrations connect notion <productId>`, tell the human to open the returned `connect_url`, then poll with `outrank-cli products integrations poll notion <productId> --attempt-id <attempt-id>` until the handoff completes.
+7. After Notion OAuth completes, list databases with `outrank-cli products integrations notion databases <productId> <integrationId>`, inspect one schema with `... notion schema <productId> <integrationId> <databaseId>`, then update the saved integration row with `name`, `database_id`, and `fields`.
+8. For Shopify, start with `outrank-cli products integrations validate shopify --json '{"access_token":"shpat_xxx"}'`. The response returns `shop_name` and the available blogs, which the agent should use to build the create payload instead of guessing them or asking the human for the store name first.
+9. For Webflow, start with `outrank-cli products integrations validate webflow --json-file webflow-sites.json`, then use `webflow sites`, `webflow collections`, `webflow fields`, and `webflow items` to build the exact create or update payload for the chosen CMS collection.
+10. For Framer, use only the newer Server API flow. Start with `outrank-cli products integrations validate framer --json-file framer-validate.json`, then use `framer collections` and `framer fields` when the human wants to publish into an existing editable collection. Do not use or mention the older plugin-based setup.
+11. For Next.js Blog, do not ask the human for credentials first. Run `outrank-cli products integrations create <productId> --json '{"provider":"nextjs-blog"}'` and treat the returned `data.secrets.api_key` as a one-time secret that must be saved immediately.
+12. For Wix, use a direct credential flow with `site_id`, `api_key`, and `publish_status`. Validate first, then create or update directly; there is no OAuth or prepare step.
+13. Validate webhook, Ghost, Shopify, Webflow, Wix, Framer, or WordPress Plugin credentials before saving with `outrank-cli products integrations validate <provider> --json-file integration.json`.
+14. Create a webhook, Ghost, Shopify, Webflow, Wix, Framer, WordPress Plugin, or Next.js Blog integration with `outrank-cli products integrations create <productId> --json-file integration-create.json`.
+14. Inspect one row with `outrank-cli products integrations get <productId> <integrationId>`.
+15. Update a saved webhook, Ghost, Shopify, Webflow, Wix, WordPress Plugin, or Notion integration with `outrank-cli products integrations update <productId> <integrationId> --json-file integration-update.json`.
+16. Test a saved webhook, Ghost, Shopify, Webflow, Wix, Framer, WordPress Plugin, or Notion integration with `outrank-cli products integrations test <productId> <integrationId>`.
+17. If the integration is stale or wrong, remove it with `outrank-cli products integrations delete <productId> <integrationId>`.
+
+Important behavior:
+
+- V2 products are intended to keep exactly one publishing integration. If `list` returns multiple rows, treat the extras as likely legacy V1 leftovers and inspect before deleting.
+- `create` currently supports `webhook`, `ghost`, `shopify`, `webflow`, `wix`, `wordpress-plugin`, and `nextjs-blog` first. Other providers may appear in `providers`, but if their create/update/test capabilities are absent there, do not invent those writes.
+- `wordpress-plugin` should usually start with `prepare`, not with a question asking the human for an integration token. The prepare response includes the generated token plus suggested validate/create payloads.
+- `wordpress-com` should use `connect` plus `poll`, not `create`. The connect payload mirrors the dashboard flow with `name` and `publish_status`, then the human completes browser OAuth.
+- `notion` should use `connect` plus `poll`, not `create`. OAuth only stores the access token row. The agent still needs to list databases, inspect schema, and PATCH the saved row with `name`, `database_id`, and `fields` before the integration is publish-ready.
+- `shopify` should start with validation. The agent should not ask the human to guess `shop_name` or `blog_id` before `validate` returns them.
+- `webflow` should use validation plus discovery before create. The agent should not guess `site_id`, `collection_id`, or Webflow field mappings.
+- `framer` should use the newer Server API flow only. The agent should not mention the older Framer plugin flow. Validate the project URL and Server API key first, then use `framer collections` and `framer fields` only when the human chooses an existing editable collection. There is no separate plugin-config step in the agent surface.
+- `wix` uses direct validate/create/update/test with a site UUID plus API key. The agent should validate `site_id` and `api_key` before create or after credentials change.
+- `nextjs-blog` create returns a one-time API key. The agent must surface and preserve it immediately because later reads only show that a hash exists, not the plain secret.
+- deleting the current active integration clears the product integration fields automatically
+- `validate` tests unsaved credentials without persisting a row, while `test` re-checks a saved integration row
+- the current CLI surface still does not expose create, update, or test for some providers, and only WordPress.com and Notion currently expose an OAuth connect flow; if the human asks for unsupported operations, say they are not shipped in this CLI yet instead of inventing commands
 
 ## Keyword workflow
 
@@ -318,6 +464,7 @@ Important behavior to remember:
 - featured image is separate from the markdown body and can be updated either through the normal article update payload via `image_url` or by local-file upload with `articles upload-featured-image`
 - in-content images can be uploaded from local files with `articles upload-image`; the command returns a hosted URL and alt text for markdown insertion or replacement
 - per-article instructions live on the linked scheduled keyword, so they are only editable while that planner relationship still exists and is writable
+- `articles update --json '{"status":"published"}'` attempts a real publish through the product's active integration for eligible attached articles; if the remote publish fails, inspect the returned error and the article's `publish_error`
 - slug is readable for reference but read-only in the agent API
 - `articles generate <keywordId>` mirrors the current create-and-publish flow for a scheduled keyword
 - `articles precreate <keywordId>` mirrors the current pre-generation flow; after calling it, inspect the keyword state until it moves from `generating_article` to `pregenerated` or back to `scheduled`
@@ -344,5 +491,5 @@ Do not ask for billing approval until you have already clarified the intended pr
 
 ## Current limitation
 
-The implementation plan is broader than the current live API. Keywords and core article flows are now exposed in `outrank-cli`, but integrations, backlinks, and onboarding flows are still incomplete. If the user asks for something not present in `outrank-cli --help`, say that exact command surface is not shipped yet and do not invent unsupported commands.
+The implementation plan is broader than the current live API. Keywords, core article flows, linking, backlink exchange management, and the current integration-management flows are now exposed in `outrank-cli`, including direct setup for webhook, Ghost, Shopify, Webflow, Wix, Framer, WordPress Plugin, and Next.js Blog, plus OAuth flows for WordPress.com and Notion. Purchasing or changing backlink add-ons and some onboarding flows still require the dashboard. If the user asks for something not present in `outrank-cli --help`, say that exact command surface is not shipped yet and do not invent unsupported commands.
 
