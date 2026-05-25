@@ -16,10 +16,10 @@ export const KEYWORDS_HELP = `Usage:
   outrank-cli keywords export --product <product-id>
   outrank-cli keywords generation-status --product <product-id>
   outrank-cli keywords add --product <product-id> --json <object>
+  outrank-cli keywords update <keyword-id> --json <object>
   outrank-cli keywords suggest --product <product-id> (--keyword <text> | --theme <text>) [--keyword-region <code>] [--limit <n>]
   outrank-cli keywords generate --product <product-id> --count <n> [--source competitors|audiences|both] [--competitor <competitor-id> ...] [--audience <text> ...]
   outrank-cli keywords bulk-process --product <product-id> --json <object> [--keyword-region <code>]
-  outrank-cli keywords reschedule <keyword-id> --scheduled-for <date>
   outrank-cli keywords bulk-reschedule --json <object>
   outrank-cli keywords delete <keyword-id>
   outrank-cli keywords bulk-delete --json <object>
@@ -29,14 +29,16 @@ JSON Input:
 
 Examples:
   outrank-cli keywords list --product 00000000-0000-0000-0000-000000000000 --scope all
+  outrank-cli keywords list --product 00000000-0000-0000-0000-000000000000 --scope scheduled --q "best seo tools"
   outrank-cli keywords export --product 00000000-0000-0000-0000-000000000000
   outrank-cli keywords generation-status --product 00000000-0000-0000-0000-000000000000
   outrank-cli keywords add --product 00000000-0000-0000-0000-000000000000 --json-file keywords.json
+  outrank-cli keywords update 00000000-0000-0000-0000-000000000000 --json '{"instructions":"Write for beginners and include a step-by-step setup section"}'
+  outrank-cli keywords update 00000000-0000-0000-0000-000000000000 --json '{"scheduled_for":"2026-05-20"}'
   outrank-cli keywords suggest --product 00000000-0000-0000-0000-000000000000 --theme "email marketing" --limit 8
   outrank-cli keywords generate --product 00000000-0000-0000-0000-000000000000 --count 10 --source both
   outrank-cli keywords generate --product 00000000-0000-0000-0000-000000000000 --count 5 --source competitors --competitor 11111111-1111-1111-1111-111111111111
   outrank-cli keywords bulk-process --product 00000000-0000-0000-0000-000000000000 --json '{"keywords":["keyword one","keyword two"]}'
-  outrank-cli keywords reschedule 00000000-0000-0000-0000-000000000000 --scheduled-for 2026-05-20
   outrank-cli keywords bulk-reschedule --json-file keyword-reschedule.json
   outrank-cli keywords delete 00000000-0000-0000-0000-000000000000
 `;
@@ -126,6 +128,17 @@ const handleKeywordsAdd = async (parsed) => {
   const response = await requestAgentApi(parsed, {
     method: 'POST',
     path: '/keywords',
+    body,
+  });
+  return response.payload;
+};
+
+const handleKeywordsUpdate = async (parsed) => {
+  const keywordId = getRequiredPositional(parsed, 0, '<keyword-id>');
+  const body = await readJsonInput(parsed);
+  const response = await requestAgentApi(parsed, {
+    method: 'PATCH',
+    path: `/keywords/${keywordId}`,
     body,
   });
   return response.payload;
@@ -228,26 +241,6 @@ const handleKeywordsBulkProcess = async (parsed) => {
   return response.payload;
 };
 
-const handleKeywordsReschedule = async (parsed) => {
-  const keywordId = getRequiredPositional(parsed, 0, '<keyword-id>');
-  const scheduledFor = getOption(parsed, 'scheduled-for');
-  if (!scheduledFor) {
-    throw Object.assign(new Error('Missing required option: --scheduled-for <date>.'), {
-      cliCode: 'CLI_INVALID_USAGE',
-      guidance: 'Pass the target schedule date with `--scheduled-for YYYY-MM-DD` or an ISO timestamp.',
-    });
-  }
-
-  const response = await requestAgentApi(parsed, {
-    method: 'PATCH',
-    path: `/keywords/${keywordId}`,
-    body: {
-      scheduled_for: scheduledFor,
-    },
-  });
-  return response.payload;
-};
-
 const handleKeywordsBulkReschedule = async (parsed) => {
   const body = await readJsonInput(parsed);
   const response = await requestAgentApi(parsed, {
@@ -287,7 +280,7 @@ export const handleKeywordsCommand = async (argv) => {
       {
         usage: KEYWORDS_HELP.trim(),
       },
-      'Choose one of: list, get, export, generation-status, add, suggest, generate, bulk-process, reschedule, bulk-reschedule, delete, bulk-delete.',
+      'Choose one of: list, get, export, generation-status, add, update, suggest, generate, bulk-process, bulk-reschedule, delete, bulk-delete.',
     );
   }
 
@@ -296,10 +289,10 @@ export const handleKeywordsCommand = async (argv) => {
   if (subcommand === 'export') return handleKeywordsExport(parsed);
   if (subcommand === 'generation-status') return handleKeywordsGenerationStatus(parsed);
   if (subcommand === 'add') return handleKeywordsAdd(parsed);
+  if (subcommand === 'update') return handleKeywordsUpdate(parsed);
   if (subcommand === 'suggest') return handleKeywordsSuggest(parsed);
   if (subcommand === 'generate') return handleKeywordsGenerate(parsed);
   if (subcommand === 'bulk-process') return handleKeywordsBulkProcess(parsed);
-  if (subcommand === 'reschedule') return handleKeywordsReschedule(parsed);
   if (subcommand === 'bulk-reschedule') return handleKeywordsBulkReschedule(parsed);
   if (subcommand === 'delete') return handleKeywordsDelete(parsed);
   if (subcommand === 'bulk-delete') return handleKeywordsBulkDelete(parsed);

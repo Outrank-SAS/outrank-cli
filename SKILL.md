@@ -138,6 +138,7 @@ Write commands currently supported:
 - `outrank-cli products backlinks reverify <productId> <backlinkId>`
 - `outrank-cli products backlinks subscribe-quote <productId> --plan premium|enterprise`
 - `outrank-cli keywords add --product <productId> --json-file keywords.json`
+- `outrank-cli keywords update <keywordId> --json-file keyword-update.json`
 - `outrank-cli keywords bulk-reschedule --json-file keyword-reschedule.json`
 - `outrank-cli keywords bulk-delete --json-file keyword-delete.json`
 - `outrank-cli articles update <articleId> --json-file article-patch.json`
@@ -219,7 +220,7 @@ Business-critical settings that may matter before article generation:
 - article examples or brand-writing examples
 - publishing workflow preferences such as draft-first vs direct publish
 
-If the human has not provided those business-critical settings yet, say so clearly. Explain which of them are currently exposed by `outrank-cli` and which are not. Internal linking is now exposed through the `products linking ...` subtree. For settings that are not yet supported by the current CLI surface, do not invent commands. Instead, ask the human whether to:
+If the human has not provided those business-critical settings yet, say so clearly. Explain which of them are currently exposed by `outrank-cli` and which are not. Internal linking is exposed through the `products linking ...` subtree. For settings that are not yet supported by the current CLI surface, do not invent commands. Instead, ask the human whether to:
 
 - proceed with existing/default Outrank settings for now, or
 - stop product creation until those settings are provided and/or configured elsewhere
@@ -372,7 +373,7 @@ Important behavior:
 
 ## Keyword workflow
 
-Keyword plans now have two buckets:
+Keyword plans have two buckets:
 
 - scheduled keywords: already on the content calendar
 - stored keywords: unscheduled inventory waiting to be promoted into the plan
@@ -422,13 +423,20 @@ Important behavior to remember:
 For schedule changes:
 
 - check writability first when there is any doubt: `outrank-cli keywords generation-status --product <productId>`
-- reschedule one: `outrank-cli keywords reschedule <keywordId> --scheduled-for YYYY-MM-DD`
+- `keywords list` uses planner-first ordering for scheduled results, so page 1 prioritizes upcoming scheduled items before past ones
+- confirm keyword presence with `outrank-cli keywords list --product <productId> --scope scheduled --q "<keyword>"`; if `next_offset` is not `null`, keep paging before claiming it is missing
+- keyword records return top-level `article_type`, `article_subtype`, `expected_length`, and label fields; use those directly for article-type or expected-length questions instead of checking product output-settings
+- update one keyword's mutable fields: `outrank-cli keywords update <keywordId> --json '{"instructions":"..."}'`
+- `outrank-cli keywords get <keywordId>` returns `article_type_options`; use those values when patching `article_type`, `article_subtype`, or `expected_length`
+- `outrank-cli keywords update <keywordId> --json '{"article_type":"guide","article_subtype":"explainer","expected_length":"long"}'` mirrors the scheduler card Article Type Settings modal and rejects values outside the allowed option lists
+- reschedule one: `outrank-cli keywords update <keywordId> --json '{"scheduled_for":"YYYY-MM-DD"}'`
 - reschedule many: `outrank-cli keywords bulk-reschedule --json-file keyword-reschedule.json`
 
 For article actions:
 
 - `outrank-cli articles generate <keywordId>` is only for keywords scheduled for today
 - `outrank-cli articles precreate <keywordId>` is only for eligible future scheduled keywords
+- article records with a linked scheduled keyword also return top-level `article_type`, `article_subtype`, `expected_length`, and label fields
 - trial users cannot pre-create articles
 - past-due subscriptions block article actions
 - future scheduled articles cannot be manually published early through `articles update`
@@ -464,6 +472,8 @@ Important behavior to remember:
 - featured image is separate from the markdown body and can be updated either through the normal article update payload via `image_url` or by local-file upload with `articles upload-featured-image`
 - in-content images can be uploaded from local files with `articles upload-image`; the command returns a hosted URL and alt text for markdown insertion or replacement
 - per-article instructions live on the linked scheduled keyword, so they are only editable while that planner relationship still exists and is writable
+- `articles get <articleId>` returns `article_type_options`; use those values when patching `article_type`, `article_subtype`, or `expected_length`
+- `articles update --json '{"article_type":"guide","article_subtype":"howTo","expected_length":"medium"}'` mirrors the dashboard Article Type Settings modal and rejects values outside the allowed option lists
 - `articles update --json '{"status":"published"}'` attempts a real publish through the product's active integration for eligible attached articles; if the remote publish fails, inspect the returned error and the article's `publish_error`
 - slug is readable for reference but read-only in the agent API
 - `articles generate <keywordId>` mirrors the current create-and-publish flow for a scheduled keyword
@@ -491,5 +501,5 @@ Do not ask for billing approval until you have already clarified the intended pr
 
 ## Current limitation
 
-The implementation plan is broader than the current live API. Keywords, core article flows, linking, backlink exchange management, and the current integration-management flows are now exposed in `outrank-cli`, including direct setup for webhook, Ghost, Shopify, Webflow, Wix, Framer, WordPress Plugin, and Next.js Blog, plus OAuth flows for WordPress.com and Notion. Purchasing or changing backlink add-ons and some onboarding flows still require the dashboard. If the user asks for something not present in `outrank-cli --help`, say that exact command surface is not shipped yet and do not invent unsupported commands.
+The implementation plan is broader than the current live API. Keywords, core article flows, linking, backlink exchange management, and the current integration-management flows are exposed in `outrank-cli`, including direct setup for webhook, Ghost, Shopify, Webflow, Wix, Framer, WordPress Plugin, and Next.js Blog, plus OAuth flows for WordPress.com and Notion. Purchasing or changing backlink add-ons and some onboarding flows still require the dashboard. If the user asks for something not present in `outrank-cli --help`, say that exact command surface is not shipped yet and do not invent unsupported commands.
 

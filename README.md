@@ -48,7 +48,7 @@ This repo currently targets the agent endpoints that already exist in `outrank`:
 - `products linking target-config get|update`
 - `products linking targets list|add-manual|upsert|clear-customizations|delete`
 - `products backlinks get|update|credits|earned|unverified|check-removal|reverify|subscription|subscribe-quote`
-- `keywords list|get|export|generation-status|add|suggest|generate|reschedule|bulk-reschedule|delete|bulk-delete`
+- `keywords list|get|export|generation-status|add|update|suggest|generate|bulk-reschedule|delete|bulk-delete`
 - `articles list|get|get-content|update|update-content|replace|bulk-replace|upload-image|upload-featured-image|retry-publish|delete|precreate|generate`
 - `subscription status`
 - `usage stats`
@@ -97,6 +97,7 @@ outrank-cli auth status
 outrank-cli auth whoami
 outrank-cli products list --limit 20
 outrank-cli keywords list --product 00000000-0000-0000-0000-000000000000 --scope all
+outrank-cli keywords list --product 00000000-0000-0000-0000-000000000000 --scope scheduled --q "best seo tools"
 outrank-cli keywords generation-status --product 00000000-0000-0000-0000-000000000000
 outrank-cli articles list --product 00000000-0000-0000-0000-000000000000 --status published
 outrank-cli articles get 00000000-0000-0000-0000-000000000000
@@ -152,9 +153,10 @@ outrank-cli products integrations test 00000000-0000-0000-0000-000000000000 1111
 outrank-cli keywords suggest --product 00000000-0000-0000-0000-000000000000 --theme "email marketing"
 outrank-cli keywords generate --product 00000000-0000-0000-0000-000000000000 --count 10 --source both
 outrank-cli keywords add --product 00000000-0000-0000-0000-000000000000 --json-file ./keywords.json
+outrank-cli keywords update 00000000-0000-0000-0000-000000000000 --json '{"instructions":"Write for beginners and include a step-by-step setup section"}'
 outrank-cli keywords export --product 00000000-0000-0000-0000-000000000000
 outrank-cli products create --json-file ./product.json
-# products create now auto-queues the initial ~30-day keyword plan; poll with keywords generation-status / keywords list
+# products create auto-queues the initial ~30-day keyword plan; poll with keywords generation-status / keywords list
 outrank-cli billing portal-url
 outrank-cli products update 00000000-0000-0000-0000-000000000000 --json '{"daily_article_count":2}'
 outrank-cli products output-settings update 00000000-0000-0000-0000-000000000000 --json-file ./output-settings.json
@@ -188,7 +190,7 @@ outrank-cli products backlinks check-removal 00000000-0000-0000-0000-00000000000
 outrank-cli products backlinks reverify 00000000-0000-0000-0000-000000000000 11111111-1111-1111-1111-111111111111
 outrank-cli products backlinks subscription 00000000-0000-0000-0000-000000000000
 outrank-cli products backlinks subscribe-quote 00000000-0000-0000-0000-000000000000 --plan premium
-outrank-cli keywords reschedule 00000000-0000-0000-0000-000000000000 --scheduled-for 2026-05-20
+outrank-cli keywords update 00000000-0000-0000-0000-000000000000 --json '{"scheduled_for":"2026-05-20"}'
 outrank-cli billing purchase-products quote --additional-products 2
 ```
 
@@ -272,13 +274,21 @@ Example payload:
 ## Keyword mutation rules
 
 - Run `outrank-cli keywords generation-status --product <product-id>` before keyword writes when you are not sure the product is writable.
-- `keywords generate` now mirrors the dashboard Generate Keywords flow. Ask the human how many keywords to generate before calling it if they did not specify a count.
+- `keywords generate` mirrors the dashboard Generate Keywords flow. Ask the human how many keywords to generate before calling it if they did not specify a count.
 - The allowed generation count is 5-30, but the real upper bound depends on free scheduler slots. Check `keywords generation-status` first when you need the current capacity.
 - Stored keywords are read-only inventory. They can be promoted into the plan with `keywords add`, but they cannot be deleted directly.
 - Scheduled keywords with created or pre-created articles are read-only.
 - Keywords in `generating_article` are read-only until generation finishes.
 - Past keywords are read-only except past `scheduled` or `disabled` keywords without an article, which can still be rescheduled.
 - If the main subscription is `past_due`, keyword mutations are blocked and reads still work.
+- `keywords list` defaults to planner-first ordering for scheduled results, so page 1 prioritizes upcoming scheduled items before past ones.
+- Use `keywords list --product <product-id> --scope scheduled --q "<keyword>"` when looking for one planner keyword by text. If `next_offset` is not `null`, keep paging before claiming the keyword is absent.
+- Keyword records return top-level `article_type`, `article_subtype`, `expected_length`, and label fields. Read those from the keyword itself when answering article-type or expected-length questions; do not look in product output-settings for per-keyword length.
+- Use `keywords update <keyword-id> --json '{"instructions":"..."}'` to add or change per-keyword instructions after creation. This matches the dashboard flow, which creates the keyword first and updates the brief afterward.
+- Use `keywords update <keyword-id> --json '{"scheduled_for":"YYYY-MM-DD","instructions":"..."}'` when you need to change the date and brief in one PATCH request.
+- Use `keywords update <keyword-id> --json '{"scheduled_for":"YYYY-MM-DD"}'` for date-only rescheduling too; there is no separate reschedule command.
+- `keywords get <keyword-id>` returns `article_type_options`, which lists the valid dropdown values for `article_type`, `article_subtype`, and `expected_length`.
+- Use `keywords update --json '{"article_type":"guide","article_subtype":"explainer","expected_length":"long"}'` to mirror the scheduler card's "Article Type Settings" modal. The API rejects values outside the returned option lists.
 
 ## Article behavior notes
 
@@ -286,7 +296,10 @@ Example payload:
 - Featured image can be updated either by hosted URL through `articles update --json '{"image_url":"..."}'` or by local-file upload through `articles upload-featured-image`.
 - In-content images can be uploaded from a local file with `articles upload-image`; the command returns the hosted URL plus generated alt text so the agent can insert or replace the markdown image reference.
 - Per-article instructions are stored on the linked scheduled keyword, so `articles update --json '{"instructions":"..."}'` only works for articles that still have a linked planner keyword.
-- `articles update --json '{"status":"published"}'` now attempts a real publish through the product's active integration for eligible attached articles; it is not just a local status flip.
+- `articles get <article-id>` returns `article_type_options`, which lists the valid dropdown values for `article_type`, `article_subtype`, and `expected_length`.
+- Article records with a linked scheduled keyword also return top-level `article_type`, `article_subtype`, `expected_length`, and label fields for direct reads.
+- Use `articles update --json '{"article_type":"guide","article_subtype":"comparison","expected_length":"long"}'` to mirror the dashboard's "Article Type Settings" modal. The API rejects values outside the returned option lists.
+- `articles update --json '{"status":"published"}'` attempts a real publish through the product's active integration for eligible attached articles; it is not just a local status flip.
 - Slug is returned for read-only reference but cannot be changed through the agent API.
 - `articles generate <keyword-id>` is only valid for scheduled keywords due today; it mirrors the dashboard's create-and-publish action.
 - `articles precreate <keyword-id>` is only valid for eligible future scheduled keywords, is unavailable on trial subscriptions, and should be polled through the keyword state afterward.
@@ -337,7 +350,7 @@ Current scope note:
 
 - Webhook, Ghost, Shopify, Webflow, and Wix support direct validate/create/update/test. Framer supports validate, provider-specific discovery, create, and test for the newer Server API flow. WordPress Plugin supports prepare plus validate/create/update/test. Next.js Blog supports one-step create plus the shared list|get|delete surface, returning a one-time API key on create. WordPress.com supports OAuth connect plus poll, then the shared list|get|delete surface. Notion supports OAuth connect plus poll, provider-specific database/schema discovery, then update/test on the saved row.
 - V2 products are intended to keep one publishing integration. If `list` returns multiple rows, that usually means legacy V1 residue and stale rows should be reviewed and deleted.
-- Backlink exchange management now covers configuration, status reads, earned/unverified review queues, and reverification actions. Purchasing or changing backlink add-ons still requires the dashboard checkout flow.
+- Backlink exchange management covers configuration, status reads, earned/unverified review queues, and reverification actions. Purchasing or changing backlink add-ons still requires the dashboard checkout flow.
 - Other providers are still mostly read/delete only while create, update, test, and provider-specific discovery are added one by one.
 
 ## Custom API target (advanced)
