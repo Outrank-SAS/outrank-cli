@@ -427,6 +427,7 @@ For schedule changes:
 - confirm keyword presence with `outrank-cli keywords list --product <productId> --scope scheduled --q "<keyword>"`; if `next_offset` is not `null`, keep paging before claiming it is missing
 - keyword records return top-level `article_type`, `article_subtype`, `expected_length`, and label fields; use those directly for article-type or expected-length questions instead of checking product output-settings
 - update one keyword's mutable fields: `outrank-cli keywords update <keywordId> --json '{"instructions":"..."}'`
+- answer or replace the keyword's quality questions with `outrank-cli keywords update <keywordId> --json '{"quality_questions":[{"id":"...","question":"...","answer":"..."}]}'`
 - `outrank-cli keywords get <keywordId>` returns `article_type_options`; use those values when patching `article_type`, `article_subtype`, or `expected_length`
 - `outrank-cli keywords update <keywordId> --json '{"article_type":"guide","article_subtype":"explainer","expected_length":"long"}'` mirrors the scheduler card Article Type Settings modal and rejects values outside the allowed option lists
 - reschedule one: `outrank-cli keywords update <keywordId> --json '{"scheduled_for":"YYYY-MM-DD"}'`
@@ -502,4 +503,3 @@ Do not ask for billing approval until you have already clarified the intended pr
 ## Current limitation
 
 The implementation plan is broader than the current live API. Keywords, core article flows, linking, backlink exchange management, and the current integration-management flows are exposed in `outrank-cli`, including direct setup for webhook, Ghost, Shopify, Webflow, Wix, Framer, WordPress Plugin, and Next.js Blog, plus OAuth flows for WordPress.com and Notion. Purchasing or changing backlink add-ons and some onboarding flows still require the dashboard. If the user asks for something not present in `outrank-cli --help`, say that exact command surface is not shipped yet and do not invent unsupported commands.
-

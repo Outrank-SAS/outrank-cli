@@ -285,6 +285,7 @@ Example payload:
 - Use `keywords list --product <product-id> --scope scheduled --q "<keyword>"` when looking for one planner keyword by text. If `next_offset` is not `null`, keep paging before claiming the keyword is absent.
 - Keyword records return top-level `article_type`, `article_subtype`, `expected_length`, and label fields. Read those from the keyword itself when answering article-type or expected-length questions; do not look in product output-settings for per-keyword length.
 - Use `keywords update <keyword-id> --json '{"instructions":"..."}'` to add or change per-keyword instructions after creation. This matches the dashboard flow, which creates the keyword first and updates the brief afterward.
+- Use `keywords update <keyword-id> --json '{"quality_questions":[{"id":"...","question":"...","answer":"..."}]}'` to answer or replace the keyword's quality questions through the same PATCH route.
 - Use `keywords update <keyword-id> --json '{"scheduled_for":"YYYY-MM-DD","instructions":"..."}'` when you need to change the date and brief in one PATCH request.
 - Use `keywords update <keyword-id> --json '{"scheduled_for":"YYYY-MM-DD"}'` for date-only rescheduling too; there is no separate reschedule command.
 - `keywords get <keyword-id>` returns `article_type_options`, which lists the valid dropdown values for `article_type`, `article_subtype`, and `expected_length`.
