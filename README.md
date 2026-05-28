@@ -50,6 +50,11 @@ This repo currently targets the agent endpoints that already exist in `outrank`:
 - `products backlinks get|update|credits|earned|unverified|check-removal|reverify|subscription|subscribe-quote`
 - `keywords list|get|export|generation-status|add|update|suggest|generate|bulk-reschedule|delete|bulk-delete`
 - `articles list|get|get-content|update|update-content|replace|bulk-replace|upload-image|upload-featured-image|retry-publish|delete|precreate|generate`
+- `improvements settings get|update`
+- `improvements analyze`
+- `improvements candidates list|brief|edit-brief|schedule`
+- `improvements tasks list|reschedule|cancel|edit-brief|execute`
+- `improvements executions list|get|decisions|push`
 - `subscription status`
 - `usage stats`
 - `billing portal-url`
@@ -110,6 +115,11 @@ outrank-cli articles replace 00000000-0000-0000-0000-000000000000 --json '{"find
 outrank-cli articles retry-publish 00000000-0000-0000-0000-000000000000
 outrank-cli articles precreate 00000000-0000-0000-0000-000000000000
 outrank-cli articles generate 00000000-0000-0000-0000-000000000000
+outrank-cli improvements settings get 00000000-0000-0000-0000-000000000000
+outrank-cli improvements candidates list 00000000-0000-0000-0000-000000000000 --type ctr_gap --limit 20
+outrank-cli improvements candidates schedule 00000000-0000-0000-0000-000000000000 --scheduled-for 2026-06-01
+outrank-cli improvements tasks execute 00000000-0000-0000-0000-000000000000
+outrank-cli improvements executions push 00000000-0000-0000-0000-000000000000
 outrank-cli subscription status
 outrank-cli usage stats
 outrank-cli products get 00000000-0000-0000-0000-000000000000
@@ -306,6 +316,19 @@ Example payload:
 - `articles precreate <keyword-id>` is only valid for eligible future scheduled keywords, is unavailable on trial subscriptions, and should be polled through the keyword state afterward.
 - `articles update --json '{"status":"published"}'` cannot be used to manually publish a future scheduled article before its due date.
 - `articles retry-publish <article-id>` is only valid for generated articles with a publish error.
+
+## Article improvements behavior notes
+
+- Article improvements are a separate surface from generation: they rewrite an already-published post based on Search Console signals, then push the result to the CMS. They require the All-in-One plan. On Basic plan, `improvements candidates list` returns an empty list and write actions return `PLAN_UPGRADE_REQUIRED`.
+- `improvements settings update --json '{"enabled":true}'` starts an unattended loop: weekly opportunity discovery, daily auto-scheduling on `publishing_days` (at most 2 weekday codes from Mon–Sun), and execution every ~15 minutes. Surface this to the human before enabling.
+- `improvements settings update --json '{"auto_push":true}'` publishes every successful rewrite to the CMS without human review (still skipped automatically on a hard validation failure or an unverified backlink injection).
+- `improvements settings get` returns `readiness`, which says whether the connected CMS can actually receive a pushed update (`ready`) or not (`not_connected`, `action_required`, `unsupported`). A push to an unsupported/disconnected CMS is reported as `skipped` with `requires_manual_publish`.
+- `improvements analyze`, `improvements candidates brief`, and `improvements tasks execute` run in Firebase and can take minutes. If the call times out at the network edge, the work still completes server-side — re-list candidates or poll the execution rather than retrying.
+- After `improvements candidates brief`, poll the candidate (via `improvements candidates list`) until its `brief_status` is `ready`. After `improvements tasks execute`, poll `improvements executions get <execution-id>` until `status` is `completed`, then read `review_status`.
+- A candidate (or its underlying article) can have only one active scheduled task at a time, and an article can have only one active (pending/running) execution. Conflicts return `409`.
+- `improvements executions get` returns `before`/`after`, paragraph-level `hunks` (each with an id), and `validation_issues`. Push with no JSON to accept all changes; send `{"decisions":{"<hunkId>":"rejected"},"edited_hunks":{"<hunkId>":"..."}}` to reject or edit specific hunks. `decisions` and `push` only work while `review_status` is `awaiting_review`.
+- A push updates the article inside Outrank first, then dispatches to the CMS. `CMS_PUSH_FAILED` means the content was saved in Outrank but the CMS rejected it; inspect `error.details.cms_response` and retry.
+- `improvements candidates list` and `improvements executions list` use offset pagination through `data.next_offset`.
 
 ## Linking behavior notes
 

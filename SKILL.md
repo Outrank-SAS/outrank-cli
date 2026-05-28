@@ -1,6 +1,6 @@
 ﻿---
 name: outrank
-description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage publishing integrations, inspect or manage keyword plans, inspect or edit articles, manage article settings, target audiences, competitors, Google Search Console connections, internal linking configuration, or quote/buy product slots. Requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
+description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage publishing integrations, inspect or manage keyword plans, inspect or edit articles, discover/schedule/run/review/publish article improvements for existing posts, manage article settings, target audiences, competitors, Google Search Console connections, internal linking configuration, or quote/buy product slots. Requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
 ---
 
 # Outrank Skill
@@ -11,6 +11,8 @@ In human-facing responses, call `products get` / `products update` the product's
 
 In human-facing responses, call product `output-settings` article settings or article preferences. Use `output-settings` only when you are quoting the literal CLI command or API path.
 Use `products backlinks ...` for backlink exchange settings, credits, review queues, and reverification actions.
+
+Use `improvements ...` for article improvements: discovering, briefing, scheduling, running, reviewing, and publishing AI rewrites of **existing published articles** based on Search Console performance. This is a distinct area from article generation (`articles generate`/`precreate`) — offer it whenever the human wants to refresh, update, optimize, or improve existing/older posts, or act on GSC opportunities. It needs the All-in-One plan.
 
 ## Setup
 
@@ -31,6 +33,7 @@ Run group help when needed:
 - `outrank-cli products --help`
 - `outrank-cli keywords --help`
 - `outrank-cli articles --help`
+- `outrank-cli improvements --help`
 - `outrank-cli subscription --help`
 - `outrank-cli usage --help`
 - `outrank-cli billing --help`
@@ -47,6 +50,10 @@ Prefer inspecting before mutating:
 - `outrank-cli articles get-content <articleId>`
 - `outrank-cli articles upload-image --file <path> --article <articleId>`
 - `outrank-cli articles upload-featured-image <articleId> --file <path>`
+- `outrank-cli improvements settings get <productId>`
+- `outrank-cli improvements candidates list <productId>`
+- `outrank-cli improvements tasks list <productId>`
+- `outrank-cli improvements executions list <productId>`
 - `outrank-cli keywords export --product <productId>`
 - `outrank-cli products target-audiences list <productId>`
 - `outrank-cli products competitors list <productId>`
@@ -482,6 +489,36 @@ Important behavior to remember:
 - `articles retry-publish <articleId>` only works for generated articles with a publish error
 - `articles bulk-replace` is preview-first; review the returned excerpts, then rerun with `"confirm": true` in the JSON payload to write changes
 
+## Article improvements workflow
+
+Article improvements take an already-published post, analyze its Search Console performance, draft a rewrite brief, run a multi-step rewrite, and push the improved version back to the CMS. This is a separate surface from article generation. It requires the All-in-One plan; on Basic plan candidate lists come back empty and write actions return `PLAN_UPGRADE_REQUIRED`.
+
+Inspect before mutating:
+
+- `outrank-cli improvements settings get <productId>` — shows `enabled`, `auto_push`, `publishing_days`, the CMS `readiness` (whether a push can actually land), and `activity` counts
+- `outrank-cli improvements candidates list <productId> [--type <opportunity_type>]` — opportunities available to schedule
+- `outrank-cli improvements tasks list <productId>` — scheduled tasks, each with its `latest_execution` for progress polling
+- `outrank-cli improvements executions list <productId> --review-status awaiting_review` — the review inbox
+
+Typical manual flow:
+
+1. `outrank-cli improvements analyze <productId>` — discover/refresh opportunities (heavy, multi-minute; re-list candidates after)
+2. `outrank-cli improvements candidates brief <candidateId>` — generate the rewrite brief (heavy; poll the candidate until `brief_status` is `ready`)
+3. optionally `outrank-cli improvements candidates edit-brief <candidateId> --json-file brief.json` to refine it
+4. `outrank-cli improvements candidates schedule <candidateId> --scheduled-for <iso-date>` — create the task
+5. `outrank-cli improvements tasks execute <taskId>` — run the rewrite now (heavy; poll `improvements executions get <executionId>` until `status` is `completed`)
+6. review and publish: `outrank-cli improvements executions get <executionId>`, then `outrank-cli improvements executions push <executionId>`
+
+Important behavior to remember:
+
+- turning settings `enabled` on starts an unattended loop — weekly opportunity discovery, daily auto-scheduling on `publishing_days` (max 2 weekdays), and execution every ~15 minutes. Always tell the human this before enabling.
+- with `auto_push` on, each successful rewrite is published to the CMS with no human review (still skipped automatically on a hard validation failure or an unverified backlink). Only enable it via `settings update` after the human confirms.
+- analyze, candidates brief, and tasks execute run in Firebase and can take minutes; if a call times out at the edge the work continues server-side, so re-list or poll the execution instead of retrying
+- `executions get` returns `before`/`after`, paragraph-level `hunks` (each with an id), and `validation_issues`; to accept everything, `executions push` with no JSON; to reject or edit specific hunks, send `{"decisions":{"<hunkId>":"rejected"},"edited_hunks":{"<hunkId>":"..."}}` to `executions decisions` or directly in the push body
+- decisions and push only work while `review_status` is `awaiting_review`
+- a push always updates the article inside Outrank first; if `cms_response.status` is `skipped` the CMS is not connected/supported for auto-push (publish manually); a `CMS_PUSH_FAILED` error means the CMS rejected it — inspect `error.details.cms_response` and retry
+- `tasks execute --improve-images false` skips image regeneration (default regenerates images)
+
 ## Buying more product slots
 
 Always do this in two steps:
@@ -502,4 +539,4 @@ Do not ask for billing approval until you have already clarified the intended pr
 
 ## Current limitation
 
-The implementation plan is broader than the current live API. Keywords, core article flows, linking, backlink exchange management, and the current integration-management flows are exposed in `outrank-cli`, including direct setup for webhook, Ghost, Shopify, Webflow, Wix, Framer, WordPress Plugin, and Next.js Blog, plus OAuth flows for WordPress.com and Notion. Purchasing or changing backlink add-ons and some onboarding flows still require the dashboard. If the user asks for something not present in `outrank-cli --help`, say that exact command surface is not shipped yet and do not invent unsupported commands.
+The implementation plan is broader than the current live API. Keywords, core article flows, article improvements, linking, backlink exchange management, and the current integration-management flows are exposed in `outrank-cli`, including direct setup for webhook, Ghost, Shopify, Webflow, Wix, Framer, WordPress Plugin, and Next.js Blog, plus OAuth flows for WordPress.com and Notion. Purchasing or changing backlink add-ons and some onboarding flows still require the dashboard. If the user asks for something not present in `outrank-cli --help`, say that exact command surface is not shipped yet and do not invent unsupported commands.

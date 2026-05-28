@@ -12,6 +12,7 @@ import { handleSubscriptionCommand } from './commands/subscription.js';
 import { handleUsageCommand } from './commands/usage.js';
 import { handleKeywordsCommand } from './commands/keywords.js';
 import { handleArticlesCommand } from './commands/articles.js';
+import { handleImprovementsCommand } from './commands/improvements.js';
 
 const getVersion = () => {
   try {
@@ -35,6 +36,7 @@ Groups:
   products    List, create, inspect, and configure products, integrations, article settings, Google Search Console, linking, and backlinks.
   keywords    Inspect, check write status, add, reschedule, delete, suggest, generate, and export keyword plans.
   articles    Inspect article metadata and bodies, edit content, retry publish, precreate, and generate.
+  improvements Discover, brief, schedule, run, review, and publish article improvements for existing posts.
   subscription Inspect plan, trial, quota, and add-on status.
   usage       Inspect current usage and quota consumption.
   billing     Product-slot purchase flows.
@@ -55,6 +57,8 @@ Examples:
   outrank-cli products list --limit 20
   outrank-cli keywords list --product 00000000-0000-0000-0000-000000000000 --scope all
   outrank-cli articles list --product 00000000-0000-0000-0000-000000000000 --status published
+  outrank-cli improvements candidates list 00000000-0000-0000-0000-000000000000 --type ctr_gap
+  outrank-cli improvements tasks execute 00000000-0000-0000-0000-000000000000
   outrank-cli subscription status
   outrank-cli usage stats
   outrank-cli products create --json-file product.json
@@ -111,6 +115,8 @@ const main = async () => {
     result = await handleKeywordsCommand(rest);
   } else if (group === 'articles') {
     result = await handleArticlesCommand(rest);
+  } else if (group === 'improvements') {
+    result = await handleImprovementsCommand(rest);
   } else if (group === 'subscription') {
     result = await handleSubscriptionCommand(rest);
   } else if (group === 'usage') {
