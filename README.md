@@ -55,6 +55,9 @@ This repo currently targets the agent endpoints that already exist in `outrank`:
 - `improvements candidates list|brief|edit-brief|schedule`
 - `improvements tasks list|reschedule|cancel|edit-brief|execute`
 - `improvements executions list|get|decisions|push`
+- `marketplace seller status|onboard|eligibility|settings|integrations|stripe|complete-onboarding|placements|earnings|content-history`
+- `marketplace notifications list|mark-read`
+- `marketplace buyer status|billing-status|subscription|subscribe-quote|checkout|change-plan|target-pages|participation|placements|article|credits`
 - `subscription status`
 - `usage stats`
 - `billing portal-url`
@@ -202,6 +205,11 @@ outrank-cli products backlinks subscription 00000000-0000-0000-0000-000000000000
 outrank-cli products backlinks subscribe-quote 00000000-0000-0000-0000-000000000000 --plan premium
 outrank-cli keywords update 00000000-0000-0000-0000-000000000000 --json '{"scheduled_for":"2026-05-20"}'
 outrank-cli billing purchase-products quote --additional-products 2
+outrank-cli marketplace seller status 00000000-0000-0000-0000-000000000000
+outrank-cli marketplace seller onboard 00000000-0000-0000-0000-000000000000 --country US
+outrank-cli marketplace seller placements list 00000000-0000-0000-0000-000000000000 --status needs_approval
+outrank-cli marketplace seller earnings 00000000-0000-0000-0000-000000000000
+outrank-cli marketplace buyer status 00000000-0000-0000-0000-000000000000
 ```
 
 ## Google Search Console workflow
@@ -280,6 +288,23 @@ Example payload:
   "min_domain_rating": 10
 }
 ```
+
+## Marketplace workflow
+
+Seller side (live):
+
+- Start with `outrank-cli marketplace seller status <product-id>` — its guidance walks the onboarding wizard (Blog -> Articles -> Integration -> Payouts).
+- `outrank-cli marketplace seller onboard <product-id> [--country <ISO2>]` orchestrates onboarding: it reports remaining steps, adopts an existing reusable CMS automatically (never ask the user to pick a platform when one is reusable), and creates the Stripe Express account once the earlier steps are done and a country is provided.
+- Stripe identity/bank onboarding happens in a browser — surface the returned `onboardingUrl` to the human.
+- Finish with `outrank-cli marketplace seller complete-onboarding <product-id>` and always report the eligibility check results (`marketplace seller eligibility`) to the human.
+- Day-to-day: `placements list|approve|decline|publish|regenerate`, `earnings`, `settings get|update`, `stripe manage`, `content-history`, and `marketplace notifications list --role seller`.
+- Admin-only (server-enforced against the key creator's current role): settings update, integrations writes, stripe commands, complete-onboarding, placements decline.
+
+Buyer side:
+
+- Start with `outrank-cli marketplace buyer status <product-id>` — its guidance drives the setup sequence.
+- The mandatory sequence: Enterprise backlink plan (`buyer subscribe-quote`, a human org admin completes checkout — purchasing is admin-only) -> add target pages (`buyer target-pages discover|add`) -> `buyer participation on`.
+- Then `buyer placements list|regenerate|revalidate`, `buyer article get|edit`, `buyer credits history`, and `marketplace notifications list --role buyer`.
 
 ## Keyword mutation rules
 

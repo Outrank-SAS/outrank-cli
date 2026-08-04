@@ -1,6 +1,6 @@
 ﻿---
 name: outrank
-description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage publishing integrations, inspect or manage keyword plans, inspect or edit articles, discover/schedule/run/review/publish article improvements for existing posts, manage article settings, target audiences, competitors, Google Search Console connections, internal linking configuration, or quote/buy product slots. Requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
+description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage publishing integrations, inspect or manage keyword plans, inspect or edit articles, discover/schedule/run/review/publish article improvements for existing posts, manage article settings, target audiences, competitors, Google Search Console connections, internal linking configuration, quote/buy product slots, or work with the Outrank Marketplace (seller onboarding, eligibility, placements, earnings, Stripe payouts, buyer target pages and placements). Requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
 ---
 
 # Outrank Skill
@@ -13,6 +13,8 @@ In human-facing responses, call product `output-settings` article settings or ar
 Use `products backlinks ...` for backlink exchange settings, credits, review queues, and reverification actions.
 
 Use `improvements ...` for article improvements: discovering, briefing, scheduling, running, reviewing, and publishing AI rewrites of **existing published articles** based on Search Console performance. This is a distinct area from article generation (`articles generate`/`precreate`) — offer it whenever the human wants to refresh, update, optimize, or improve existing/older posts, or act on GSC opportunities. It needs the All-in-One plan.
+
+Use `marketplace ...` for the Outrank Marketplace: seller onboarding and eligibility, placement approval/decline/publishing, earnings and Stripe Express payouts, marketplace notifications, and buyer target pages, placements, and credits. This is distinct from `products backlinks ...`, which is the classic backlink exchange.
 
 ## Setup
 
@@ -34,6 +36,7 @@ Run group help when needed:
 - `outrank-cli keywords --help`
 - `outrank-cli articles --help`
 - `outrank-cli improvements --help`
+- `outrank-cli marketplace --help`
 - `outrank-cli subscription --help`
 - `outrank-cli usage --help`
 - `outrank-cli billing --help`
@@ -84,6 +87,13 @@ Prefer inspecting before mutating:
 - `outrank-cli products backlinks earned <productId>`
 - `outrank-cli products backlinks unverified <productId>`
 - `outrank-cli products backlinks subscription <productId>`
+- `outrank-cli marketplace seller status <productId>`
+- `outrank-cli marketplace seller eligibility <productId>`
+- `outrank-cli marketplace seller placements list <productId>`
+- `outrank-cli marketplace seller earnings <productId>`
+- `outrank-cli marketplace buyer status <productId>`
+- `outrank-cli marketplace buyer target-pages list <productId>`
+- `outrank-cli marketplace notifications list <productId> --role seller`
 - `outrank-cli subscription status`
 - `outrank-cli usage stats`
 
@@ -402,6 +412,7 @@ When the user asks for keyword ideas:
 
 Treat `keywords suggest` as candidate-generation only. It does not change the content plan until you add keywords.
 Treat `keywords generate` as the dashboard Generate Keywords action. It creates scheduled keywords through the same backend pipeline.
+Product-wide keyword research instructions live in product article settings as `global_keyword_prompt` (`products output-settings get|update`). They steer every keyword research run for the product and are separate from per-keyword `instructions`. When the human wants a standing rule for all future keyword research (topics, angles, audiences to focus on), update `global_keyword_prompt` instead of repeating it per keyword.
 
 Before `keywords generate`:
 
@@ -530,6 +541,52 @@ Always do this in two steps:
 Never guess `confirm-charge-cents`. Use the server-quoted number.
 Do not ask for billing approval until you have already clarified the intended product configuration and any defaulted article/publishing settings.
 
+## Marketplace workflow
+
+The Outrank Marketplace connects sellers (sites that host backlink placements inside their upcoming Outrank articles and get paid per placement) with buyers (sites that spend backlink credits to place links on high-authority articles). Use `outrank-cli marketplace ...` for everything.
+
+Role note: several marketplace commands are admin-only server-side — they succeed only when the user who created the API key currently holds an org admin role. Admin-only: `seller settings update`, all `seller integrations` writes, all `seller stripe` commands, `seller complete-onboarding`, `seller placements decline`, and the buyer billing/participation writes (checkout, change-plan, participation on/off). Buyer target-page writes (add, pause/activate, delete) are open to every org member. If a command returns `ADMIN_ROLE_REQUIRED`, tell the human an organization admin must do it (dashboard or an admin-created key).
+
+### Seller onboarding
+
+The wizard order matches the dashboard: Blog -> Articles -> Integration -> Payouts, then complete. Start every session with:
+
+- `outrank-cli marketplace seller status <productId>` — composite report (enrollment, per-step onboarding state, settings, gate state) whose guidance tells you the next step
+- `outrank-cli marketplace seller onboard <productId> [--country <ISO2>]` — the orchestrator: reports remaining steps, and performs the safe automatic actions for you
+
+Step-by-step, prompting the human for the same data the dashboard collects:
+
+1. **Blog** — collect/confirm the product's content details (`products get` / `products update`) and connect Google Search Console (`products gsc connect`, human opens the URL, then `gsc poll` and `gsc set-property`). GSC is mandatory before continuing.
+2. **Articles** — review article settings (`products output-settings get/update`) and set the marketplace publishing schedule: `marketplace seller settings update <productId> --json '{"dailyArticleLimit":<1-3>,"publishingDays":[<weekday numbers, at least 3>]}'` (defaults: 2/day on Mon/Wed/Fri).
+3. **Integration** — if the product already has a reusable CMS integration, **adopt it automatically and just inform the human — never ask them to pick a platform** (`marketplace seller integrations adopt`; `seller onboard` does this for you). Only when there is no reusable integration: run `marketplace seller integrations status` for the supported platforms, connect one with the `products integrations` commands, then `marketplace seller integrations claim <productId> --integration <id> --type <platform>`. Next.js Blog cannot be reused, and plugin-managed Framer setups need a new Framer connection — the error messages say so.
+4. **Payouts** — when the earlier steps are done it is safe to create the Stripe Express account: `marketplace seller stripe onboard <productId> --country <ISO2>` (ask the human for the two-letter country of their payout bank account). Surface the returned `onboardingUrl` — the human completes identity and bank details in a browser; the agent cannot.
+5. **Finish** — `marketplace seller complete-onboarding <productId>`, then check `marketplace seller eligibility <productId>`.
+
+Always report the eligibility check results to the human — all five checks with actual vs required: GSC connected, Domain Rating >= 40, >= 100 avg monthly organic clicks (90-day window), >= 3 months of Search Console history, marketplace CMS connected. GSC and the CMS are fixable now; DR/clicks/history only grow over time — enrollment still completes, and the seller dashboard opens automatically once the site qualifies (re-checked automatically; force with `marketplace seller eligibility recheck`).
+
+### Seller operations (after onboarding)
+
+- `marketplace seller placements list <productId> [--status needs_approval|planned|live|link_not_found|lost]` — the placement pipeline with counts
+- `marketplace seller placements approve <placementId>` — only `pending_approval`; publishes immediately when the scheduled date is due
+- `marketplace seller placements decline <placementId>` — admin-only; only `matched`/`pending_approval`; refunds the buyer and cleans up the pre-generated article
+- `marketplace seller placements publish <placementId>` — publish early once the article is pregenerated and due
+- `marketplace seller placements regenerate <placementId>` — retry a failed generation
+- `marketplace seller earnings <productId>` — cents; payout states are available (cleared the 14-day hold), pending, paid
+- `marketplace seller stripe manage <productId>` — Stripe Express dashboard login link for the human
+- `marketplace seller settings get/update <productId>` — isActive (cannot enable while ineligible), approvalMode, dailyArticleLimit, publishingDays
+- `marketplace seller content-history <productId>` — marketplace-only articles (articles list with track_scope=marketplace)
+- `marketplace notifications list <productId> --role seller` and `mark-read`
+
+### Buyer
+
+Start with `marketplace buyer status <productId>` — its guidance drives the whole setup sequence. The mandatory order:
+
+1. **Enterprise backlink plan** — `marketplace buyer billing-status <productId>`; if none, `marketplace buyer subscribe-quote <productId>` and surface `subscription_management_url` to the human (checkout is an interactive Stripe flow the agent cannot complete, and purchasing is restricted to org admins)
+2. **Target pages (mandatory before the dashboard opens)** — discover with `marketplace buyer target-pages discover <productId> [--source sitemap|root_url|integration]`, present candidates to the human, add with `marketplace buyer target-pages add <productId> --urls <u1,u2,...>` (own-domain only, max 10 pages, batches of up to 50), manage with `pause`/`activate`/`delete`
+3. **Participation** — `marketplace buyer participation on <productId>` (requires the plan plus >= 1 active target page)
+
+Then: `placements list`, `placements regenerate|revalidate`, `article get/edit <placementId>` (editable only while the placement is matched or publishing and unpublished; keep the placement backlink intact), `credits history`, and `notifications --role buyer`. Each placement costs the host site's Domain Rating x 3 in backlink credits. Plan upgrades via `change-plan` are dashboard-only (interactive payment confirmation); downgrades, cancellations, and restores work from the CLI.
+
 ## Error handling
 
 - If `ok` is `false`, read both `error.message` and `agent_guidance`.
@@ -539,4 +596,4 @@ Do not ask for billing approval until you have already clarified the intended pr
 
 ## Current limitation
 
-The implementation plan is broader than the current live API. Keywords, core article flows, article improvements, linking, backlink exchange management, and the current integration-management flows are exposed in `outrank-cli`, including direct setup for webhook, Ghost, Shopify, Webflow, Wix, Framer, WordPress Plugin, and Next.js Blog, plus OAuth flows for WordPress.com and Notion. Purchasing or changing backlink add-ons and some onboarding flows still require the dashboard. If the user asks for something not present in `outrank-cli --help`, say that exact command surface is not shipped yet and do not invent unsupported commands.
+The implementation plan is broader than the current live API. Keywords, core article flows, article improvements, linking, backlink exchange management, marketplace seller and buyer flows, and the current integration-management flows are exposed in `outrank-cli`, including direct setup for webhook, Ghost, Shopify, Webflow, Wix, Framer, WordPress Plugin, and Next.js Blog, plus OAuth flows for WordPress.com and Notion. Purchasing or changing backlink add-ons, marketplace Enterprise checkout, Stripe Express identity/bank onboarding, and marketplace plan upgrades still require the dashboard or a browser. If the user asks for something not present in `outrank-cli --help`, say that exact command surface is not shipped yet and do not invent unsupported commands.

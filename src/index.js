@@ -13,6 +13,7 @@ import { handleUsageCommand } from './commands/usage.js';
 import { handleKeywordsCommand } from './commands/keywords.js';
 import { handleArticlesCommand } from './commands/articles.js';
 import { handleImprovementsCommand } from './commands/improvements.js';
+import { handleMarketplaceCommand } from './commands/marketplace.js';
 
 const getVersion = () => {
   try {
@@ -37,6 +38,7 @@ Groups:
   keywords    Inspect, check write status, add, reschedule, delete, suggest, generate, and export keyword plans.
   articles    Inspect article metadata and bodies, edit content, retry publish, precreate, and generate.
   improvements Discover, brief, schedule, run, review, and publish article improvements for existing posts.
+  marketplace Seller onboarding, eligibility, placements, earnings, Stripe payouts, and buyer setup for the Outrank Marketplace.
   subscription Inspect plan, trial, quota, and add-on status.
   usage       Inspect current usage and quota consumption.
   billing     Product-slot purchase flows.
@@ -72,6 +74,9 @@ Examples:
   outrank-cli products backlinks get <product-id>
   outrank-cli products backlinks earned <product-id> --limit 20 --include-article
   outrank-cli billing purchase-products quote --additional-products 2
+  outrank-cli marketplace seller status <product-id>
+  outrank-cli marketplace seller onboard <product-id> --country US
+  outrank-cli marketplace seller placements list <product-id> --status needs_approval
 `;
 
 const main = async () => {
@@ -117,6 +122,8 @@ const main = async () => {
     result = await handleArticlesCommand(rest);
   } else if (group === 'improvements') {
     result = await handleImprovementsCommand(rest);
+  } else if (group === 'marketplace') {
+    result = await handleMarketplaceCommand(rest);
   } else if (group === 'subscription') {
     result = await handleSubscriptionCommand(rest);
   } else if (group === 'usage') {
