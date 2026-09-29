@@ -1,0 +1,1209 @@
+{
+  "help": {
+    "argv": [
+      "improvements",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli improvements settings get <product-id>\\n  outrank-cli improvements settings update <product-id> --json <object>\\n  outrank-cli improvements analyze <product-id>\\n  outrank-cli improvements candidates list <product-id> [--type outsider|ctr_gap|declining|content_gap|thin_content] [--limit <n>] [--offset <n>]\\n  outrank-cli improvements candidates brief <candidate-id> [--task <task-id>]\\n  outrank-cli improvements candidates edit-brief <candidate-id> --json <object>\\n  outrank-cli improvements candidates schedule <candidate-id> --scheduled-for <iso-date>\\n  outrank-cli improvements tasks list <product-id>\\n  outrank-cli improvements tasks reschedule <task-id> --scheduled-for <iso-date>\\n  outrank-cli improvements tasks cancel <task-id>\\n  outrank-cli improvements tasks edit-brief <task-id> --json <object>\\n  outrank-cli improvements tasks execute <task-id> [--improve-images true|false]\\n  outrank-cli improvements executions list <product-id> [--review-status awaiting_review|pushed|auto_pushed|rejected|all] [--limit <n>] [--offset <n>]\\n  outrank-cli improvements executions get <execution-id>\\n  outrank-cli improvements executions decisions <execution-id> --json <object>\\n  outrank-cli improvements executions push <execution-id> [--json <object>]\\n\\nJSON Input:\\n  Use one of: --json '<object>', --json-file payload.json, or --json-stdin\\n\\nNotes:\\n  Article improvements need the All-in-One plan. Turning settings on starts an unattended loop\\n  (weekly opportunity discovery, daily auto-scheduling on the configured publishing_days, and\\n  execution every ~15 minutes). With auto_push on, each successful rewrite is published to the CMS\\n  without review. analyze, candidates brief, and tasks execute are heavy multi-minute operations:\\n  if a call times out at the edge, the work continues server-side — re-list/poll instead of retrying.\\n\\nExamples:\\n  outrank-cli improvements settings get <UUID-1>\\n  outrank-cli improvements settings update <UUID-1> --json '{\\\"enabled\\\":true,\\\"auto_push\\\":false,\\\"publishing_days\\\":[\\\"Mon\\\",\\\"Thu\\\"]}'\\n  outrank-cli improvements analyze <UUID-1>\\n  outrank-cli improvements candidates list <UUID-1> --type ctr_gap --limit 20\\n  outrank-cli improvements candidates brief <UUID-1>\\n  outrank-cli improvements candidates edit-brief <UUID-1> --json-file brief.json\\n  outrank-cli improvements candidates schedule <UUID-1> --scheduled-for 2026-06-01\\n  outrank-cli improvements tasks list <UUID-1>\\n  outrank-cli improvements tasks execute <UUID-1> --improve-images false\\n  outrank-cli improvements executions list <UUID-1> --review-status awaiting_review\\n  outrank-cli improvements executions get <UUID-1>\\n  outrank-cli improvements executions push <UUID-1>\\n  outrank-cli improvements executions push <UUID-1> --json '{\\\"decisions\\\":{\\\"para-3\\\":\\\"rejected\\\"}}'\"\n  },\n  \"agent_guidance\": \"Choose a sub-noun: settings, analyze, candidates, tasks, or executions. The typical flow is analyze -> candidates brief -> candidates schedule -> tasks execute -> executions push.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "settings-help-not-supported": {
+    "argv": [
+      "improvements",
+      "settings",
+      "--help"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "candidates-help-not-supported": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "--help"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown candidates action: --help.\"\n  },\n  \"agent_guidance\": \"Use: improvements candidates list|brief|edit-brief|schedule.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "tasks-help-not-supported": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "--help"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown tasks action: --help.\"\n  },\n  \"agent_guidance\": \"Use: improvements tasks list|reschedule|cancel|edit-brief|execute.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "executions-help-not-supported": {
+    "argv": [
+      "improvements",
+      "executions",
+      "--help"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown executions action: --help.\"\n  },\n  \"agent_guidance\": \"Use: improvements executions list|get|decisions|push.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "analyze-help-runs-anyway": {
+    "argv": [
+      "improvements",
+      "analyze",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/analyze",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "settings-get": {
+    "argv": [
+      "improvements",
+      "settings",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "settings-get-missing-id": {
+    "argv": [
+      "improvements",
+      "settings",
+      "get"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "settings-get-no-key": {
+    "argv": [
+      "improvements",
+      "settings",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "settings-get-not-found": {
+    "argv": [
+      "improvements",
+      "settings",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "settings-get-non-json": {
+    "argv": [
+      "improvements",
+      "settings",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 502 without a JSON body.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/settings\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "settings-get-network-error": {
+    "argv": [
+      "improvements",
+      "settings",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "settings-update-inline": {
+    "argv": [
+      "improvements",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"enabled\":true,\"auto_push\":false,\"publishing_days\":[\"Mon\",\"Thu\"]}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "enabled": true,
+          "auto_push": false,
+          "publishing_days": [
+            "Mon",
+            "Thu"
+          ]
+        }
+      }
+    ]
+  },
+  "settings-update-json-file": {
+    "argv": [
+      "improvements",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/improvements-settings-update.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "enabled": true,
+          "auto_push": false,
+          "publishing_days": [
+            "Mon",
+            "Thu"
+          ]
+        }
+      }
+    ]
+  },
+  "settings-update-no-json-source": {
+    "argv": [
+      "improvements",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "analyze": {
+    "argv": [
+      "improvements",
+      "analyze",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/analyze",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "analyze-missing-id": {
+    "argv": [
+      "improvements",
+      "analyze"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "candidates-list-type-outsider": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--type",
+      "outsider"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/candidates?type=outsider",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "candidates-list-type-ctr-gap": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--type",
+      "ctr_gap",
+      "--limit",
+      "20",
+      "--offset",
+      "5"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/candidates?type=ctr_gap&limit=20&offset=5",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "candidates-list-type-declining": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--type",
+      "declining"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/candidates?type=declining",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "candidates-list-type-content-gap": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--type",
+      "content_gap"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/candidates?type=content_gap",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "candidates-list-type-thin-content": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--type",
+      "thin_content"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/candidates?type=thin_content",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "candidates-list-no-filters": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/candidates",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "candidates-list-limit-out-of-range": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limit",
+      "51"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be <= 50.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "candidates-list-missing-id": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "candidates-brief": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "brief",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/candidates/bbbbbbbb-0000-4000-8000-000000000002/brief",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
+  },
+  "candidates-brief-with-task": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "brief",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--task",
+      "cccccccc-0000-4000-8000-000000000003"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/candidates/bbbbbbbb-0000-4000-8000-000000000002/brief",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "task_id": "cccccccc-0000-4000-8000-000000000003"
+        }
+      }
+    ]
+  },
+  "candidates-brief-missing-id": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "brief"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <candidate-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "candidates-edit-brief-inline": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "edit-brief",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"brief\":\"Focus on updated statistics.\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/candidates/bbbbbbbb-0000-4000-8000-000000000002/brief",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "brief": "Focus on updated statistics."
+        }
+      }
+    ]
+  },
+  "candidates-edit-brief-json-file": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "edit-brief",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json-file",
+      "tests/golden/fixtures/payloads/improvements-candidates-edit-brief.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/candidates/bbbbbbbb-0000-4000-8000-000000000002/brief",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "brief": "Add a comparison table and refresh the statistics."
+        }
+      }
+    ]
+  },
+  "candidates-edit-brief-two-sources": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "edit-brief",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"brief\":\"Focus on updated statistics.\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/improvements-candidates-edit-brief.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "candidates-schedule": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "schedule",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--scheduled-for",
+      "2026-06-01"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/candidates/bbbbbbbb-0000-4000-8000-000000000002/schedule",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "scheduled_for": "2026-06-01"
+        }
+      }
+    ]
+  },
+  "candidates-schedule-missing-scheduled-for": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "schedule",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --scheduled-for <iso-date>.\"\n  },\n  \"agent_guidance\": \"Pass a date or ISO timestamp, e.g. `--scheduled-for 2026-06-01`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "tasks-list": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/tasks",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "tasks-list-missing-id": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "tasks-reschedule": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "reschedule",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--scheduled-for",
+      "2026-07-01"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/tasks/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "scheduled_for": "2026-07-01"
+        }
+      }
+    ]
+  },
+  "tasks-reschedule-missing-scheduled-for": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "reschedule",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --scheduled-for <iso-date>.\"\n  },\n  \"agent_guidance\": \"Pass a date or ISO timestamp, e.g. `--scheduled-for 2026-06-01`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "tasks-cancel-204-non-json": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "cancel",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 204 without a JSON body.\",\n    \"details\": {\n      \"status\": 204,\n      \"url\": \"https://www.outrank.so/api/agent/v1/improvements/tasks/bbbbbbbb-0000-4000-8000-000000000002\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/tasks/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "tasks-cancel": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "cancel",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/tasks/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "tasks-cancel-missing-id": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "cancel"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <task-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "tasks-edit-brief-inline": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "edit-brief",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"brief\":\"Emphasize the new pricing tiers.\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/tasks/bbbbbbbb-0000-4000-8000-000000000002/brief",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "brief": "Emphasize the new pricing tiers."
+        }
+      }
+    ]
+  },
+  "tasks-edit-brief-json-stdin": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "edit-brief",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/tasks/bbbbbbbb-0000-4000-8000-000000000002/brief",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "brief": "Emphasize the new pricing tiers."
+        }
+      }
+    ]
+  },
+  "tasks-execute-improve-images-true": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "execute",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--improve-images",
+      "true"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/tasks/bbbbbbbb-0000-4000-8000-000000000002/execute",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "improve_images": true
+        }
+      }
+    ]
+  },
+  "tasks-execute-improve-images-false": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "execute",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--improve-images",
+      "false"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/tasks/bbbbbbbb-0000-4000-8000-000000000002/execute",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "improve_images": false
+        }
+      }
+    ]
+  },
+  "tasks-execute-improve-images-invalid": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "execute",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--improve-images",
+      "maybe"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--improve-images must be true or false.\"\n  },\n  \"agent_guidance\": \"Pass `--improve-images true` or `--improve-images false`, or omit it to use the default (images are regenerated).\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "tasks-execute-no-flag": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "execute",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/tasks/bbbbbbbb-0000-4000-8000-000000000002/execute",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
+  },
+  "executions-list-review-status-awaiting-review": {
+    "argv": [
+      "improvements",
+      "executions",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--review-status",
+      "awaiting_review"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/executions?review_status=awaiting_review",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "executions-list-review-status-pushed": {
+    "argv": [
+      "improvements",
+      "executions",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--review-status",
+      "pushed"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/executions?review_status=pushed",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "executions-list-review-status-auto-pushed": {
+    "argv": [
+      "improvements",
+      "executions",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--review-status",
+      "auto_pushed"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/executions?review_status=auto_pushed",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "executions-list-review-status-rejected": {
+    "argv": [
+      "improvements",
+      "executions",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--review-status",
+      "rejected"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/executions?review_status=rejected",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "executions-list-review-status-all": {
+    "argv": [
+      "improvements",
+      "executions",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--review-status",
+      "all",
+      "--limit",
+      "10",
+      "--offset",
+      "5"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/executions?review_status=all&limit=10&offset=5",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "executions-list-no-filters": {
+    "argv": [
+      "improvements",
+      "executions",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/executions",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "executions-list-missing-id": {
+    "argv": [
+      "improvements",
+      "executions",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "executions-get": {
+    "argv": [
+      "improvements",
+      "executions",
+      "get",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/executions/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "executions-get-missing-id": {
+    "argv": [
+      "improvements",
+      "executions",
+      "get"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <execution-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "executions-decisions-inline": {
+    "argv": [
+      "improvements",
+      "executions",
+      "decisions",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"decisions\":{\"para-3\":\"approved\"}}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/executions/bbbbbbbb-0000-4000-8000-000000000002/decisions",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "decisions": {
+            "para-3": "approved"
+          }
+        }
+      }
+    ]
+  },
+  "executions-decisions-json-file": {
+    "argv": [
+      "improvements",
+      "executions",
+      "decisions",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json-file",
+      "tests/golden/fixtures/payloads/improvements-executions-decisions.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/executions/bbbbbbbb-0000-4000-8000-000000000002/decisions",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "decisions": {
+            "para-3": "approved",
+            "para-5": "rejected"
+          }
+        }
+      }
+    ]
+  },
+  "executions-decisions-no-source": {
+    "argv": [
+      "improvements",
+      "executions",
+      "decisions",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "executions-push-with-json": {
+    "argv": [
+      "improvements",
+      "executions",
+      "push",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"decisions\":{\"para-3\":\"rejected\"}}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/executions/bbbbbbbb-0000-4000-8000-000000000002/push",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "decisions": {
+            "para-3": "rejected"
+          }
+        }
+      }
+    ]
+  },
+  "executions-push-no-json": {
+    "argv": [
+      "improvements",
+      "executions",
+      "push",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/executions/bbbbbbbb-0000-4000-8000-000000000002/push",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
+  },
+  "unknown-subgroup": {
+    "argv": [
+      "improvements",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown improvements sub-noun: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli improvements --help` to see available improvement commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

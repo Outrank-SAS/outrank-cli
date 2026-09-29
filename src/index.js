@@ -2,7 +2,6 @@
 
 import { readFileSync } from 'node:fs';
 
-import { parseArgs } from './core/args.js';
 import { emitAndExit } from './core/io.js';
 import { cliError, cliSuccess } from './core/errors.js';
 import { handleAuthCommand } from './commands/auth.js';
@@ -81,7 +80,6 @@ Examples:
 
 const main = async () => {
   const argv = process.argv.slice(2);
-  const parsed = parseArgs(argv);
   const first = argv[0];
 
   if (argv.length === 0 || first === '--help' || first === '-h' || first === 'help') {

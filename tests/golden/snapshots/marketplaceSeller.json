@@ -1,0 +1,1642 @@
+{
+  "help-marketplace": {
+    "argv": [
+      "marketplace",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli marketplace seller status <product-id> [--refresh-stripe]\\n  outrank-cli marketplace seller onboard <product-id> [--country <ISO2>]\\n  outrank-cli marketplace seller eligibility <product-id> [--refresh]\\n  outrank-cli marketplace seller eligibility recheck <product-id>\\n  outrank-cli marketplace seller settings get <product-id>\\n  outrank-cli marketplace seller settings update <product-id> --json '<object>'\\n  outrank-cli marketplace seller integrations status <product-id>\\n  outrank-cli marketplace seller integrations adopt <product-id>\\n  outrank-cli marketplace seller integrations claim <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller integrations set-activation <product-id> --integration <integration-id> --type <platform> --status active|disabled\\n  outrank-cli marketplace seller integrations delete <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller stripe onboard <product-id> --country <ISO2>\\n  outrank-cli marketplace seller stripe manage <product-id>\\n  outrank-cli marketplace seller stripe reset <product-id>\\n  outrank-cli marketplace seller complete-onboarding <product-id>\\n  outrank-cli marketplace seller placements list <product-id> [--status all|needs_approval|planned|live|link_not_found|lost] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace seller placements approve <placement-id>\\n  outrank-cli marketplace seller placements decline <placement-id>\\n  outrank-cli marketplace seller placements publish <placement-id>\\n  outrank-cli marketplace seller placements regenerate <placement-id>\\n  outrank-cli marketplace seller earnings <product-id>\\n  outrank-cli marketplace seller content-history <product-id> [--status <status>] [--limit <n>] [--offset <n>]\\n  outrank-cli marketplace notifications list <product-id> --role seller|buyer [--type <type>] [--sort oldest] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace notifications mark-read <product-id> --role seller|buyer [--ids <id1,id2,...>]\\n\\n  outrank-cli marketplace buyer status <product-id>\\n  outrank-cli marketplace buyer billing-status <product-id>\\n  outrank-cli marketplace buyer subscription <product-id>\\n  outrank-cli marketplace buyer subscribe-quote <product-id>\\n  outrank-cli marketplace buyer checkout <product-id> --tier <tier>\\n  outrank-cli marketplace buyer change-plan <product-id> --action change_tier|cancel_scheduled|cancel_subscription|restore_subscription [--tier <tier>]\\n  outrank-cli marketplace buyer target-pages list <product-id>\\n  outrank-cli marketplace buyer target-pages add <product-id> --urls <url1,url2,...> [--source manual|discovered]\\n  outrank-cli marketplace buyer target-pages discover <product-id> [--source sitemap|root_url|integration] [--source-url <url>]\\n  outrank-cli marketplace buyer target-pages pause <target-page-id>\\n  outrank-cli marketplace buyer target-pages activate <target-page-id>\\n  outrank-cli marketplace buyer target-pages delete <target-page-id>\\n  outrank-cli marketplace buyer participation on <product-id>\\n  outrank-cli marketplace buyer participation off <product-id>\\n  outrank-cli marketplace buyer placements list <product-id> [--status all|live|in_progress|lost|rejected] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace buyer placements regenerate <placement-id>\\n  outrank-cli marketplace buyer placements revalidate <placement-id>\\n  outrank-cli marketplace buyer article get <placement-id>\\n  outrank-cli marketplace buyer article edit <placement-id> --json '<object>'\\n  outrank-cli marketplace buyer credits history <product-id> [--kind all|charge|refund] [--page <n>] [--page-size <n>]\\n\\nNotes:\\n  Seller onboarding wizard order: Blog (content details + Google Search Console) -> Articles (article settings + publishing schedule) -> Integration (marketplace CMS) -> Payouts (Stripe Express).\\n  `seller onboard` reports every remaining step, auto-adopts an existing reusable CMS without asking, and creates the Stripe Express account when the earlier steps are done and --country is provided.\\n  Admin-only commands (need an API key created by an org admin who still holds that role): settings update, all integrations writes, all stripe commands, complete-onboarding, placements decline, and buyer checkout/change-plan/participation. Buyer target-page writes are open to every org member.\\n  The mandatory buyer sequence: Enterprise backlink plan (subscribe-quote -> a human org admin completes checkout) -> add target pages -> participation on.\\n  Purchasing the Enterprise backlink plan is admin-only and happens through interactive Stripe checkout — surface subscription_management_url to the human.\\n\\nExamples:\\n  outrank-cli marketplace seller status <UUID-1>\\n  outrank-cli marketplace seller onboard <UUID-1> --country US\\n  outrank-cli marketplace seller settings update <UUID-1> --json '{\\\"dailyArticleLimit\\\":2,\\\"publishingDays\\\":[1,3,5]}'\\n  outrank-cli marketplace seller placements list <UUID-1> --status needs_approval\\n  outrank-cli marketplace seller placements approve <UUID-1>\\n  outrank-cli marketplace notifications list <UUID-1> --role seller\\n  outrank-cli marketplace buyer status <UUID-1>\\n  outrank-cli marketplace buyer target-pages add <UUID-1> --urls https://example.com/pricing,https://example.com/features\"\n  },\n  \"agent_guidance\": \"Choose `seller`, `buyer`, or `notifications`. Sellers earn by hosting marketplace backlinks in their articles; buyers spend backlink credits to place links on high-authority articles. Start buyers with `marketplace buyer status` and sellers with `marketplace seller status`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "help-seller-group": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli marketplace seller status <product-id> [--refresh-stripe]\\n  outrank-cli marketplace seller onboard <product-id> [--country <ISO2>]\\n  outrank-cli marketplace seller eligibility <product-id> [--refresh]\\n  outrank-cli marketplace seller eligibility recheck <product-id>\\n  outrank-cli marketplace seller settings get <product-id>\\n  outrank-cli marketplace seller settings update <product-id> --json '<object>'\\n  outrank-cli marketplace seller integrations status <product-id>\\n  outrank-cli marketplace seller integrations adopt <product-id>\\n  outrank-cli marketplace seller integrations claim <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller integrations set-activation <product-id> --integration <integration-id> --type <platform> --status active|disabled\\n  outrank-cli marketplace seller integrations delete <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller stripe onboard <product-id> --country <ISO2>\\n  outrank-cli marketplace seller stripe manage <product-id>\\n  outrank-cli marketplace seller stripe reset <product-id>\\n  outrank-cli marketplace seller complete-onboarding <product-id>\\n  outrank-cli marketplace seller placements list <product-id> [--status all|needs_approval|planned|live|link_not_found|lost] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace seller placements approve <placement-id>\\n  outrank-cli marketplace seller placements decline <placement-id>\\n  outrank-cli marketplace seller placements publish <placement-id>\\n  outrank-cli marketplace seller placements regenerate <placement-id>\\n  outrank-cli marketplace seller earnings <product-id>\\n  outrank-cli marketplace seller content-history <product-id> [--status <status>] [--limit <n>] [--offset <n>]\\n  outrank-cli marketplace notifications list <product-id> --role seller|buyer [--type <type>] [--sort oldest] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace notifications mark-read <product-id> --role seller|buyer [--ids <id1,id2,...>]\\n\\n  outrank-cli marketplace buyer status <product-id>\\n  outrank-cli marketplace buyer billing-status <product-id>\\n  outrank-cli marketplace buyer subscription <product-id>\\n  outrank-cli marketplace buyer subscribe-quote <product-id>\\n  outrank-cli marketplace buyer checkout <product-id> --tier <tier>\\n  outrank-cli marketplace buyer change-plan <product-id> --action change_tier|cancel_scheduled|cancel_subscription|restore_subscription [--tier <tier>]\\n  outrank-cli marketplace buyer target-pages list <product-id>\\n  outrank-cli marketplace buyer target-pages add <product-id> --urls <url1,url2,...> [--source manual|discovered]\\n  outrank-cli marketplace buyer target-pages discover <product-id> [--source sitemap|root_url|integration] [--source-url <url>]\\n  outrank-cli marketplace buyer target-pages pause <target-page-id>\\n  outrank-cli marketplace buyer target-pages activate <target-page-id>\\n  outrank-cli marketplace buyer target-pages delete <target-page-id>\\n  outrank-cli marketplace buyer participation on <product-id>\\n  outrank-cli marketplace buyer participation off <product-id>\\n  outrank-cli marketplace buyer placements list <product-id> [--status all|live|in_progress|lost|rejected] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace buyer placements regenerate <placement-id>\\n  outrank-cli marketplace buyer placements revalidate <placement-id>\\n  outrank-cli marketplace buyer article get <placement-id>\\n  outrank-cli marketplace buyer article edit <placement-id> --json '<object>'\\n  outrank-cli marketplace buyer credits history <product-id> [--kind all|charge|refund] [--page <n>] [--page-size <n>]\\n\\nNotes:\\n  Seller onboarding wizard order: Blog (content details + Google Search Console) -> Articles (article settings + publishing schedule) -> Integration (marketplace CMS) -> Payouts (Stripe Express).\\n  `seller onboard` reports every remaining step, auto-adopts an existing reusable CMS without asking, and creates the Stripe Express account when the earlier steps are done and --country is provided.\\n  Admin-only commands (need an API key created by an org admin who still holds that role): settings update, all integrations writes, all stripe commands, complete-onboarding, placements decline, and buyer checkout/change-plan/participation. Buyer target-page writes are open to every org member.\\n  The mandatory buyer sequence: Enterprise backlink plan (subscribe-quote -> a human org admin completes checkout) -> add target pages -> participation on.\\n  Purchasing the Enterprise backlink plan is admin-only and happens through interactive Stripe checkout — surface subscription_management_url to the human.\\n\\nExamples:\\n  outrank-cli marketplace seller status <UUID-1>\\n  outrank-cli marketplace seller onboard <UUID-1> --country US\\n  outrank-cli marketplace seller settings update <UUID-1> --json '{\\\"dailyArticleLimit\\\":2,\\\"publishingDays\\\":[1,3,5]}'\\n  outrank-cli marketplace seller placements list <UUID-1> --status needs_approval\\n  outrank-cli marketplace seller placements approve <UUID-1>\\n  outrank-cli marketplace notifications list <UUID-1> --role seller\\n  outrank-cli marketplace buyer status <UUID-1>\\n  outrank-cli marketplace buyer target-pages add <UUID-1> --urls https://example.com/pricing,https://example.com/features\"\n  },\n  \"agent_guidance\": \"Choose `seller`, `buyer`, or `notifications`. Sellers earn by hosting marketplace backlinks in their articles; buyers spend backlink credits to place links on high-authority articles. Start buyers with `marketplace buyer status` and sellers with `marketplace seller status`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "help-seller-integrations-group": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli marketplace seller status <product-id> [--refresh-stripe]\\n  outrank-cli marketplace seller onboard <product-id> [--country <ISO2>]\\n  outrank-cli marketplace seller eligibility <product-id> [--refresh]\\n  outrank-cli marketplace seller eligibility recheck <product-id>\\n  outrank-cli marketplace seller settings get <product-id>\\n  outrank-cli marketplace seller settings update <product-id> --json '<object>'\\n  outrank-cli marketplace seller integrations status <product-id>\\n  outrank-cli marketplace seller integrations adopt <product-id>\\n  outrank-cli marketplace seller integrations claim <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller integrations set-activation <product-id> --integration <integration-id> --type <platform> --status active|disabled\\n  outrank-cli marketplace seller integrations delete <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller stripe onboard <product-id> --country <ISO2>\\n  outrank-cli marketplace seller stripe manage <product-id>\\n  outrank-cli marketplace seller stripe reset <product-id>\\n  outrank-cli marketplace seller complete-onboarding <product-id>\\n  outrank-cli marketplace seller placements list <product-id> [--status all|needs_approval|planned|live|link_not_found|lost] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace seller placements approve <placement-id>\\n  outrank-cli marketplace seller placements decline <placement-id>\\n  outrank-cli marketplace seller placements publish <placement-id>\\n  outrank-cli marketplace seller placements regenerate <placement-id>\\n  outrank-cli marketplace seller earnings <product-id>\\n  outrank-cli marketplace seller content-history <product-id> [--status <status>] [--limit <n>] [--offset <n>]\\n  outrank-cli marketplace notifications list <product-id> --role seller|buyer [--type <type>] [--sort oldest] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace notifications mark-read <product-id> --role seller|buyer [--ids <id1,id2,...>]\\n\\n  outrank-cli marketplace buyer status <product-id>\\n  outrank-cli marketplace buyer billing-status <product-id>\\n  outrank-cli marketplace buyer subscription <product-id>\\n  outrank-cli marketplace buyer subscribe-quote <product-id>\\n  outrank-cli marketplace buyer checkout <product-id> --tier <tier>\\n  outrank-cli marketplace buyer change-plan <product-id> --action change_tier|cancel_scheduled|cancel_subscription|restore_subscription [--tier <tier>]\\n  outrank-cli marketplace buyer target-pages list <product-id>\\n  outrank-cli marketplace buyer target-pages add <product-id> --urls <url1,url2,...> [--source manual|discovered]\\n  outrank-cli marketplace buyer target-pages discover <product-id> [--source sitemap|root_url|integration] [--source-url <url>]\\n  outrank-cli marketplace buyer target-pages pause <target-page-id>\\n  outrank-cli marketplace buyer target-pages activate <target-page-id>\\n  outrank-cli marketplace buyer target-pages delete <target-page-id>\\n  outrank-cli marketplace buyer participation on <product-id>\\n  outrank-cli marketplace buyer participation off <product-id>\\n  outrank-cli marketplace buyer placements list <product-id> [--status all|live|in_progress|lost|rejected] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace buyer placements regenerate <placement-id>\\n  outrank-cli marketplace buyer placements revalidate <placement-id>\\n  outrank-cli marketplace buyer article get <placement-id>\\n  outrank-cli marketplace buyer article edit <placement-id> --json '<object>'\\n  outrank-cli marketplace buyer credits history <product-id> [--kind all|charge|refund] [--page <n>] [--page-size <n>]\\n\\nNotes:\\n  Seller onboarding wizard order: Blog (content details + Google Search Console) -> Articles (article settings + publishing schedule) -> Integration (marketplace CMS) -> Payouts (Stripe Express).\\n  `seller onboard` reports every remaining step, auto-adopts an existing reusable CMS without asking, and creates the Stripe Express account when the earlier steps are done and --country is provided.\\n  Admin-only commands (need an API key created by an org admin who still holds that role): settings update, all integrations writes, all stripe commands, complete-onboarding, placements decline, and buyer checkout/change-plan/participation. Buyer target-page writes are open to every org member.\\n  The mandatory buyer sequence: Enterprise backlink plan (subscribe-quote -> a human org admin completes checkout) -> add target pages -> participation on.\\n  Purchasing the Enterprise backlink plan is admin-only and happens through interactive Stripe checkout — surface subscription_management_url to the human.\\n\\nExamples:\\n  outrank-cli marketplace seller status <UUID-1>\\n  outrank-cli marketplace seller onboard <UUID-1> --country US\\n  outrank-cli marketplace seller settings update <UUID-1> --json '{\\\"dailyArticleLimit\\\":2,\\\"publishingDays\\\":[1,3,5]}'\\n  outrank-cli marketplace seller placements list <UUID-1> --status needs_approval\\n  outrank-cli marketplace seller placements approve <UUID-1>\\n  outrank-cli marketplace notifications list <UUID-1> --role seller\\n  outrank-cli marketplace buyer status <UUID-1>\\n  outrank-cli marketplace buyer target-pages add <UUID-1> --urls https://example.com/pricing,https://example.com/features\"\n  },\n  \"agent_guidance\": \"Choose `seller`, `buyer`, or `notifications`. Sellers earn by hosting marketplace backlinks in their articles; buyers spend backlink credits to place links on high-authority articles. Start buyers with `marketplace buyer status` and sellers with `marketplace seller status`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "help-seller-stripe-group": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "stripe",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli marketplace seller status <product-id> [--refresh-stripe]\\n  outrank-cli marketplace seller onboard <product-id> [--country <ISO2>]\\n  outrank-cli marketplace seller eligibility <product-id> [--refresh]\\n  outrank-cli marketplace seller eligibility recheck <product-id>\\n  outrank-cli marketplace seller settings get <product-id>\\n  outrank-cli marketplace seller settings update <product-id> --json '<object>'\\n  outrank-cli marketplace seller integrations status <product-id>\\n  outrank-cli marketplace seller integrations adopt <product-id>\\n  outrank-cli marketplace seller integrations claim <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller integrations set-activation <product-id> --integration <integration-id> --type <platform> --status active|disabled\\n  outrank-cli marketplace seller integrations delete <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller stripe onboard <product-id> --country <ISO2>\\n  outrank-cli marketplace seller stripe manage <product-id>\\n  outrank-cli marketplace seller stripe reset <product-id>\\n  outrank-cli marketplace seller complete-onboarding <product-id>\\n  outrank-cli marketplace seller placements list <product-id> [--status all|needs_approval|planned|live|link_not_found|lost] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace seller placements approve <placement-id>\\n  outrank-cli marketplace seller placements decline <placement-id>\\n  outrank-cli marketplace seller placements publish <placement-id>\\n  outrank-cli marketplace seller placements regenerate <placement-id>\\n  outrank-cli marketplace seller earnings <product-id>\\n  outrank-cli marketplace seller content-history <product-id> [--status <status>] [--limit <n>] [--offset <n>]\\n  outrank-cli marketplace notifications list <product-id> --role seller|buyer [--type <type>] [--sort oldest] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace notifications mark-read <product-id> --role seller|buyer [--ids <id1,id2,...>]\\n\\n  outrank-cli marketplace buyer status <product-id>\\n  outrank-cli marketplace buyer billing-status <product-id>\\n  outrank-cli marketplace buyer subscription <product-id>\\n  outrank-cli marketplace buyer subscribe-quote <product-id>\\n  outrank-cli marketplace buyer checkout <product-id> --tier <tier>\\n  outrank-cli marketplace buyer change-plan <product-id> --action change_tier|cancel_scheduled|cancel_subscription|restore_subscription [--tier <tier>]\\n  outrank-cli marketplace buyer target-pages list <product-id>\\n  outrank-cli marketplace buyer target-pages add <product-id> --urls <url1,url2,...> [--source manual|discovered]\\n  outrank-cli marketplace buyer target-pages discover <product-id> [--source sitemap|root_url|integration] [--source-url <url>]\\n  outrank-cli marketplace buyer target-pages pause <target-page-id>\\n  outrank-cli marketplace buyer target-pages activate <target-page-id>\\n  outrank-cli marketplace buyer target-pages delete <target-page-id>\\n  outrank-cli marketplace buyer participation on <product-id>\\n  outrank-cli marketplace buyer participation off <product-id>\\n  outrank-cli marketplace buyer placements list <product-id> [--status all|live|in_progress|lost|rejected] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace buyer placements regenerate <placement-id>\\n  outrank-cli marketplace buyer placements revalidate <placement-id>\\n  outrank-cli marketplace buyer article get <placement-id>\\n  outrank-cli marketplace buyer article edit <placement-id> --json '<object>'\\n  outrank-cli marketplace buyer credits history <product-id> [--kind all|charge|refund] [--page <n>] [--page-size <n>]\\n\\nNotes:\\n  Seller onboarding wizard order: Blog (content details + Google Search Console) -> Articles (article settings + publishing schedule) -> Integration (marketplace CMS) -> Payouts (Stripe Express).\\n  `seller onboard` reports every remaining step, auto-adopts an existing reusable CMS without asking, and creates the Stripe Express account when the earlier steps are done and --country is provided.\\n  Admin-only commands (need an API key created by an org admin who still holds that role): settings update, all integrations writes, all stripe commands, complete-onboarding, placements decline, and buyer checkout/change-plan/participation. Buyer target-page writes are open to every org member.\\n  The mandatory buyer sequence: Enterprise backlink plan (subscribe-quote -> a human org admin completes checkout) -> add target pages -> participation on.\\n  Purchasing the Enterprise backlink plan is admin-only and happens through interactive Stripe checkout — surface subscription_management_url to the human.\\n\\nExamples:\\n  outrank-cli marketplace seller status <UUID-1>\\n  outrank-cli marketplace seller onboard <UUID-1> --country US\\n  outrank-cli marketplace seller settings update <UUID-1> --json '{\\\"dailyArticleLimit\\\":2,\\\"publishingDays\\\":[1,3,5]}'\\n  outrank-cli marketplace seller placements list <UUID-1> --status needs_approval\\n  outrank-cli marketplace seller placements approve <UUID-1>\\n  outrank-cli marketplace notifications list <UUID-1> --role seller\\n  outrank-cli marketplace buyer status <UUID-1>\\n  outrank-cli marketplace buyer target-pages add <UUID-1> --urls https://example.com/pricing,https://example.com/features\"\n  },\n  \"agent_guidance\": \"Choose `seller`, `buyer`, or `notifications`. Sellers earn by hosting marketplace backlinks in their articles; buyers spend backlink credits to place links on high-authority articles. Start buyers with `marketplace buyer status` and sellers with `marketplace seller status`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "help-seller-placements-group": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli marketplace seller status <product-id> [--refresh-stripe]\\n  outrank-cli marketplace seller onboard <product-id> [--country <ISO2>]\\n  outrank-cli marketplace seller eligibility <product-id> [--refresh]\\n  outrank-cli marketplace seller eligibility recheck <product-id>\\n  outrank-cli marketplace seller settings get <product-id>\\n  outrank-cli marketplace seller settings update <product-id> --json '<object>'\\n  outrank-cli marketplace seller integrations status <product-id>\\n  outrank-cli marketplace seller integrations adopt <product-id>\\n  outrank-cli marketplace seller integrations claim <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller integrations set-activation <product-id> --integration <integration-id> --type <platform> --status active|disabled\\n  outrank-cli marketplace seller integrations delete <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller stripe onboard <product-id> --country <ISO2>\\n  outrank-cli marketplace seller stripe manage <product-id>\\n  outrank-cli marketplace seller stripe reset <product-id>\\n  outrank-cli marketplace seller complete-onboarding <product-id>\\n  outrank-cli marketplace seller placements list <product-id> [--status all|needs_approval|planned|live|link_not_found|lost] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace seller placements approve <placement-id>\\n  outrank-cli marketplace seller placements decline <placement-id>\\n  outrank-cli marketplace seller placements publish <placement-id>\\n  outrank-cli marketplace seller placements regenerate <placement-id>\\n  outrank-cli marketplace seller earnings <product-id>\\n  outrank-cli marketplace seller content-history <product-id> [--status <status>] [--limit <n>] [--offset <n>]\\n  outrank-cli marketplace notifications list <product-id> --role seller|buyer [--type <type>] [--sort oldest] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace notifications mark-read <product-id> --role seller|buyer [--ids <id1,id2,...>]\\n\\n  outrank-cli marketplace buyer status <product-id>\\n  outrank-cli marketplace buyer billing-status <product-id>\\n  outrank-cli marketplace buyer subscription <product-id>\\n  outrank-cli marketplace buyer subscribe-quote <product-id>\\n  outrank-cli marketplace buyer checkout <product-id> --tier <tier>\\n  outrank-cli marketplace buyer change-plan <product-id> --action change_tier|cancel_scheduled|cancel_subscription|restore_subscription [--tier <tier>]\\n  outrank-cli marketplace buyer target-pages list <product-id>\\n  outrank-cli marketplace buyer target-pages add <product-id> --urls <url1,url2,...> [--source manual|discovered]\\n  outrank-cli marketplace buyer target-pages discover <product-id> [--source sitemap|root_url|integration] [--source-url <url>]\\n  outrank-cli marketplace buyer target-pages pause <target-page-id>\\n  outrank-cli marketplace buyer target-pages activate <target-page-id>\\n  outrank-cli marketplace buyer target-pages delete <target-page-id>\\n  outrank-cli marketplace buyer participation on <product-id>\\n  outrank-cli marketplace buyer participation off <product-id>\\n  outrank-cli marketplace buyer placements list <product-id> [--status all|live|in_progress|lost|rejected] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace buyer placements regenerate <placement-id>\\n  outrank-cli marketplace buyer placements revalidate <placement-id>\\n  outrank-cli marketplace buyer article get <placement-id>\\n  outrank-cli marketplace buyer article edit <placement-id> --json '<object>'\\n  outrank-cli marketplace buyer credits history <product-id> [--kind all|charge|refund] [--page <n>] [--page-size <n>]\\n\\nNotes:\\n  Seller onboarding wizard order: Blog (content details + Google Search Console) -> Articles (article settings + publishing schedule) -> Integration (marketplace CMS) -> Payouts (Stripe Express).\\n  `seller onboard` reports every remaining step, auto-adopts an existing reusable CMS without asking, and creates the Stripe Express account when the earlier steps are done and --country is provided.\\n  Admin-only commands (need an API key created by an org admin who still holds that role): settings update, all integrations writes, all stripe commands, complete-onboarding, placements decline, and buyer checkout/change-plan/participation. Buyer target-page writes are open to every org member.\\n  The mandatory buyer sequence: Enterprise backlink plan (subscribe-quote -> a human org admin completes checkout) -> add target pages -> participation on.\\n  Purchasing the Enterprise backlink plan is admin-only and happens through interactive Stripe checkout — surface subscription_management_url to the human.\\n\\nExamples:\\n  outrank-cli marketplace seller status <UUID-1>\\n  outrank-cli marketplace seller onboard <UUID-1> --country US\\n  outrank-cli marketplace seller settings update <UUID-1> --json '{\\\"dailyArticleLimit\\\":2,\\\"publishingDays\\\":[1,3,5]}'\\n  outrank-cli marketplace seller placements list <UUID-1> --status needs_approval\\n  outrank-cli marketplace seller placements approve <UUID-1>\\n  outrank-cli marketplace notifications list <UUID-1> --role seller\\n  outrank-cli marketplace buyer status <UUID-1>\\n  outrank-cli marketplace buyer target-pages add <UUID-1> --urls https://example.com/pricing,https://example.com/features\"\n  },\n  \"agent_guidance\": \"Choose `seller`, `buyer`, or `notifications`. Sellers earn by hosting marketplace backlinks in their articles; buyers spend backlink credits to place links on high-authority articles. Start buyers with `marketplace buyer status` and sellers with `marketplace seller status`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "help-seller-eligibility-group": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "eligibility",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli marketplace seller status <product-id> [--refresh-stripe]\\n  outrank-cli marketplace seller onboard <product-id> [--country <ISO2>]\\n  outrank-cli marketplace seller eligibility <product-id> [--refresh]\\n  outrank-cli marketplace seller eligibility recheck <product-id>\\n  outrank-cli marketplace seller settings get <product-id>\\n  outrank-cli marketplace seller settings update <product-id> --json '<object>'\\n  outrank-cli marketplace seller integrations status <product-id>\\n  outrank-cli marketplace seller integrations adopt <product-id>\\n  outrank-cli marketplace seller integrations claim <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller integrations set-activation <product-id> --integration <integration-id> --type <platform> --status active|disabled\\n  outrank-cli marketplace seller integrations delete <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller stripe onboard <product-id> --country <ISO2>\\n  outrank-cli marketplace seller stripe manage <product-id>\\n  outrank-cli marketplace seller stripe reset <product-id>\\n  outrank-cli marketplace seller complete-onboarding <product-id>\\n  outrank-cli marketplace seller placements list <product-id> [--status all|needs_approval|planned|live|link_not_found|lost] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace seller placements approve <placement-id>\\n  outrank-cli marketplace seller placements decline <placement-id>\\n  outrank-cli marketplace seller placements publish <placement-id>\\n  outrank-cli marketplace seller placements regenerate <placement-id>\\n  outrank-cli marketplace seller earnings <product-id>\\n  outrank-cli marketplace seller content-history <product-id> [--status <status>] [--limit <n>] [--offset <n>]\\n  outrank-cli marketplace notifications list <product-id> --role seller|buyer [--type <type>] [--sort oldest] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace notifications mark-read <product-id> --role seller|buyer [--ids <id1,id2,...>]\\n\\n  outrank-cli marketplace buyer status <product-id>\\n  outrank-cli marketplace buyer billing-status <product-id>\\n  outrank-cli marketplace buyer subscription <product-id>\\n  outrank-cli marketplace buyer subscribe-quote <product-id>\\n  outrank-cli marketplace buyer checkout <product-id> --tier <tier>\\n  outrank-cli marketplace buyer change-plan <product-id> --action change_tier|cancel_scheduled|cancel_subscription|restore_subscription [--tier <tier>]\\n  outrank-cli marketplace buyer target-pages list <product-id>\\n  outrank-cli marketplace buyer target-pages add <product-id> --urls <url1,url2,...> [--source manual|discovered]\\n  outrank-cli marketplace buyer target-pages discover <product-id> [--source sitemap|root_url|integration] [--source-url <url>]\\n  outrank-cli marketplace buyer target-pages pause <target-page-id>\\n  outrank-cli marketplace buyer target-pages activate <target-page-id>\\n  outrank-cli marketplace buyer target-pages delete <target-page-id>\\n  outrank-cli marketplace buyer participation on <product-id>\\n  outrank-cli marketplace buyer participation off <product-id>\\n  outrank-cli marketplace buyer placements list <product-id> [--status all|live|in_progress|lost|rejected] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace buyer placements regenerate <placement-id>\\n  outrank-cli marketplace buyer placements revalidate <placement-id>\\n  outrank-cli marketplace buyer article get <placement-id>\\n  outrank-cli marketplace buyer article edit <placement-id> --json '<object>'\\n  outrank-cli marketplace buyer credits history <product-id> [--kind all|charge|refund] [--page <n>] [--page-size <n>]\\n\\nNotes:\\n  Seller onboarding wizard order: Blog (content details + Google Search Console) -> Articles (article settings + publishing schedule) -> Integration (marketplace CMS) -> Payouts (Stripe Express).\\n  `seller onboard` reports every remaining step, auto-adopts an existing reusable CMS without asking, and creates the Stripe Express account when the earlier steps are done and --country is provided.\\n  Admin-only commands (need an API key created by an org admin who still holds that role): settings update, all integrations writes, all stripe commands, complete-onboarding, placements decline, and buyer checkout/change-plan/participation. Buyer target-page writes are open to every org member.\\n  The mandatory buyer sequence: Enterprise backlink plan (subscribe-quote -> a human org admin completes checkout) -> add target pages -> participation on.\\n  Purchasing the Enterprise backlink plan is admin-only and happens through interactive Stripe checkout — surface subscription_management_url to the human.\\n\\nExamples:\\n  outrank-cli marketplace seller status <UUID-1>\\n  outrank-cli marketplace seller onboard <UUID-1> --country US\\n  outrank-cli marketplace seller settings update <UUID-1> --json '{\\\"dailyArticleLimit\\\":2,\\\"publishingDays\\\":[1,3,5]}'\\n  outrank-cli marketplace seller placements list <UUID-1> --status needs_approval\\n  outrank-cli marketplace seller placements approve <UUID-1>\\n  outrank-cli marketplace notifications list <UUID-1> --role seller\\n  outrank-cli marketplace buyer status <UUID-1>\\n  outrank-cli marketplace buyer target-pages add <UUID-1> --urls https://example.com/pricing,https://example.com/features\"\n  },\n  \"agent_guidance\": \"Choose `seller`, `buyer`, or `notifications`. Sellers earn by hosting marketplace backlinks in their articles; buyers spend backlink credits to place links on high-authority articles. Start buyers with `marketplace buyer status` and sellers with `marketplace seller status`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "status-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-refresh-stripe": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--refresh-stripe"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status?refresh_stripe=true",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-not-found": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-missing-product-id": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "status"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "status-no-api-key": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "onboard-already-enrolled": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "onboard",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"status\": {\n      \"enrollment\": {\n        \"completed\": true\n      },\n      \"onboarding\": {}\n    },\n    \"actions\": []\n  },\n  \"agent_guidance\": \"Seller onboarding is already complete for this product. Seller onboarding is complete.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "onboard-not-enrolled-no-op": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "onboard",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"status\": {\n      \"enrollment\": {\n        \"completed\": false\n      },\n      \"onboarding\": {\n        \"cms\": {\n          \"connected\": false,\n          \"existing\": false\n        },\n        \"gsc\": {\n          \"connected\": false\n        },\n        \"stripe\": {\n          \"accountConnected\": false,\n          \"payoutsEnabled\": false\n        }\n      }\n    },\n    \"actions\": [],\n    \"eligibility\": {\n      \"eligible\": false,\n      \"reasons\": [\n        \"payouts_incomplete\"\n      ]\n    }\n  },\n  \"agent_guidance\": \"Seller onboarding in progress (wizard order: Blog -> Articles -> Integration -> Payouts). Steps to complete with the human: Blog step: collect the product's content details from the human (outrank-cli products get/update aaaaaaaa-0000-4000-8000-000000000001) and connect Google Search Console (outrank-cli products gsc connect aaaaaaaa-0000-4000-8000-000000000001, then gsc poll and gsc set-property) — required before anything else; Articles step: review article settings (outrank-cli products output-settings get/update aaaaaaaa-0000-4000-8000-000000000001) and set the publishing schedule (outrank-cli marketplace seller settings update aaaaaaaa-0000-4000-8000-000000000001 --json '{\\\"dailyArticleLimit\\\":<1-3>,\\\"publishingDays\\\":[...]}'); Integration step: no reusable CMS was found — run outrank-cli marketplace seller integrations status aaaaaaaa-0000-4000-8000-000000000001, connect a supported platform via the products integrations commands, then claim it for the marketplace; Payouts step: ask the human for the two-letter country of their payout bank account, then run outrank-cli marketplace seller stripe onboard aaaaaaaa-0000-4000-8000-000000000001 --country <ISO2> (or re-run this command with --country); Finish with outrank-cli marketplace seller complete-onboarding aaaaaaaa-0000-4000-8000-000000000001, then re-check outrank-cli marketplace seller status aaaaaaaa-0000-4000-8000-000000000001. Eligibility: Not eligible yet. Always report the eligibility check results to the human.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      },
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/eligibility?refresh=true",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "onboard-adopt-success": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "onboard",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"status\": {\n      \"enrollment\": {\n        \"completed\": false\n      },\n      \"onboarding\": {\n        \"cms\": {\n          \"connected\": false,\n          \"existing\": true\n        },\n        \"gsc\": {\n          \"connected\": false\n        },\n        \"stripe\": {\n          \"accountConnected\": false,\n          \"payoutsEnabled\": false\n        }\n      }\n    },\n    \"actions\": [\n      {\n        \"action\": \"adopt-existing-integration\",\n        \"ok\": true,\n        \"result\": {\n          \"integrationId\": \"bbbbbbbb-0000-4000-8000-000000000002\",\n          \"integrationType\": \"wordpress\"\n        }\n      }\n    ],\n    \"eligibility\": {\n      \"eligible\": false,\n      \"reasons\": [\n        \"payouts_incomplete\"\n      ]\n    }\n  },\n  \"agent_guidance\": \"Seller onboarding in progress (wizard order: Blog -> Articles -> Integration -> Payouts). Automatic actions taken: adopt-existing-integration (ok). Steps to complete with the human: Blog step: collect the product's content details from the human (outrank-cli products get/update aaaaaaaa-0000-4000-8000-000000000001) and connect Google Search Console (outrank-cli products gsc connect aaaaaaaa-0000-4000-8000-000000000001, then gsc poll and gsc set-property) — required before anything else; Articles step: review article settings (outrank-cli products output-settings get/update aaaaaaaa-0000-4000-8000-000000000001) and set the publishing schedule (outrank-cli marketplace seller settings update aaaaaaaa-0000-4000-8000-000000000001 --json '{\\\"dailyArticleLimit\\\":<1-3>,\\\"publishingDays\\\":[...]}'); Payouts step: ask the human for the two-letter country of their payout bank account, then run outrank-cli marketplace seller stripe onboard aaaaaaaa-0000-4000-8000-000000000001 --country <ISO2> (or re-run this command with --country); Finish with outrank-cli marketplace seller complete-onboarding aaaaaaaa-0000-4000-8000-000000000001, then re-check outrank-cli marketplace seller status aaaaaaaa-0000-4000-8000-000000000001. Eligibility: Not eligible yet. Always report the eligibility check results to the human.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      },
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/adopt",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      },
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/eligibility?refresh=true",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "onboard-adopt-fails": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "onboard",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"status\": {\n      \"enrollment\": {\n        \"completed\": false\n      },\n      \"onboarding\": {\n        \"cms\": {\n          \"connected\": false,\n          \"existing\": true\n        },\n        \"gsc\": {\n          \"connected\": false\n        },\n        \"stripe\": {\n          \"accountConnected\": false,\n          \"payoutsEnabled\": false\n        }\n      }\n    },\n    \"actions\": [\n      {\n        \"action\": \"adopt-existing-integration\",\n        \"ok\": false,\n        \"result\": {\n          \"code\": \"ADOPT_FAILED\",\n          \"message\": \"the existing integration is not reusable\"\n        }\n      }\n    ],\n    \"eligibility\": {\n      \"eligible\": false,\n      \"reasons\": [\n        \"payouts_incomplete\"\n      ]\n    }\n  },\n  \"agent_guidance\": \"Seller onboarding in progress (wizard order: Blog -> Articles -> Integration -> Payouts). Automatic actions taken: adopt-existing-integration (failed). Steps to complete with the human: Blog step: collect the product's content details from the human (outrank-cli products get/update aaaaaaaa-0000-4000-8000-000000000001) and connect Google Search Console (outrank-cli products gsc connect aaaaaaaa-0000-4000-8000-000000000001, then gsc poll and gsc set-property) — required before anything else; Articles step: review article settings (outrank-cli products output-settings get/update aaaaaaaa-0000-4000-8000-000000000001) and set the publishing schedule (outrank-cli marketplace seller settings update aaaaaaaa-0000-4000-8000-000000000001 --json '{\\\"dailyArticleLimit\\\":<1-3>,\\\"publishingDays\\\":[...]}'); Integration step: adopting the existing CMS failed (the existing integration is not reusable) — run outrank-cli marketplace seller integrations status aaaaaaaa-0000-4000-8000-000000000001, connect a new supported platform via the products integrations commands, then claim it for the marketplace; Payouts step: ask the human for the two-letter country of their payout bank account, then run outrank-cli marketplace seller stripe onboard aaaaaaaa-0000-4000-8000-000000000001 --country <ISO2> (or re-run this command with --country); Finish with outrank-cli marketplace seller complete-onboarding aaaaaaaa-0000-4000-8000-000000000001, then re-check outrank-cli marketplace seller status aaaaaaaa-0000-4000-8000-000000000001. Eligibility: Not eligible yet. Always report the eligibility check results to the human.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      },
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/adopt",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      },
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/eligibility?refresh=true",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "onboard-stripe-success": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "onboard",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--country",
+      "US"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"status\": {\n      \"enrollment\": {\n        \"completed\": false\n      },\n      \"onboarding\": {\n        \"cms\": {\n          \"connected\": true,\n          \"existing\": false\n        },\n        \"gsc\": {\n          \"connected\": true\n        },\n        \"stripe\": {\n          \"accountConnected\": false,\n          \"payoutsEnabled\": false\n        }\n      }\n    },\n    \"actions\": [\n      {\n        \"action\": \"stripe-express-onboard\",\n        \"ok\": true,\n        \"result\": {\n          \"onboardingUrl\": \"https://connect.stripe.com/setup/e2e\"\n        }\n      }\n    ],\n    \"eligibility\": {\n      \"eligible\": false,\n      \"reasons\": [\n        \"payouts_incomplete\"\n      ]\n    }\n  },\n  \"agent_guidance\": \"Seller onboarding in progress (wizard order: Blog -> Articles -> Integration -> Payouts). Automatic actions taken: stripe-express-onboard (ok). Steps to complete with the human: Articles step: review article settings (outrank-cli products output-settings get/update aaaaaaaa-0000-4000-8000-000000000001) and set the publishing schedule (outrank-cli marketplace seller settings update aaaaaaaa-0000-4000-8000-000000000001 --json '{\\\"dailyArticleLimit\\\":<1-3>,\\\"publishingDays\\\":[...]}'); Payouts step: the Stripe Express account is ready — the human must open https://connect.stripe.com/setup/e2e in a browser and finish identity and bank details; Finish with outrank-cli marketplace seller complete-onboarding aaaaaaaa-0000-4000-8000-000000000001, then re-check outrank-cli marketplace seller status aaaaaaaa-0000-4000-8000-000000000001. Eligibility: Not eligible yet. Always report the eligibility check results to the human.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      },
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/stripe-connect/onboard",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "country": "US"
+        }
+      },
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/eligibility?refresh=true",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "onboard-stripe-fails": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "onboard",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--country",
+      "US"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"status\": {\n      \"enrollment\": {\n        \"completed\": false\n      },\n      \"onboarding\": {\n        \"cms\": {\n          \"connected\": true,\n          \"existing\": false\n        },\n        \"gsc\": {\n          \"connected\": true\n        },\n        \"stripe\": {\n          \"accountConnected\": false,\n          \"payoutsEnabled\": false\n        }\n      }\n    },\n    \"actions\": [\n      {\n        \"action\": \"stripe-express-onboard\",\n        \"ok\": false,\n        \"result\": {\n          \"code\": \"STRIPE_ERROR\",\n          \"message\": \"country is not supported\"\n        }\n      }\n    ],\n    \"eligibility\": {\n      \"eligible\": false,\n      \"reasons\": [\n        \"payouts_incomplete\"\n      ]\n    }\n  },\n  \"agent_guidance\": \"Seller onboarding in progress (wizard order: Blog -> Articles -> Integration -> Payouts). Automatic actions taken: stripe-express-onboard (failed). Steps to complete with the human: Articles step: review article settings (outrank-cli products output-settings get/update aaaaaaaa-0000-4000-8000-000000000001) and set the publishing schedule (outrank-cli marketplace seller settings update aaaaaaaa-0000-4000-8000-000000000001 --json '{\\\"dailyArticleLimit\\\":<1-3>,\\\"publishingDays\\\":[...]}'); Payouts step: Stripe Express could not be created yet — finish the earlier steps, then run outrank-cli marketplace seller stripe onboard aaaaaaaa-0000-4000-8000-000000000001 --country US; Finish with outrank-cli marketplace seller complete-onboarding aaaaaaaa-0000-4000-8000-000000000001, then re-check outrank-cli marketplace seller status aaaaaaaa-0000-4000-8000-000000000001. Eligibility: Not eligible yet. Always report the eligibility check results to the human.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      },
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/stripe-connect/onboard",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "country": "US"
+        }
+      },
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/eligibility?refresh=true",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "onboard-no-country-skips-stripe": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "onboard",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"status\": {\n      \"enrollment\": {\n        \"completed\": false\n      },\n      \"onboarding\": {\n        \"cms\": {\n          \"connected\": true,\n          \"existing\": false\n        },\n        \"gsc\": {\n          \"connected\": true\n        },\n        \"stripe\": {\n          \"accountConnected\": false,\n          \"payoutsEnabled\": false\n        }\n      }\n    },\n    \"actions\": [],\n    \"eligibility\": {\n      \"eligible\": false,\n      \"reasons\": [\n        \"payouts_incomplete\"\n      ]\n    }\n  },\n  \"agent_guidance\": \"Seller onboarding in progress (wizard order: Blog -> Articles -> Integration -> Payouts). Steps to complete with the human: Articles step: review article settings (outrank-cli products output-settings get/update aaaaaaaa-0000-4000-8000-000000000001) and set the publishing schedule (outrank-cli marketplace seller settings update aaaaaaaa-0000-4000-8000-000000000001 --json '{\\\"dailyArticleLimit\\\":<1-3>,\\\"publishingDays\\\":[...]}'); Payouts step: ask the human for the two-letter country of their payout bank account, then run outrank-cli marketplace seller stripe onboard aaaaaaaa-0000-4000-8000-000000000001 --country <ISO2> (or re-run this command with --country); Finish with outrank-cli marketplace seller complete-onboarding aaaaaaaa-0000-4000-8000-000000000001, then re-check outrank-cli marketplace seller status aaaaaaaa-0000-4000-8000-000000000001. Eligibility: Not eligible yet. Always report the eligibility check results to the human.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      },
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/eligibility?refresh=true",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "onboard-network-error-on-adopt": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "onboard",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      },
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/adopt",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "onboard-missing-product-id": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "onboard"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "eligibility-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "eligibility",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/eligibility",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "eligibility-refresh": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "eligibility",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--refresh"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/eligibility?refresh=true",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "eligibility-missing-product-id": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "eligibility"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "eligibility-recheck-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "eligibility",
+      "recheck",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/eligibility/recheck",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "eligibility-recheck-missing-product-id": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "eligibility",
+      "recheck"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "settings-get-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "settings",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "settings-get-not-found": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "settings",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "settings-update-json-inline": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"dailyArticleLimit\":2,\"publishingDays\":[1,3,5]}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "dailyArticleLimit": 2,
+          "publishingDays": [
+            1,
+            3,
+            5
+          ]
+        }
+      }
+    ]
+  },
+  "settings-update-json-file": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/sellerSettingsUpdate.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "dailyArticleLimit": 2,
+          "publishingDays": [
+            1,
+            3,
+            5
+          ]
+        }
+      }
+    ]
+  },
+  "settings-update-json-stdin": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "dailyArticleLimit": 1,
+          "publishingDays": [
+            2,
+            4
+          ]
+        }
+      }
+    ]
+  },
+  "settings-update-no-source": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "settings-update-two-sources": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"dailyArticleLimit\":2,\"publishingDays\":[1,3,5]}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/sellerSettingsUpdate.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "settings-update-admin-role-required": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"dailyArticleLimit\":2,\"publishingDays\":[1,3,5]}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"ADMIN_ROLE_REQUIRED\",\n    \"message\": \"This action requires an organization admin API key.\"\n  },\n  \"agent_guidance\": \"Ask an organization admin to run this, or create a new API key while holding the admin role.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "dailyArticleLimit": 2,
+          "publishingDays": [
+            1,
+            3,
+            5
+          ]
+        }
+      }
+    ]
+  },
+  "integrations-status-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "integrations-status-not-found": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "integrations-adopt-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "adopt",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/adopt",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "integrations-adopt-not-found": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "adopt",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/adopt",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "integrations-claim-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "claim",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--integration",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--type",
+      "wordpress"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/claim",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "integrationId": "bbbbbbbb-0000-4000-8000-000000000002",
+          "integrationType": "wordpress"
+        }
+      }
+    ]
+  },
+  "integrations-claim-missing-integration": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "claim",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--type",
+      "wordpress"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --integration <integration-id>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "integrations-claim-missing-type": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "claim",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--integration",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --type <platform>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "integrations-set-activation-active": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "set-activation",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--integration",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--type",
+      "wordpress",
+      "--status",
+      "active"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "integrationType": "wordpress",
+          "activationStatus": "active"
+        }
+      }
+    ]
+  },
+  "integrations-set-activation-disabled": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "set-activation",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--integration",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--type",
+      "wordpress",
+      "--status",
+      "disabled"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "integrationType": "wordpress",
+          "activationStatus": "disabled"
+        }
+      }
+    ]
+  },
+  "integrations-set-activation-invalid-status": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "set-activation",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--integration",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--type",
+      "wordpress",
+      "--status",
+      "invalid"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"VALIDATION_ERROR\",\n    \"message\": \"activationStatus must be one of: active, disabled.\"\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "integrationType": "wordpress",
+          "activationStatus": "invalid"
+        }
+      }
+    ]
+  },
+  "integrations-set-activation-missing-integration": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "set-activation",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--type",
+      "wordpress",
+      "--status",
+      "active"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --integration <integration-id>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "integrations-delete-success": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--integration",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--type",
+      "wordpress"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/bbbbbbbb-0000-4000-8000-000000000002?integration_type=wordpress",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "integrations-delete-204-non-json": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--integration",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--type",
+      "wordpress"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 204 without a JSON body.\",\n    \"details\": {\n      \"status\": 204,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/bbbbbbbb-0000-4000-8000-000000000002?integration_type=wordpress\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/integrations/bbbbbbbb-0000-4000-8000-000000000002?integration_type=wordpress",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "integrations-delete-missing-type": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--integration",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --type <platform>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "stripe-onboard-with-country": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "stripe",
+      "onboard",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--country",
+      "FR"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/stripe-connect/onboard",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "country": "FR"
+        }
+      }
+    ]
+  },
+  "stripe-onboard-no-country": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "stripe",
+      "onboard",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/stripe-connect/onboard",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
+  },
+  "stripe-onboard-missing-product-id": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "stripe",
+      "onboard",
+      "--country",
+      "FR"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "stripe-manage-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "stripe",
+      "manage",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/stripe-connect/manage",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "stripe-manage-not-found": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "stripe",
+      "manage",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/stripe-connect/manage",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "stripe-reset-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "stripe",
+      "reset",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/stripe-connect/reset",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "stripe-reset-not-found": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "stripe",
+      "reset",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/stripe-connect/reset",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "complete-onboarding-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "complete-onboarding",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/complete-onboarding",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "complete-onboarding-missing-product-id": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "complete-onboarding"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "placements-list-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/placements",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "placements-list-status-search": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--status",
+      "needs_approval",
+      "--search",
+      "guest post"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/placements?status=needs_approval&search=guest+post",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "placements-list-page-page-size": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--page",
+      "2",
+      "--page-size",
+      "20"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/placements?page=2&page_size=20",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "placements-list-page-zero-error": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--page",
+      "0"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--page must be >= 1.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "placements-list-page-size-over-max-error": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--page-size",
+      "101"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--page-size must be <= 100.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "placements-approve-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "approve",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/marketplace/placements/bbbbbbbb-0000-4000-8000-000000000002/approve",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "placements-decline-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "decline",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/marketplace/placements/bbbbbbbb-0000-4000-8000-000000000002/decline",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "placements-publish-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "publish",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/marketplace/placements/bbbbbbbb-0000-4000-8000-000000000002/publish",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "placements-regenerate-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "regenerate",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/marketplace/placements/bbbbbbbb-0000-4000-8000-000000000002/regenerate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "placements-approve-missing-placement-id": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "approve"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <placement-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "placements-unknown-subcommand": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements",
+      "frobnicate",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown marketplace seller placements subcommand: frobnicate.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "earnings-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "earnings",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/earnings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "earnings-not-found": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "earnings",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/earnings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "earnings-non-json-response": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "earnings",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 502 without a JSON body.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/earnings\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/earnings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "content-history-basic": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "content-history",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles?product_id=aaaaaaaa-0000-4000-8000-000000000001&track_scope=marketplace",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "content-history-filters": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "content-history",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--status",
+      "published",
+      "--limit",
+      "5",
+      "--offset",
+      "10"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles?product_id=aaaaaaaa-0000-4000-8000-000000000001&track_scope=marketplace&status=published&limit=5&offset=10",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "content-history-missing-product-id": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "content-history"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "seller-unknown-subcommand": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "frobnicate",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown marketplace seller subcommand: frobnicate.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "seller-settings-bare-unknown-subcommand": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "settings"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown marketplace seller settings subcommand: undefined.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "seller-integrations-bare-unknown-subcommand": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "integrations"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown marketplace seller integrations subcommand: undefined.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "seller-stripe-bare-missing-product-id": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "stripe"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "seller-placements-bare-unknown-subcommand": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "placements"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown marketplace seller placements subcommand: undefined.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

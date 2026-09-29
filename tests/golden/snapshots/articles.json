@@ -1,0 +1,819 @@
+{
+  "help": {
+    "argv": [
+      "articles",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli articles list [--product <product-id>] [--status generated|approved|published|failed|deleted] [--title <text>] [--keyword <text>] [--content <text>] [--slug <text>] [--created-from <date>] [--created-to <date>] [--scheduled-from <date>] [--scheduled-to <date>] [--sort-by created_at|status|title] [--sort-order asc|desc] [--limit <n>] [--offset <n>]\\n  outrank-cli articles get <article-id>\\n  outrank-cli articles get-content <article-id> [--format markdown|html]\\n  outrank-cli articles update <article-id> --json <object>\\n  outrank-cli articles update-content <article-id> --json <object>\\n  outrank-cli articles replace <article-id> --json <object>\\n  outrank-cli articles bulk-replace --json <object>\\n  outrank-cli articles upload-image --file <path> [--article <article-id>] [--keyword <text>]\\n  outrank-cli articles upload-featured-image <article-id> --file <path>\\n  outrank-cli articles retry-publish <article-id>\\n  outrank-cli articles delete <article-id>\\n  outrank-cli articles precreate <keyword-id>  # eligible future scheduled keyword only\\n  outrank-cli articles generate <keyword-id>   # scheduled for today only\\n\\nJSON Input:\\n  Use one of: --json '<object>', --json-file payload.json, or --json-stdin\\n\\nExamples:\\n  outrank-cli articles list --product <UUID-1> --status published --limit 20\\n  outrank-cli articles get <UUID-1>\\n  outrank-cli articles get-content <UUID-1> --format html\\n  outrank-cli articles update <UUID-1> --json '{\\\"title\\\":\\\"New title\\\"}'\\n  outrank-cli articles update <UUID-1> --json '{\\\"image_url\\\":\\\"https://example.com/featured.jpg\\\"}'\\n  outrank-cli articles update-content <UUID-1> --json-file article-content.json\\n  outrank-cli articles replace <UUID-1> --json '{\\\"find\\\":\\\"Old brand\\\",\\\"replace_with\\\":\\\"New brand\\\",\\\"preview_only\\\":true}'\\n  outrank-cli articles bulk-replace --json-file bulk-replace.json\\n  outrank-cli articles upload-image --file .\\\\diagram.png --article <UUID-1>\\n  outrank-cli articles upload-featured-image <UUID-1> --file .\\\\hero.jpg\\n  outrank-cli articles retry-publish <UUID-1>\\n  outrank-cli articles precreate <UUID-1>\\n  outrank-cli articles generate <UUID-1>\"\n  },\n  \"agent_guidance\": \"Choose one of: list, get, get-content, update, update-content, replace, bulk-replace, upload-image, upload-featured-image, retry-publish, delete, precreate, generate.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-all-filters": {
+    "argv": [
+      "articles",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--status",
+      "published",
+      "--title",
+      "crm",
+      "--keyword",
+      "email marketing",
+      "--content",
+      "automation",
+      "--slug",
+      "best-crm-software",
+      "--created-from",
+      "2026-01-01",
+      "--created-to",
+      "2026-12-31",
+      "--scheduled-from",
+      "2026-01-01",
+      "--scheduled-to",
+      "2026-12-31",
+      "--sort-by",
+      "created_at",
+      "--sort-order",
+      "desc",
+      "--limit",
+      "20",
+      "--offset",
+      "10"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles?product_id=aaaaaaaa-0000-4000-8000-000000000001&status=published&title=crm&keyword=email+marketing&content=automation&slug=best-crm-software&created_from=2026-01-01&created_to=2026-12-31&scheduled_from=2026-01-01&scheduled_to=2026-12-31&sort_by=created_at&sort_order=desc&limit=20&offset=10",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-no-filters": {
+    "argv": [
+      "articles",
+      "list"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-limit-out-of-range": {
+    "argv": [
+      "articles",
+      "list",
+      "--limit",
+      "101"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be <= 100.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-not-found": {
+    "argv": [
+      "articles",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-non-json": {
+    "argv": [
+      "articles",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 502 without a JSON body.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/articles\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-network-error": {
+    "argv": [
+      "articles",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-no-key": {
+    "argv": [
+      "articles",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "get": {
+    "argv": [
+      "articles",
+      "get",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "get-missing-id": {
+    "argv": [
+      "articles",
+      "get"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <article-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "get-content-markdown": {
+    "argv": [
+      "articles",
+      "get-content",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--format",
+      "markdown"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/content?format=markdown",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "get-content-html": {
+    "argv": [
+      "articles",
+      "get-content",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--format",
+      "html"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/content?format=html",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "get-content-no-format": {
+    "argv": [
+      "articles",
+      "get-content",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/content",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "update-json-inline": {
+    "argv": [
+      "articles",
+      "update",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"title\":\"New title\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "title": "New title"
+        }
+      }
+    ]
+  },
+  "update-json-file": {
+    "argv": [
+      "articles",
+      "update",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json-file",
+      "tests/golden/fixtures/payloads/articles-update.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "title": "Refreshed onboarding guide",
+          "image_url": "https://example.com/featured.jpg"
+        }
+      }
+    ]
+  },
+  "update-no-json-source": {
+    "argv": [
+      "articles",
+      "update",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "update-two-json-sources": {
+    "argv": [
+      "articles",
+      "update",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"title\":\"New title\"}",
+      "--json-stdin"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "update-missing-id": {
+    "argv": [
+      "articles",
+      "update"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <article-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "update-content-json-stdin": {
+    "argv": [
+      "articles",
+      "update-content",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/content",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "content_markdown": "# Updated\n\nBody text."
+        }
+      }
+    ]
+  },
+  "update-content-missing-id": {
+    "argv": [
+      "articles",
+      "update-content"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <article-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "replace-json-inline": {
+    "argv": [
+      "articles",
+      "replace",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"find\":\"Old brand\",\"replace_with\":\"New brand\",\"preview_only\":true}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/replace",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "find": "Old brand",
+          "replace_with": "New brand",
+          "preview_only": true
+        }
+      }
+    ]
+  },
+  "replace-json-file": {
+    "argv": [
+      "articles",
+      "replace",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json-file",
+      "tests/golden/fixtures/payloads/articles-replace.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/replace",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "find": "Old brand",
+          "replace_with": "New brand",
+          "preview_only": true
+        }
+      }
+    ]
+  },
+  "bulk-replace-json-inline": {
+    "argv": [
+      "articles",
+      "bulk-replace",
+      "--json",
+      "{\"find\":\"Old brand\",\"replace_with\":\"New brand\",\"article_ids\":[\"article-1\"],\"confirm\":true}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bulk-replace",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "find": "Old brand",
+          "replace_with": "New brand",
+          "article_ids": [
+            "article-1"
+          ],
+          "confirm": true
+        }
+      }
+    ]
+  },
+  "bulk-replace-json-file": {
+    "argv": [
+      "articles",
+      "bulk-replace",
+      "--json-file",
+      "tests/golden/fixtures/payloads/articles-bulk-replace.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bulk-replace",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "find": "Old brand",
+          "replace_with": "New brand",
+          "article_ids": [
+            "article-1"
+          ],
+          "confirm": true
+        }
+      }
+    ]
+  },
+  "bulk-replace-no-json-source": {
+    "argv": [
+      "articles",
+      "bulk-replace"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "upload-image-with-article": {
+    "argv": [
+      "articles",
+      "upload-image",
+      "--file",
+      "tests/golden/fixtures/payloads/tiny.png",
+      "--article",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/images/upload",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "file_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+          "file_name": "tiny.png",
+          "file_type": "image/png",
+          "article_id": "bbbbbbbb-0000-4000-8000-000000000002"
+        }
+      }
+    ]
+  },
+  "upload-image-with-keyword": {
+    "argv": [
+      "articles",
+      "upload-image",
+      "--file",
+      "tests/golden/fixtures/payloads/tiny.jpg",
+      "--keyword",
+      "email marketing"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/images/upload",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "file_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+          "file_name": "tiny.jpg",
+          "file_type": "image/jpeg",
+          "keyword": "email marketing"
+        }
+      }
+    ]
+  },
+  "upload-image-missing-both": {
+    "argv": [
+      "articles",
+      "upload-image",
+      "--file",
+      "tests/golden/fixtures/payloads/tiny.webp"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide at least one of: --article <article-id> or --keyword <text>.\"\n  },\n  \"agent_guidance\": \"Pass `--article <article-id>` for an existing article editor-style upload, or `--keyword <text>` when you want keyword-driven image metadata without an existing article.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "upload-image-missing-file": {
+    "argv": [
+      "articles",
+      "upload-image",
+      "--article",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --file <path>.\"\n  },\n  \"agent_guidance\": \"Pass a local image path with `--file <path>`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "upload-image-unsupported-extension": {
+    "argv": [
+      "articles",
+      "upload-image",
+      "--file",
+      "tests/golden/fixtures/payloads/not-an-image.txt",
+      "--article",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unsupported image file extension: .txt.\"\n  },\n  \"agent_guidance\": \"Use one of: .jpg, .jpeg, .png, .webp, .gif.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "upload-image-nonexistent-file": {
+    "argv": [
+      "articles",
+      "upload-image",
+      "--file",
+      "tests/golden/fixtures/payloads/does-not-exist.png",
+      "--article",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Failed to read file: ENOENT: no such file or directory, open '<REPO_ROOT>/tests/golden/fixtures/payloads/does-not-exist.png'\"\n  },\n  \"agent_guidance\": \"Confirm that <REPO_ROOT>/tests/golden/fixtures/payloads/does-not-exist.png exists and is readable, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "upload-featured-image-happy": {
+    "argv": [
+      "articles",
+      "upload-featured-image",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--file",
+      "tests/golden/fixtures/payloads/tiny.gif"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/featured-image/upload",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "file_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+          "file_name": "tiny.gif",
+          "file_type": "image/gif"
+        }
+      }
+    ]
+  },
+  "upload-featured-image-missing-file": {
+    "argv": [
+      "articles",
+      "upload-featured-image",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --file <path>.\"\n  },\n  \"agent_guidance\": \"Pass a local image path with `--file <path>`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "upload-featured-image-missing-id": {
+    "argv": [
+      "articles",
+      "upload-featured-image"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <article-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "retry-publish": {
+    "argv": [
+      "articles",
+      "retry-publish",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/retry-publish",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "retry-publish-missing-id": {
+    "argv": [
+      "articles",
+      "retry-publish"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <article-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "delete": {
+    "argv": [
+      "articles",
+      "delete",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "delete-204-non-json": {
+    "argv": [
+      "articles",
+      "delete",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 204 without a JSON body.\",\n    \"details\": {\n      \"status\": 204,\n      \"url\": \"https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "delete-missing-id": {
+    "argv": [
+      "articles",
+      "delete"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <article-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "precreate": {
+    "argv": [
+      "articles",
+      "precreate",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/precreate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword_id": "bbbbbbbb-0000-4000-8000-000000000002"
+        }
+      }
+    ]
+  },
+  "precreate-missing-id": {
+    "argv": [
+      "articles",
+      "precreate"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <keyword-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "generate": {
+    "argv": [
+      "articles",
+      "generate",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword_id": "bbbbbbbb-0000-4000-8000-000000000002"
+        }
+      }
+    ]
+  },
+  "generate-missing-id": {
+    "argv": [
+      "articles",
+      "generate"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <keyword-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-subcommand": {
+    "argv": [
+      "articles",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown articles subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli articles --help` to see available article commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

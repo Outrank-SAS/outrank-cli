@@ -1,0 +1,803 @@
+{
+  "help": {
+    "argv": [
+      "products",
+      "gsc",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products gsc status <product-id>\\n  outrank-cli products gsc connect <product-id>\\n  outrank-cli products gsc poll <product-id> --attempt-id <attempt-id>\\n  outrank-cli products gsc reconnect <product-id>\\n  outrank-cli products gsc disconnect <product-id>\\n  outrank-cli products gsc accounts <product-id>\\n  outrank-cli products gsc properties <product-id> --email <email>\\n  outrank-cli products gsc set-property <product-id> --email <email> --site-url <url>\\n  outrank-cli products gsc performance <product-id> [--months <n>]\\n  outrank-cli products gsc search-analytics <product-id> [--dimensions <csv>] [--limit <n>] [--months <n>] [--start-date <yyyy-mm-dd>] [--end-date <yyyy-mm-dd>] [--page <text>] [--query <text>] [--country <cc>] [--device <device>]\\n  outrank-cli products gsc inspect-url <product-id> --url <url> [--language-code <code>]\\n  outrank-cli products gsc cannibalization <product-id>\"\n  },\n  \"agent_guidance\": \"Use connect plus poll for the OAuth handoff, then inspect accounts, properties, performance, indexing, and keyword data from the same subtree.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-subcommand": {
+    "argv": [
+      "products",
+      "gsc",
+      "nonsense",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown products gsc subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products gsc --help` to see the available Google Search Console commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "api-error": {
+    "argv": [
+      "products",
+      "gsc",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "non-json-response": {
+    "argv": [
+      "products",
+      "gsc",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 502 without a JSON body.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "network-error": {
+    "argv": [
+      "products",
+      "gsc",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "no-key": {
+    "argv": [
+      "products",
+      "gsc",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "status": {
+    "argv": [
+      "products",
+      "gsc",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "status"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "connect": {
+    "argv": [
+      "products",
+      "gsc",
+      "connect",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/connect",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "connect-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "connect"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "poll": {
+    "argv": [
+      "products",
+      "gsc",
+      "poll",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--attempt-id",
+      "attempt-123"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/connect?attempt_id=attempt-123",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "poll-missing-attempt-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "poll",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --attempt-id <attempt-id>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products gsc poll <product-id> --attempt-id <attempt-id>` after connect starts.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "poll-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "poll",
+      "--attempt-id",
+      "attempt-123"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "reconnect": {
+    "argv": [
+      "products",
+      "gsc",
+      "reconnect",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/reconnect",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "reconnect-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "reconnect"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "disconnect": {
+    "argv": [
+      "products",
+      "gsc",
+      "disconnect",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "disconnect-204-non-json": {
+    "argv": [
+      "products",
+      "gsc",
+      "disconnect",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 204 without a JSON body.\",\n    \"details\": {\n      \"status\": 204,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "disconnect-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "disconnect"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "accounts": {
+    "argv": [
+      "products",
+      "gsc",
+      "accounts",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/accounts",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "accounts-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "accounts"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "properties": {
+    "argv": [
+      "products",
+      "gsc",
+      "properties",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--email",
+      "owner@example.com"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/properties?email=owner%40example.com",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "properties-missing-email": {
+    "argv": [
+      "products",
+      "gsc",
+      "properties",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --email <email>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products gsc properties <product-id> --email <email>` to list properties for a connected Google account.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "properties-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "properties",
+      "--email",
+      "owner@example.com"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "set-property": {
+    "argv": [
+      "products",
+      "gsc",
+      "set-property",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--email",
+      "owner@example.com",
+      "--site-url",
+      "https://acme.example.com/"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/property",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "email": "owner@example.com",
+          "site_url": "https://acme.example.com/"
+        }
+      }
+    ]
+  },
+  "set-property-missing-email": {
+    "argv": [
+      "products",
+      "gsc",
+      "set-property",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--site-url",
+      "https://acme.example.com/"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required options: --email <email> and --site-url <url>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products gsc set-property <product-id> --email <email> --site-url <url>` to save the verified property.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "set-property-missing-site-url": {
+    "argv": [
+      "products",
+      "gsc",
+      "set-property",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--email",
+      "owner@example.com"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required options: --email <email> and --site-url <url>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products gsc set-property <product-id> --email <email> --site-url <url>` to save the verified property.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "set-property-missing-both": {
+    "argv": [
+      "products",
+      "gsc",
+      "set-property",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required options: --email <email> and --site-url <url>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products gsc set-property <product-id> --email <email> --site-url <url>` to save the verified property.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "performance": {
+    "argv": [
+      "products",
+      "gsc",
+      "performance",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/performance",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "performance-months": {
+    "argv": [
+      "products",
+      "gsc",
+      "performance",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--months",
+      "3"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/performance?months=3",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "performance-months-too-low": {
+    "argv": [
+      "products",
+      "gsc",
+      "performance",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--months",
+      "0"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--months must be >= 1.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "performance-months-too-high": {
+    "argv": [
+      "products",
+      "gsc",
+      "performance",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--months",
+      "17"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--months must be <= 16.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "performance-months-boundary-max": {
+    "argv": [
+      "products",
+      "gsc",
+      "performance",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--months",
+      "16"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/performance?months=16",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "performance-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "performance"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "search-analytics": {
+    "argv": [
+      "products",
+      "gsc",
+      "search-analytics",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/search-analytics",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "search-analytics-all-options": {
+    "argv": [
+      "products",
+      "gsc",
+      "search-analytics",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--dimensions",
+      "query,page",
+      "--limit",
+      "50",
+      "--months",
+      "6",
+      "--start-date",
+      "2026-01-01",
+      "--end-date",
+      "2026-06-30",
+      "--page",
+      "/blog/post",
+      "--query",
+      "outrank seo",
+      "--country",
+      "usa",
+      "--device",
+      "mobile"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/search-analytics?dimensions=query%2Cpage&limit=50&months=6&start_date=2026-01-01&end_date=2026-06-30&page=%2Fblog%2Fpost&query=outrank+seo&country=usa&device=mobile",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "search-analytics-limit-too-low": {
+    "argv": [
+      "products",
+      "gsc",
+      "search-analytics",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limit",
+      "0"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be >= 1.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "search-analytics-limit-too-high": {
+    "argv": [
+      "products",
+      "gsc",
+      "search-analytics",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limit",
+      "1001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be <= 1000.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "search-analytics-limit-boundary-max": {
+    "argv": [
+      "products",
+      "gsc",
+      "search-analytics",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limit",
+      "1000"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/search-analytics?limit=1000",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "search-analytics-months-too-high": {
+    "argv": [
+      "products",
+      "gsc",
+      "search-analytics",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--months",
+      "17"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--months must be <= 16.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "search-analytics-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "search-analytics"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "inspect-url": {
+    "argv": [
+      "products",
+      "gsc",
+      "inspect-url",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--url",
+      "https://acme.example.com/blog/post"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/url-inspection",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "inspection_url": "https://acme.example.com/blog/post"
+        }
+      }
+    ]
+  },
+  "inspect-url-with-language-code": {
+    "argv": [
+      "products",
+      "gsc",
+      "inspect-url",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--url",
+      "https://acme.example.com/blog/post",
+      "--language-code",
+      "en"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/url-inspection",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "inspection_url": "https://acme.example.com/blog/post",
+          "language_code": "en"
+        }
+      }
+    ]
+  },
+  "inspect-url-missing-url": {
+    "argv": [
+      "products",
+      "gsc",
+      "inspect-url",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --url <url>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products gsc inspect-url <product-id> --url <url>` to inspect indexing details for one page.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "inspect-url-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "inspect-url",
+      "--url",
+      "https://acme.example.com/blog/post"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "cannibalization": {
+    "argv": [
+      "products",
+      "gsc",
+      "cannibalization",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/gsc/cannibalization",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "cannibalization-missing-id": {
+    "argv": [
+      "products",
+      "gsc",
+      "cannibalization"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

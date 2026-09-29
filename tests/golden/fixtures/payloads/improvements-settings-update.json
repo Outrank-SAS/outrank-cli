@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "auto_push": false,
+  "publishing_days": ["Mon", "Thu"]
+}

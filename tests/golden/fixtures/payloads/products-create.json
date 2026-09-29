@@ -1,0 +1,7 @@
+{
+  "name": "Acme Blog",
+  "url": "https://acme.example.com",
+  "business_context": "Acme sells project management software for small teams.",
+  "daily_article_count": 1,
+  "output_language": "en"
+}

@@ -16,8 +16,16 @@
   "scripts": {
     "start": "node ./src/index.js",
     "help": "node ./src/index.js --help",
+    "lint": "eslint .",
+    "test": "node --test",
+    "golden:capture": "node ./scripts/captureGolden.js",
     "link:local": "npm link",
     "unlink:local": "npm unlink -g outrank-cli"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0"
   },
   "keywords": [
     "outrank",

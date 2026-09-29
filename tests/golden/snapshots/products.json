@@ -1,0 +1,1151 @@
+{
+  "help": {
+    "argv": [
+      "products",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products list [--status active|disabled] [--limit <n>] [--cursor <iso-timestamp>]\\n  outrank-cli products get <product-id>\\n  outrank-cli products create --json <object>\\n  outrank-cli products update <product-id> --json <object>\\n  outrank-cli products pause <product-id>\\n  outrank-cli products resume <product-id>\\n  outrank-cli products integrations providers\\n  outrank-cli products integrations prepare <provider> <product-id> [--json <object>]\\n  outrank-cli products integrations connect <provider> <product-id> [--json <object>]\\n  outrank-cli products integrations poll <provider> <product-id> --attempt-id <attempt-id>\\n  outrank-cli products integrations notion databases <product-id> <integration-id>\\n  outrank-cli products integrations notion schema <product-id> <integration-id> <database-id>\\n  outrank-cli products integrations framer collections --json <object>\\n  outrank-cli products integrations framer fields --json <object>\\n  outrank-cli products integrations webflow sites --json <object>\\n  outrank-cli products integrations webflow collections --json <object>\\n  outrank-cli products integrations webflow fields --json <object>\\n  outrank-cli products integrations webflow items --json <object>\\n  outrank-cli products integrations validate <provider> --json <object>\\n  outrank-cli products integrations list <product-id>\\n  outrank-cli products integrations create <product-id> --json <object>\\n  outrank-cli products integrations get <product-id> <integration-id>\\n  outrank-cli products integrations update <product-id> <integration-id> --json <object>\\n  outrank-cli products integrations test <product-id> <integration-id>\\n  outrank-cli products integrations delete <product-id> <integration-id>\\n  outrank-cli products output-settings get <product-id>\\n  outrank-cli products output-settings update <product-id> --json <object>\\n  outrank-cli products target-audiences list <product-id>\\n  outrank-cli products target-audiences replace <product-id> --json <object>\\n  outrank-cli products competitors list <product-id>\\n  outrank-cli products competitors replace <product-id> --json <object>\\n  outrank-cli products gsc status <product-id>\\n  outrank-cli products gsc connect <product-id>\\n  outrank-cli products gsc poll <product-id> --attempt-id <attempt-id>\\n  outrank-cli products gsc reconnect <product-id>\\n  outrank-cli products gsc disconnect <product-id>\\n  outrank-cli products gsc accounts <product-id>\\n  outrank-cli products gsc properties <product-id> --email <email>\\n  outrank-cli products gsc set-property <product-id> --email <email> --site-url <url>\\n  outrank-cli products gsc performance <product-id> [--months <n>]\\n  outrank-cli products gsc search-analytics <product-id> [--dimensions <csv>] [--limit <n>] [--months <n>] [--start-date <yyyy-mm-dd>] [--end-date <yyyy-mm-dd>] [--page <text>] [--query <text>] [--country <cc>] [--device <device>]\\n  outrank-cli products gsc inspect-url <product-id> --url <url> [--language-code <code>]\\n  outrank-cli products gsc cannibalization <product-id>\\n  outrank-cli products linking sources get <product-id>\\n  outrank-cli products linking sources update <product-id> --json <object>\\n  outrank-cli products linking detect <product-id>\\n  outrank-cli products linking target-config get <product-id>\\n  outrank-cli products linking target-config update <product-id> --json <object>\\n  outrank-cli products linking targets list <product-id>\\n  outrank-cli products linking targets add-manual <product-id> --json <object>\\n  outrank-cli products linking targets upsert <product-id> --json <object>\\n  outrank-cli products linking targets clear-customizations <product-id> <target-id>\\n  outrank-cli products linking targets delete <product-id> <target-id>\\n  outrank-cli products backlinks get <product-id>\\n  outrank-cli products backlinks update <product-id> --json <object>\\n  outrank-cli products backlinks credits <product-id>\\n  outrank-cli products backlinks earned <product-id> [--limit <n>] [--cursor <iso>] [--status <status>] [--sort-by created_at|status|credits_applied] [--sort-order desc] [--include-article] [--include-summary]\\n  outrank-cli products backlinks unverified <product-id> [--limit <n>] [--cursor <iso>] [--status <status>] [--sort-by created_at|verification_error_reason] [--sort-order desc]\\n  outrank-cli products backlinks check-removal <product-id> <backlink-id>\\n  outrank-cli products backlinks reverify <product-id> <backlink-id>\\n  outrank-cli products backlinks subscription <product-id>\\n  outrank-cli products backlinks subscribe-quote <product-id> --plan premium|enterprise\\n\\nJSON Input:\\n  Use one of: --json '<object>', --json-file payload.json, or --json-stdin\\n\\nExamples:\\n  outrank-cli products list --limit 20\\n  outrank-cli products create --json-file product.json\\n  outrank-cli products update <UUID-1> --json '{\\\"daily_article_count\\\":2}'\\n  outrank-cli products integrations providers\\n  outrank-cli products integrations prepare wordpress-plugin <UUID-1>\\n  outrank-cli products integrations connect wordpress-com <UUID-1> --json '{\\\"name\\\":\\\"Main WordPress.com\\\",\\\"publish_status\\\":\\\"publish\\\"}'\\n  outrank-cli products integrations connect notion <UUID-1>\\n  outrank-cli products integrations poll wordpress-com <UUID-1> --attempt-id <attempt-id>\\n  outrank-cli products integrations notion databases <UUID-1> <UUID-2>\\n  outrank-cli products integrations notion schema <UUID-1> <UUID-2> <UUID-3>\\n  outrank-cli products integrations framer collections --json '{\\\"project_url\\\":\\\"https://framer.com/projects/your-project\\\",\\\"server_api_key\\\":\\\"framer_server_key\\\"}'\\n  outrank-cli products integrations framer fields --json '{\\\"project_url\\\":\\\"https://framer.com/projects/your-project\\\",\\\"server_api_key\\\":\\\"framer_server_key\\\",\\\"collection_id\\\":\\\"collection_id\\\"}'\\n  outrank-cli products integrations webflow sites --json-file webflow-sites.json\\n  outrank-cli products integrations webflow collections --json '{\\\"api_token\\\":\\\"wf_token\\\",\\\"site_id\\\":\\\"site_id\\\"}'\\n  outrank-cli products integrations webflow fields --json '{\\\"api_token\\\":\\\"wf_token\\\",\\\"collection_id\\\":\\\"collection_id\\\"}'\\n  outrank-cli products integrations webflow items --json '{\\\"api_token\\\":\\\"wf_token\\\",\\\"collection_id\\\":\\\"collection_id\\\"}'\\n  outrank-cli products integrations validate webhook --json '{\\\"endpoint\\\":\\\"https://api.example.com/webhook\\\",\\\"access_token\\\":\\\"secret\\\"}'\\n  outrank-cli products integrations validate framer --json '{\\\"project_url\\\":\\\"https://framer.com/projects/your-project\\\",\\\"server_api_key\\\":\\\"framer_server_key\\\"}'\\n  outrank-cli products integrations validate webflow --json '{\\\"api_token\\\":\\\"wf_token\\\"}'\\n  outrank-cli products integrations validate shopify --json '{\\\"access_token\\\":\\\"shpat_xxx\\\"}'\\n  outrank-cli products integrations validate wix --json '{\\\"site_id\\\":\\\"<UUID-1>\\\",\\\"api_key\\\":\\\"wix_api_key\\\"}'\\n  outrank-cli products integrations validate wordpress-plugin --json '{\\\"domain\\\":\\\"https://example.com\\\",\\\"api_key\\\":\\\"secret-token\\\"}'\\n  outrank-cli products integrations list <UUID-1>\\n  outrank-cli products integrations create <UUID-1> --json '{\\\"provider\\\":\\\"webhook\\\",\\\"name\\\":\\\"Main Webhook\\\",\\\"endpoint\\\":\\\"https://api.example.com/webhook\\\",\\\"access_token\\\":\\\"secret\\\"}'\\n  outrank-cli products integrations create <UUID-1> --json '{\\\"provider\\\":\\\"framer\\\",\\\"name\\\":\\\"Main Framer\\\",\\\"project_url\\\":\\\"https://framer.com/projects/your-project\\\",\\\"server_api_key\\\":\\\"framer_server_key\\\",\\\"author_name\\\":\\\"Outrank AI\\\",\\\"publish_mode\\\":\\\"deploy\\\",\\\"collection_setup_mode\\\":\\\"create\\\"}'\\n  outrank-cli products integrations create <UUID-1> --json '{\\\"provider\\\":\\\"shopify\\\",\\\"name\\\":\\\"Main Shopify\\\",\\\"access_token\\\":\\\"shpat_xxx\\\",\\\"blog_id\\\":\\\"123456789\\\",\\\"author_name\\\":\\\"Outrank\\\",\\\"publish_status\\\":\\\"publish\\\"}'\\n  outrank-cli products integrations create <UUID-1> --json '{\\\"provider\\\":\\\"wix\\\",\\\"name\\\":\\\"Main Wix\\\",\\\"site_id\\\":\\\"<UUID-1>\\\",\\\"api_key\\\":\\\"wix_api_key\\\",\\\"publish_status\\\":\\\"publish\\\"}'\\n  outrank-cli products integrations create <UUID-1> --json-file webflow-create.json\\n  outrank-cli products integrations create <UUID-1> --json '{\\\"provider\\\":\\\"wordpress-plugin\\\",\\\"domain\\\":\\\"https://example.com\\\",\\\"api_key\\\":\\\"secret-token\\\"}'\\n  outrank-cli products integrations create <UUID-1> --json '{\\\"provider\\\":\\\"nextjs-blog\\\"}'\\n  outrank-cli products integrations get <UUID-1> <UUID-2>\\n  outrank-cli products integrations update <UUID-1> <UUID-2> --json '{\\\"endpoint\\\":\\\"https://api.example.com/webhook-v2\\\"}'\\n  outrank-cli products integrations update <UUID-1> <UUID-2> --json '{\\\"blog_id\\\":\\\"987654321\\\",\\\"author_name\\\":\\\"Editorial Team\\\",\\\"publish_status\\\":\\\"draft\\\"}'\\n  outrank-cli products integrations update <UUID-1> <UUID-2> --json '{\\\"publish_status\\\":\\\"draft\\\"}'\\n  outrank-cli products integrations update <UUID-1> <UUID-2> --json-file webflow-update.json\\n  outrank-cli products integrations update <UUID-1> <UUID-2> --json '{\\\"domain\\\":\\\"https://example.com/blog\\\",\\\"api_key\\\":\\\"new-secret-token\\\"}'\\n  outrank-cli products integrations test <UUID-1> <UUID-2>\\n  outrank-cli products output-settings update <UUID-1> --json-file output-settings.json\\n  outrank-cli products target-audiences replace <UUID-1> --json-file target-audiences.json\\n  outrank-cli products competitors replace <UUID-1> --json-file competitors.json\\n  outrank-cli products gsc connect <UUID-1>\\n  outrank-cli products gsc properties <UUID-1> --email owner@example.com\\n  outrank-cli products gsc performance <UUID-1> --months 3\\n  outrank-cli products gsc inspect-url <UUID-1> --url https://example.com/blog/post\\n  outrank-cli products linking sources get <UUID-1>\\n  outrank-cli products linking sources update <UUID-1> --json-file linking-sources.json\\n  outrank-cli products linking detect <UUID-1>\\n  outrank-cli products linking target-config update <UUID-1> --json '{\\\"only_prioritized\\\":true}'\\n  outrank-cli products linking targets add-manual <UUID-1> --json-file manual-target.json\\n  outrank-cli products linking targets clear-customizations <UUID-1> <UUID-2>\\n  outrank-cli products backlinks get <UUID-1>\\n  outrank-cli products backlinks update <UUID-1> --json '{\\\"enabled\\\":true,\\\"min_domain_rating\\\":10}'\\n  outrank-cli products backlinks credits <UUID-1>\\n  outrank-cli products backlinks earned <UUID-1> --limit 20 --include-article\\n  outrank-cli products backlinks unverified <UUID-1> --limit 20\\n  outrank-cli products backlinks check-removal <UUID-1> <UUID-2>\\n  outrank-cli products backlinks reverify <UUID-1> <UUID-2>\\n  outrank-cli products backlinks subscription <UUID-1>\\n  outrank-cli products backlinks subscribe-quote <UUID-1> --plan premium\"\n  },\n  \"agent_guidance\": \"Choose one of: list, get, create, update, pause, resume, integrations, output-settings, target-audiences, competitors, gsc, linking, backlinks.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-subcommand": {
+    "argv": [
+      "products",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown products subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products --help` to see available product commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "api-error": {
+    "argv": [
+      "products",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "non-json-response": {
+    "argv": [
+      "products",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 502 without a JSON body.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "network-error": {
+    "argv": [
+      "products",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "no-key": {
+    "argv": [
+      "products",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-default": {
+    "argv": [
+      "products",
+      "list"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-status": {
+    "argv": [
+      "products",
+      "list",
+      "--status",
+      "active"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products?status=active",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-limit": {
+    "argv": [
+      "products",
+      "list",
+      "--limit",
+      "20"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products?limit=20",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-cursor": {
+    "argv": [
+      "products",
+      "list",
+      "--cursor",
+      "2026-01-01T00:00:00.000Z"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products?cursor=2026-01-01T00%3A00%3A00.000Z",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-all-options": {
+    "argv": [
+      "products",
+      "list",
+      "--status",
+      "disabled",
+      "--limit",
+      "5",
+      "--cursor",
+      "2026-02-01T00:00:00.000Z"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products?status=disabled&limit=5&cursor=2026-02-01T00%3A00%3A00.000Z",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-limit-too-low": {
+    "argv": [
+      "products",
+      "list",
+      "--limit",
+      "0"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be >= 1.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-limit-too-high": {
+    "argv": [
+      "products",
+      "list",
+      "--limit",
+      "101"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be <= 100.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-limit-not-integer": {
+    "argv": [
+      "products",
+      "list",
+      "--limit",
+      "abc"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be an integer.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "get": {
+    "argv": [
+      "products",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "get-missing-id": {
+    "argv": [
+      "products",
+      "get"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-json-inline": {
+    "argv": [
+      "products",
+      "create",
+      "--json",
+      "{\"name\":\"Acme Blog\",\"url\":\"https://acme.example.com\",\"daily_article_count\":1}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Acme Blog",
+          "url": "https://acme.example.com",
+          "daily_article_count": 1
+        }
+      }
+    ]
+  },
+  "create-json-file": {
+    "argv": [
+      "products",
+      "create",
+      "--json-file",
+      "tests/golden/fixtures/payloads/products-create.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Acme Blog",
+          "url": "https://acme.example.com",
+          "business_context": "Acme sells project management software for small teams.",
+          "daily_article_count": 1,
+          "output_language": "en"
+        }
+      }
+    ]
+  },
+  "create-json-stdin": {
+    "argv": [
+      "products",
+      "create",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Stdin Product",
+          "url": "https://stdin.example.com",
+          "daily_article_count": 1
+        }
+      }
+    ]
+  },
+  "create-no-json-source": {
+    "argv": [
+      "products",
+      "create"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-two-json-sources": {
+    "argv": [
+      "products",
+      "create",
+      "--json",
+      "{\"name\":\"Acme Blog\",\"url\":\"https://acme.example.com\",\"daily_article_count\":1}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/products-create.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-invalid-json": {
+    "argv": [
+      "products",
+      "create",
+      "--json",
+      "{not valid json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Invalid JSON in --json: <JSON_PARSE_ERROR>\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-invalid-json-stdin": {
+    "argv": [
+      "products",
+      "create",
+      "--json-stdin"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Invalid JSON from stdin: <JSON_PARSE_ERROR>\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-invalid-json-file": {
+    "argv": [
+      "products",
+      "create",
+      "--json-file",
+      "tests/golden/fixtures/payloads/invalid.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Invalid JSON in <REPO_ROOT>/tests/golden/fixtures/payloads/invalid.json: <JSON_PARSE_ERROR>\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-json-file-missing": {
+    "argv": [
+      "products",
+      "create",
+      "--json-file",
+      "tests/golden/fixtures/payloads/does-not-exist.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"ENOENT: no such file or directory, open '<REPO_ROOT>/tests/golden/fixtures/payloads/does-not-exist.json'\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "update-json-inline": {
+    "argv": [
+      "products",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"daily_article_count\":2}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "daily_article_count": 2
+        }
+      }
+    ]
+  },
+  "update-json-file": {
+    "argv": [
+      "products",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/products-update.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "daily_article_count": 2,
+          "business_context": "Acme now also sells time-tracking software."
+        }
+      }
+    ]
+  },
+  "update-json-stdin": {
+    "argv": [
+      "products",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "daily_article_count": 3
+        }
+      }
+    ]
+  },
+  "update-no-json-source": {
+    "argv": [
+      "products",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "update-two-json-sources": {
+    "argv": [
+      "products",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"daily_article_count\":2}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/products-update.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "update-missing-id": {
+    "argv": [
+      "products",
+      "update",
+      "--json",
+      "{\"daily_article_count\":2}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "pause": {
+    "argv": [
+      "products",
+      "pause",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/pause",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "pause-missing-id": {
+    "argv": [
+      "products",
+      "pause"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "pause-help-swallowed": {
+    "argv": [
+      "products",
+      "pause",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/pause",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "resume": {
+    "argv": [
+      "products",
+      "resume",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/resume",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "resume-missing-id": {
+    "argv": [
+      "products",
+      "resume"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "output-settings-help": {
+    "argv": [
+      "products",
+      "output-settings",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products output-settings get <product-id>\\n  outrank-cli products output-settings update <product-id> --json <object>\"\n  },\n  \"agent_guidance\": \"Use `get` to inspect current article settings and `update` to patch them.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "output-settings-unknown-subcommand": {
+    "argv": [
+      "products",
+      "output-settings",
+      "nonsense",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown products output-settings subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products output-settings --help` to see the available output-settings commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "output-settings-get": {
+    "argv": [
+      "products",
+      "output-settings",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/output-settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "output-settings-get-missing-id": {
+    "argv": [
+      "products",
+      "output-settings",
+      "get"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "output-settings-update-json-inline": {
+    "argv": [
+      "products",
+      "output-settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"tone\":\"professional\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/output-settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "tone": "professional"
+        }
+      }
+    ]
+  },
+  "output-settings-update-json-file": {
+    "argv": [
+      "products",
+      "output-settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/products-output-settings-update.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/output-settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "tone": "professional",
+          "point_of_view": "third_person",
+          "include_images": true
+        }
+      }
+    ]
+  },
+  "output-settings-update-json-stdin": {
+    "argv": [
+      "products",
+      "output-settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/output-settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "tone": "professional"
+        }
+      }
+    ]
+  },
+  "output-settings-update-no-json-source": {
+    "argv": [
+      "products",
+      "output-settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "output-settings-update-two-json-sources": {
+    "argv": [
+      "products",
+      "output-settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"tone\":\"professional\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/products-output-settings-update.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "target-audiences-help": {
+    "argv": [
+      "products",
+      "target-audiences",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products target-audiences list <product-id>\\n  outrank-cli products target-audiences replace <product-id> --json <object>\"\n  },\n  \"agent_guidance\": \"Use `list` to inspect the target-audience list and `replace` to submit the full replacement set.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "target-audiences-unknown-subcommand": {
+    "argv": [
+      "products",
+      "target-audiences",
+      "nonsense",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown products target-audiences subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products target-audiences --help` to see the available target-audience commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "target-audiences-list": {
+    "argv": [
+      "products",
+      "target-audiences",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/target-audiences",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "target-audiences-list-missing-id": {
+    "argv": [
+      "products",
+      "target-audiences",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "target-audiences-replace-json-inline": {
+    "argv": [
+      "products",
+      "target-audiences",
+      "replace",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"target_audiences\":[{\"name\":\"Small business owners\"}]}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/target-audiences",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "target_audiences": [
+            {
+              "name": "Small business owners"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "target-audiences-replace-json-file": {
+    "argv": [
+      "products",
+      "target-audiences",
+      "replace",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/products-target-audiences-replace.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/target-audiences",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "target_audiences": [
+            {
+              "name": "Small business owners",
+              "description": "Owners of teams under 20 people."
+            },
+            {
+              "name": "Freelancers",
+              "description": "Independent contractors managing multiple clients."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "target-audiences-replace-json-stdin": {
+    "argv": [
+      "products",
+      "target-audiences",
+      "replace",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/target-audiences",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "target_audiences": [
+            {
+              "name": "Small business owners"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "target-audiences-replace-no-json-source": {
+    "argv": [
+      "products",
+      "target-audiences",
+      "replace",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "target-audiences-replace-two-json-sources": {
+    "argv": [
+      "products",
+      "target-audiences",
+      "replace",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"target_audiences\":[{\"name\":\"Small business owners\"}]}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/products-target-audiences-replace.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "competitors-help": {
+    "argv": [
+      "products",
+      "competitors",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products competitors list <product-id>\\n  outrank-cli products competitors replace <product-id> --json <object>\"\n  },\n  \"agent_guidance\": \"Use `list` to inspect the competitor list and `replace` to submit the full replacement set.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "competitors-unknown-subcommand": {
+    "argv": [
+      "products",
+      "competitors",
+      "nonsense",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown products competitors subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products competitors --help` to see the available competitor commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "competitors-list": {
+    "argv": [
+      "products",
+      "competitors",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/competitors",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "competitors-list-missing-id": {
+    "argv": [
+      "products",
+      "competitors",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "competitors-replace-json-inline": {
+    "argv": [
+      "products",
+      "competitors",
+      "replace",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"competitors\":[{\"url\":\"https://a.example.com\"},{\"url\":\"https://b.example.com\"},{\"url\":\"https://c.example.com\"}]}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/competitors",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "competitors": [
+            {
+              "url": "https://a.example.com"
+            },
+            {
+              "url": "https://b.example.com"
+            },
+            {
+              "url": "https://c.example.com"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "competitors-replace-json-file": {
+    "argv": [
+      "products",
+      "competitors",
+      "replace",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/products-competitors-replace.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/competitors",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "competitors": [
+            {
+              "url": "https://competitor-one.example.com"
+            },
+            {
+              "url": "https://competitor-two.example.com"
+            },
+            {
+              "url": "https://competitor-three.example.com"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "competitors-replace-json-stdin": {
+    "argv": [
+      "products",
+      "competitors",
+      "replace",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/competitors",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "competitors": [
+            {
+              "url": "https://a.example.com"
+            },
+            {
+              "url": "https://b.example.com"
+            },
+            {
+              "url": "https://c.example.com"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "competitors-replace-no-json-source": {
+    "argv": [
+      "products",
+      "competitors",
+      "replace",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "competitors-replace-two-json-sources": {
+    "argv": [
+      "products",
+      "competitors",
+      "replace",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"competitors\":[{\"url\":\"https://a.example.com\"},{\"url\":\"https://b.example.com\"},{\"url\":\"https://c.example.com\"}]}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/products-competitors-replace.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

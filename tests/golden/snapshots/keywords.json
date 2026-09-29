@@ -1,0 +1,1049 @@
+{
+  "help": {
+    "argv": [
+      "keywords",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli keywords list --product <product-id> [--scope scheduled|stored|all] [--status published|scheduled|generating_article|pregenerated|disabled] [--q <text>] [--article-type <value>] [--article-subtype <value>] [--scheduled-from <date>] [--scheduled-to <date>] [--search-volume-min <n>] [--search-volume-max <n>] [--difficulty-min <n>] [--difficulty-max <n>] [--limit <n>] [--offset <n>]\\n  outrank-cli keywords get <keyword-id> [--kind scheduled|stored]\\n  outrank-cli keywords export --product <product-id>\\n  outrank-cli keywords generation-status --product <product-id>\\n  outrank-cli keywords add --product <product-id> --json <object>\\n  outrank-cli keywords update <keyword-id> --json <object>\\n  outrank-cli keywords suggest --product <product-id> (--keyword <text> | --theme <text>) [--keyword-region <code>] [--limit <n>]\\n  outrank-cli keywords generate --product <product-id> --count <n> [--source competitors|audiences|both] [--competitor <competitor-id> ...] [--audience <text> ...]\\n  outrank-cli keywords bulk-process --product <product-id> --json <object> [--keyword-region <code>]\\n  outrank-cli keywords bulk-reschedule --json <object>\\n  outrank-cli keywords delete <keyword-id>\\n  outrank-cli keywords bulk-delete --json <object>\\n\\nJSON Input:\\n  Use one of: --json '<object>', --json-file payload.json, or --json-stdin\\n\\nExamples:\\n  outrank-cli keywords list --product <UUID-1> --scope all\\n  outrank-cli keywords list --product <UUID-1> --scope scheduled --q \\\"best seo tools\\\"\\n  outrank-cli keywords export --product <UUID-1>\\n  outrank-cli keywords generation-status --product <UUID-1>\\n  outrank-cli keywords add --product <UUID-1> --json-file keywords.json\\n  outrank-cli keywords update <UUID-1> --json '{\\\"instructions\\\":\\\"Write for beginners and include a step-by-step setup section\\\"}'\\n  outrank-cli keywords update <UUID-1> --json '{\\\"scheduled_for\\\":\\\"2026-05-20\\\"}'\\n  outrank-cli keywords suggest --product <UUID-1> --theme \\\"email marketing\\\" --limit 8\\n  outrank-cli keywords generate --product <UUID-1> --count 10 --source both\\n  outrank-cli keywords generate --product <UUID-1> --count 5 --source competitors --competitor <UUID-2>\\n  outrank-cli keywords bulk-process --product <UUID-1> --json '{\\\"keywords\\\":[\\\"keyword one\\\",\\\"keyword two\\\"]}'\\n  outrank-cli keywords bulk-reschedule --json-file keyword-reschedule.json\\n  outrank-cli keywords delete <UUID-1>\"\n  },\n  \"agent_guidance\": \"Choose one of: list, get, export, generation-status, add, update, suggest, generate, bulk-process, bulk-reschedule, delete, bulk-delete.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-all-filters": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--scope",
+      "all",
+      "--status",
+      "published",
+      "--q",
+      "best seo tools",
+      "--article-type",
+      "listicle",
+      "--article-subtype",
+      "comparison",
+      "--scheduled-from",
+      "2026-01-01",
+      "--scheduled-to",
+      "2026-12-31",
+      "--search-volume-min",
+      "10",
+      "--search-volume-max",
+      "5000",
+      "--difficulty-min",
+      "0",
+      "--difficulty-max",
+      "100",
+      "--limit",
+      "25",
+      "--offset",
+      "5"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/keywords?product_id=aaaaaaaa-0000-4000-8000-000000000001&scope=all&status=published&q=best+seo+tools&article_type=listicle&article_subtype=comparison&scheduled_from=2026-01-01&scheduled_to=2026-12-31&search_volume_min=10&search_volume_max=5000&difficulty_min=0&difficulty_max=100&limit=25&offset=5",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-minimal": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/keywords?product_id=aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-missing-product": {
+    "argv": [
+      "keywords",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --product <product-id>.\"\n  },\n  \"agent_guidance\": \"Pass the target product UUID with `--product <product-id>`. Use `outrank-cli products list` if you need to look it up first.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-search-volume-min-negative": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--search-volume-min",
+      "-5"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--search-volume-min must be >= 0.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-limit-out-of-range": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limit",
+      "101"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be <= 100.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-not-found": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/keywords?product_id=aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-non-json": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 502 without a JSON body.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/keywords?product_id=aaaaaaaa-0000-4000-8000-000000000001\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/keywords?product_id=aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-network-error": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/keywords?product_id=aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-no-key": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "get-scheduled": {
+    "argv": [
+      "keywords",
+      "get",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--kind",
+      "scheduled"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/bbbbbbbb-0000-4000-8000-000000000002?kind=scheduled",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "get-stored": {
+    "argv": [
+      "keywords",
+      "get",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--kind",
+      "stored"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/bbbbbbbb-0000-4000-8000-000000000002?kind=stored",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "get-missing-id": {
+    "argv": [
+      "keywords",
+      "get"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <keyword-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "export": {
+    "argv": [
+      "keywords",
+      "export",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/export?product_id=aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "export-missing-product": {
+    "argv": [
+      "keywords",
+      "export"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --product <product-id>.\"\n  },\n  \"agent_guidance\": \"Pass the target product UUID with `--product <product-id>`. Use `outrank-cli products list` if you need to look it up first.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "generation-status": {
+    "argv": [
+      "keywords",
+      "generation-status",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/generation-status?product_id=aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "generation-status-missing-product": {
+    "argv": [
+      "keywords",
+      "generation-status"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --product <product-id>.\"\n  },\n  \"agent_guidance\": \"Pass the target product UUID with `--product <product-id>`. Use `outrank-cli products list` if you need to look it up first.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "add-json-inline": {
+    "argv": [
+      "keywords",
+      "add",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"keyword\":\"best crm software\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword": "best crm software",
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001"
+        }
+      }
+    ]
+  },
+  "add-json-file": {
+    "argv": [
+      "keywords",
+      "add",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/keywords-add.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword": "outbound sales playbook",
+          "article_type": "guide",
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001"
+        }
+      }
+    ]
+  },
+  "add-no-json-source": {
+    "argv": [
+      "keywords",
+      "add",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "add-two-json-sources": {
+    "argv": [
+      "keywords",
+      "add",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"keyword\":\"x\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/keywords-add.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "add-missing-product": {
+    "argv": [
+      "keywords",
+      "add",
+      "--json",
+      "{\"keyword\":\"best crm software\"}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --product <product-id>.\"\n  },\n  \"agent_guidance\": \"Pass the target product UUID with `--product <product-id>`. Use `outrank-cli products list` if you need to look it up first.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "update-json-inline": {
+    "argv": [
+      "keywords",
+      "update",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"instructions\":\"Write for beginners\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "instructions": "Write for beginners"
+        }
+      }
+    ]
+  },
+  "update-json-stdin": {
+    "argv": [
+      "keywords",
+      "update",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "scheduled_for": "2026-05-20"
+        }
+      }
+    ]
+  },
+  "update-missing-id": {
+    "argv": [
+      "keywords",
+      "update"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <keyword-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "suggest-keyword": {
+    "argv": [
+      "keywords",
+      "suggest",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--keyword",
+      "email marketing"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/suggest",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "keyword": "email marketing"
+        }
+      }
+    ]
+  },
+  "suggest-theme": {
+    "argv": [
+      "keywords",
+      "suggest",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--theme",
+      "email marketing",
+      "--keyword-region",
+      "us",
+      "--limit",
+      "8"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/suggest",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "theme": "email marketing",
+          "keyword_region": "us",
+          "limit": 8
+        }
+      }
+    ]
+  },
+  "suggest-neither": {
+    "argv": [
+      "keywords",
+      "suggest",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --keyword <text> or --theme <text>.\"\n  },\n  \"agent_guidance\": \"Pass either `--keyword <text>` or `--theme <text>` when requesting keyword suggestions.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "suggest-both": {
+    "argv": [
+      "keywords",
+      "suggest",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--keyword",
+      "email marketing",
+      "--theme",
+      "lifecycle marketing"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/suggest",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "keyword": "email marketing",
+          "theme": "lifecycle marketing"
+        }
+      }
+    ]
+  },
+  "suggest-limit-out-of-range": {
+    "argv": [
+      "keywords",
+      "suggest",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--keyword",
+      "email marketing",
+      "--limit",
+      "21"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be <= 20.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "generate-count-4": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "4"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--count must be >= 5.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "generate-count-5": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "5"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "keywords_count": 5,
+          "filters": {
+            "isGenerateByCompetitors": true,
+            "isGenerateByAudiences": true
+          }
+        }
+      }
+    ]
+  },
+  "generate-count-30": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "30"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "keywords_count": 30,
+          "filters": {
+            "isGenerateByCompetitors": true,
+            "isGenerateByAudiences": true
+          }
+        }
+      }
+    ]
+  },
+  "generate-count-31": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "31"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--count must be <= 30.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "generate-source-competitors": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "10",
+      "--source",
+      "competitors",
+      "--competitor",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--competitor",
+      "cccccccc-0000-4000-8000-000000000003"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "keywords_count": 10,
+          "filters": {
+            "isGenerateByCompetitors": true,
+            "isGenerateByAudiences": false,
+            "competitors": [
+              "bbbbbbbb-0000-4000-8000-000000000002",
+              "cccccccc-0000-4000-8000-000000000003"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "generate-source-audiences": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "10",
+      "--source",
+      "audiences",
+      "--audience",
+      "small business owners",
+      "--audience",
+      "freelancers"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "keywords_count": 10,
+          "filters": {
+            "isGenerateByCompetitors": false,
+            "isGenerateByAudiences": true,
+            "target_audiences": [
+              "small business owners",
+              "freelancers"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "generate-source-both": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "10",
+      "--source",
+      "both"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "keywords_count": 10,
+          "filters": {
+            "isGenerateByCompetitors": true,
+            "isGenerateByAudiences": true
+          }
+        }
+      }
+    ]
+  },
+  "generate-source-invalid": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "10",
+      "--source",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--source must be one of: competitors, audiences, both.\"\n  },\n  \"agent_guidance\": \"Choose a dashboard generation source with `--source competitors`, `--source audiences`, or `--source both`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "generate-legacy-theme": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--theme",
+      "email marketing"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"The generate command no longer accepts --theme or --country.\"\n  },\n  \"agent_guidance\": \"Use `--count`, `--source`, repeated `--competitor`, and repeated `--audience` to match the dashboard Generate Keywords flow.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "generate-legacy-country": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--country",
+      "US"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"The generate command no longer accepts --theme or --country.\"\n  },\n  \"agent_guidance\": \"Use `--count`, `--source`, repeated `--competitor`, and repeated `--audience` to match the dashboard Generate Keywords flow.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "generate-missing-count": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --count <n>.\"\n  },\n  \"agent_guidance\": \"Ask the human how many keywords to generate first. The dashboard-equivalent flow allows 5-30 keywords when enough scheduler slots are free. Use `outrank-cli keywords generation-status --product <product-id>` to inspect current slot capacity.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "bulk-process-json-inline": {
+    "argv": [
+      "keywords",
+      "bulk-process",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"keywords\":[\"keyword one\",\"keyword two\"]}",
+      "--keyword-region",
+      "us"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/bulk-process",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keywords": [
+            "keyword one",
+            "keyword two"
+          ],
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "keyword_region": "us"
+        }
+      }
+    ]
+  },
+  "bulk-process-missing-product": {
+    "argv": [
+      "keywords",
+      "bulk-process",
+      "--json",
+      "{\"keywords\":[\"a\"]}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --product <product-id>.\"\n  },\n  \"agent_guidance\": \"Pass the target product UUID with `--product <product-id>`. Use `outrank-cli products list` if you need to look it up first.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "bulk-process-no-json-source": {
+    "argv": [
+      "keywords",
+      "bulk-process",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "bulk-reschedule-json-file": {
+    "argv": [
+      "keywords",
+      "bulk-reschedule",
+      "--json-file",
+      "tests/golden/fixtures/payloads/keywords-bulk-reschedule.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/bulk-reschedule",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword_ids": [
+            "kw-1",
+            "kw-2"
+          ],
+          "scheduled_for": "2026-06-01"
+        }
+      }
+    ]
+  },
+  "bulk-reschedule-no-json-source": {
+    "argv": [
+      "keywords",
+      "bulk-reschedule"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "delete": {
+    "argv": [
+      "keywords",
+      "delete",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "delete-204-non-json": {
+    "argv": [
+      "keywords",
+      "delete",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 204 without a JSON body.\",\n    \"details\": {\n      \"status\": 204,\n      \"url\": \"https://www.outrank.so/api/agent/v1/keywords/bbbbbbbb-0000-4000-8000-000000000002\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "delete-missing-id": {
+    "argv": [
+      "keywords",
+      "delete"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <keyword-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "bulk-delete-json-inline": {
+    "argv": [
+      "keywords",
+      "bulk-delete",
+      "--json",
+      "{\"keyword_ids\":[\"bbbbbbbb-0000-4000-8000-000000000002\",\"cccccccc-0000-4000-8000-000000000003\"]}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/bulk-delete",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword_ids": [
+            "bbbbbbbb-0000-4000-8000-000000000002",
+            "cccccccc-0000-4000-8000-000000000003"
+          ]
+        }
+      }
+    ]
+  },
+  "bulk-delete-no-json-source": {
+    "argv": [
+      "keywords",
+      "bulk-delete"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-subcommand": {
+    "argv": [
+      "keywords",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown keywords subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli keywords --help` to see available keyword commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

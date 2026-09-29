@@ -1,0 +1,6 @@
+{
+  "provider": "webhook",
+  "name": "Main Webhook",
+  "endpoint": "https://api.example.com/webhook",
+  "access_token": "secret"
+}

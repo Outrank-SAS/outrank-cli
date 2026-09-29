@@ -1,0 +1,6 @@
+{
+  "target_audiences": [
+    { "name": "Small business owners", "description": "Owners of teams under 20 people." },
+    { "name": "Freelancers", "description": "Independent contractors managing multiple clients." }
+  ]
+}

@@ -1,0 +1,391 @@
+{
+  "help": {
+    "argv": [
+      "billing",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli billing portal-url\\n  outrank-cli billing purchase-products quote --additional-products <n> [--idempotency-key <key>]\\n  outrank-cli billing purchase-products buy --additional-products <n> --confirm-charge-cents <n> --idempotency-key <key>\\n\\nNotes:\\n  portal-url returns a Stripe customer-portal link for the human to open in a browser.\\n  quote requests pricing without authorizing the charge.\\n  quote auto-generates an idempotency key if you do not pass one.\\n  buy requires the server-quoted recurring total in cents and an explicit idempotency key.\"\n  },\n  \"agent_guidance\": \"Choose one of the currently available billing groups: `portal-url` or `purchase-products`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "purchase-products-help": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli billing purchase-products quote --additional-products <n> [--idempotency-key <key>]\\n  outrank-cli billing purchase-products buy --additional-products <n> --confirm-charge-cents <n> --idempotency-key <key>\"\n  },\n  \"agent_guidance\": \"Use `quote` first, then `buy` with the quoted recurring total and a stable idempotency key.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "portal-url": {
+    "argv": [
+      "billing",
+      "portal-url"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/billing/portal-url",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "portal-url-no-key": {
+    "argv": [
+      "billing",
+      "portal-url"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "portal-url-not-found": {
+    "argv": [
+      "billing",
+      "portal-url"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/billing/portal-url",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "portal-url-non-json": {
+    "argv": [
+      "billing",
+      "portal-url"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 502 without a JSON body.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/billing/portal-url\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/billing/portal-url",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "portal-url-network-error": {
+    "argv": [
+      "billing",
+      "portal-url"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/billing/portal-url",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "quote-missing-additional-products": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "quote"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --additional-products.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "quote-with-idempotency-key": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "quote",
+      "--additional-products",
+      "2",
+      "--idempotency-key",
+      "quote-key-1"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"quote\": {\n      \"additional_products\": 2,\n      \"recurring_total_cents\": 19800,\n      \"currency\": \"usd\"\n    },\n    \"api_response\": {\n      \"ok\": false,\n      \"error\": {\n        \"code\": \"QUOTE_REQUIRED\",\n        \"message\": \"Review the quoted recurring total before confirming.\",\n        \"details\": {\n          \"additional_products\": 2,\n          \"recurring_total_cents\": 19800,\n          \"currency\": \"usd\"\n        }\n      },\n      \"agent_guidance\": \"stub guidance\"\n    },\n    \"idempotency_key\": \"quote-key-1\"\n  },\n  \"agent_guidance\": \"Quote received. Review the recurring total and, if the human approves, run the matching `buy` command with --confirm-charge-cents set to the quoted amount.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/billing/purchase-products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json",
+          "Idempotency-Key": "quote-key-1"
+        },
+        "body": {
+          "additional_products": 2
+        }
+      }
+    ]
+  },
+  "quote-without-idempotency-key": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "quote",
+      "--additional-products",
+      "2"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"quote\": {\n      \"additional_products\": 2,\n      \"recurring_total_cents\": 19800,\n      \"currency\": \"usd\"\n    },\n    \"api_response\": {\n      \"ok\": false,\n      \"error\": {\n        \"code\": \"QUOTE_REQUIRED\",\n        \"message\": \"Review the quoted recurring total before confirming.\",\n        \"details\": {\n          \"additional_products\": 2,\n          \"recurring_total_cents\": 19800,\n          \"currency\": \"usd\"\n        }\n      },\n      \"agent_guidance\": \"stub guidance\"\n    },\n    \"idempotency_key\": \"<UUID-1>\"\n  },\n  \"agent_guidance\": \"Quote received. Review the recurring total and, if the human approves, run the matching `buy` command with --confirm-charge-cents set to the quoted amount.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/billing/purchase-products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json",
+          "Idempotency-Key": "<UUID-1>"
+        },
+        "body": {
+          "additional_products": 2
+        }
+      }
+    ]
+  },
+  "quote-409-without-details": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "quote",
+      "--additional-products",
+      "2",
+      "--idempotency-key",
+      "quote-key-2"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"quote\": null,\n    \"api_response\": {\n      \"ok\": false,\n      \"error\": {\n        \"code\": \"CONFLICT\",\n        \"message\": \"Conflict.\"\n      },\n      \"agent_guidance\": \"stub guidance\"\n    },\n    \"idempotency_key\": \"quote-key-2\"\n  },\n  \"agent_guidance\": \"Quote received. Review the recurring total and, if the human approves, run the matching `buy` command with --confirm-charge-cents set to the quoted amount.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/billing/purchase-products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json",
+          "Idempotency-Key": "quote-key-2"
+        },
+        "body": {
+          "additional_products": 2
+        }
+      }
+    ]
+  },
+  "quote-200": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "quote",
+      "--additional-products",
+      "2",
+      "--idempotency-key",
+      "quote-key-3"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/billing/purchase-products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json",
+          "Idempotency-Key": "quote-key-3"
+        },
+        "body": {
+          "additional_products": 2
+        }
+      }
+    ]
+  },
+  "buy-happy": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "buy",
+      "--additional-products",
+      "2",
+      "--confirm-charge-cents",
+      "19800",
+      "--idempotency-key",
+      "buy-key-1"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/billing/purchase-products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json",
+          "Idempotency-Key": "buy-key-1"
+        },
+        "body": {
+          "additional_products": 2,
+          "confirm_charge_cents": 19800
+        }
+      }
+    ]
+  },
+  "buy-missing-idempotency-key": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "buy",
+      "--additional-products",
+      "2",
+      "--confirm-charge-cents",
+      "19800"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --idempotency-key.\"\n  },\n  \"agent_guidance\": \"Generate a stable unique key for this purchase, for example <UUID-1>, then retry with --idempotency-key <value>.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "buy-confirm-charge-cents-zero": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "buy",
+      "--additional-products",
+      "1",
+      "--confirm-charge-cents",
+      "0",
+      "--idempotency-key",
+      "buy-key-2"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/billing/purchase-products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json",
+          "Idempotency-Key": "buy-key-2"
+        },
+        "body": {
+          "additional_products": 1,
+          "confirm_charge_cents": 0
+        }
+      }
+    ]
+  },
+  "buy-confirm-charge-cents-empty": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "buy",
+      "--additional-products",
+      "1",
+      "--confirm-charge-cents=",
+      "--idempotency-key",
+      "buy-key-3"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/billing/purchase-products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json",
+          "Idempotency-Key": "buy-key-3"
+        },
+        "body": {
+          "additional_products": 1,
+          "confirm_charge_cents": 0
+        }
+      }
+    ]
+  },
+  "buy-additional-products-zero": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "buy",
+      "--additional-products",
+      "0"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--additional-products must be >= 1.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "buy-additional-products-31": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "buy",
+      "--additional-products",
+      "31"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--additional-products must be <= 30.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "purchase-products-unknown-subcommand": {
+    "argv": [
+      "billing",
+      "purchase-products",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --additional-products.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-subcommand": {
+    "argv": [
+      "billing",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown billing subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli billing --help` to see available billing commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

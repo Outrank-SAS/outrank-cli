@@ -1,0 +1,5 @@
+{
+  "find": "Old brand",
+  "replace_with": "New brand",
+  "preview_only": true
+}
