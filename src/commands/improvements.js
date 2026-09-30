@@ -1,6 +1,6 @@
-import { parseArgs, getRequiredPositional, readJsonInput, hasFlag, parseIntegerOption, getOption } from '../core/args.js';
-import { requestAgentApi } from '../core/api.js';
-import { cliSuccess } from '../core/errors.js';
+import { IMPROVEMENTS_CANDIDATES_MAX_LIMIT, LIST_MAX_LIMIT, LIST_MIN_LIMIT, MIN_OFFSET } from '../core/constants.js';
+import { BoolSerialize, bool, int, string, uuid } from '../core/schema.js';
+import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from './registry.js';
 
 export const IMPROVEMENTS_HELP = `Usage:
   outrank-cli improvements settings get <product-id>
@@ -46,232 +46,339 @@ Examples:
   outrank-cli improvements executions push 00000000-0000-0000-0000-000000000000 --json '{"decisions":{"para-3":"rejected"}}'
 `;
 
-const invalidUsage = (message, guidance) =>
-  Object.assign(new Error(message), {
-    cliCode: 'CLI_INVALID_USAGE',
-    guidance: guidance || 'Run `outrank-cli improvements --help` to see available improvement commands.',
+const SETTINGS_HELP = `Usage:
+  outrank-cli improvements settings get <product-id>
+  outrank-cli improvements settings update <product-id> --json <object>
+`;
+const CANDIDATES_HELP = `Usage:
+  outrank-cli improvements candidates list <product-id> [--type outsider|ctr_gap|declining|content_gap|thin_content] [--limit <n>] [--offset <n>]
+  outrank-cli improvements candidates brief <candidate-id> [--task <task-id>]
+  outrank-cli improvements candidates edit-brief <candidate-id> --json <object>
+  outrank-cli improvements candidates schedule <candidate-id> --scheduled-for <iso-date>
+`;
+const TASKS_HELP = `Usage:
+  outrank-cli improvements tasks list <product-id>
+  outrank-cli improvements tasks reschedule <task-id> --scheduled-for <iso-date>
+  outrank-cli improvements tasks cancel <task-id>
+  outrank-cli improvements tasks edit-brief <task-id> --json <object>
+  outrank-cli improvements tasks execute <task-id> [--improve-images true|false]
+`;
+const EXECUTIONS_HELP = `Usage:
+  outrank-cli improvements executions list <product-id> [--review-status awaiting_review|pushed|auto_pushed|rejected|all] [--limit <n>] [--offset <n>]
+  outrank-cli improvements executions get <execution-id>
+  outrank-cli improvements executions decisions <execution-id> --json <object>
+  outrank-cli improvements executions push <execution-id> [--json <object>]
+`;
+
+const TOOLSETS = [Toolset.IMPROVEMENTS];
+const PRODUCT_CLI = { positionals: ['productId'] };
+const CANDIDATE_CLI = { positionals: ['candidateId'] };
+const TASK_CLI = { positionals: ['taskId'] };
+const EXECUTION_CLI = { positionals: ['executionId'] };
+const SCHEDULED_FOR_PLACEHOLDERS = { scheduledFor: '<iso-date>' };
+const PRODUCT_SETTINGS_PATH = '/products/{productId}/improvements/settings';
+const CANDIDATE_BRIEF_PATH = '/improvements/candidates/{candidateId}/brief';
+const TASK_PATH = '/improvements/tasks/{taskId}';
+const EXECUTION_PATH = '/improvements/executions/{executionId}';
+const POLL_EXECUTIONS_LIST = 'improvements.executions.list';
+const POLL_CANDIDATES_LIST = 'improvements.candidates.list';
+const POLL_EXECUTIONS_GET = 'improvements.executions.get';
+
+const SCHEDULED_FOR_REQUIRED = { guidance: 'Pass a date or ISO timestamp, e.g. `--scheduled-for 2026-06-01`.' };
+const IMPROVE_IMAGES_GUIDANCE =
+  'Pass `--improve-images true` or `--improve-images false`, or omit it to use the default (images are regenerated).';
+
+const productInput = () => ({ productId: uuid().required() });
+const productParams = (input) => ({ productId: input.productId });
+
+const settingsGet = defineCommand({
+  id: 'improvements.settings.get',
+  summary: 'Get the article improvement settings of a product.',
+  kind: CommandKind.READ,
+  toolsets: TOOLSETS,
+  input: productInput(),
+  cli: PRODUCT_CLI,
+  run: (input, ctx) => ctx.http({ method: 'GET', path: PRODUCT_SETTINGS_PATH, pathParams: productParams(input) }),
+});
+
+const settingsUpdate = defineCommand({
+  id: 'improvements.settings.update',
+  summary: 'Update the article improvement settings of a product from a JSON body.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: productInput(),
+  cli: PRODUCT_CLI,
+  body: BodyMode.JSON,
+  run: (input, ctx) =>
+    ctx.http({ method: 'PATCH', path: PRODUCT_SETTINGS_PATH, pathParams: productParams(input), body: input.body }),
+});
+
+const analyze = defineCommand({
+  id: 'improvements.analyze',
+  summary: 'Run improvement opportunity discovery for a product (multi-minute).',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: productInput(),
+  cli: PRODUCT_CLI,
+  longRunning: { pollTool: POLL_EXECUTIONS_LIST },
+  run: (input, ctx) =>
+    ctx.http({ method: 'POST', path: '/products/{productId}/improvements/analyze', pathParams: productParams(input) }),
+});
+
+const candidatesList = defineCommand({
+  id: 'improvements.candidates.list',
+  summary: 'List improvement candidates for a product.',
+  kind: CommandKind.READ,
+  toolsets: TOOLSETS,
+  input: {
+    ...productInput(),
+    type: string(),
+    limit: int({ min: LIST_MIN_LIMIT, max: IMPROVEMENTS_CANDIDATES_MAX_LIMIT }),
+    offset: int({ min: MIN_OFFSET }),
+  },
+  cli: PRODUCT_CLI,
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'GET',
+      path: '/products/{productId}/improvements/candidates',
+      pathParams: productParams(input),
+      query: { type: input.type, limit: input.limit, offset: input.offset },
+    }),
+});
+
+const candidatesBrief = defineCommand({
+  id: 'improvements.candidates.brief',
+  summary: 'Generate the improvement brief for a candidate (multi-minute).',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: { candidateId: uuid().required(), taskId: uuid() },
+  cli: { ...CANDIDATE_CLI, options: { task: 'taskId' } },
+  longRunning: { pollTool: POLL_CANDIDATES_LIST },
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'POST',
+      path: CANDIDATE_BRIEF_PATH,
+      pathParams: { candidateId: input.candidateId },
+      body: input.taskId ? { task_id: input.taskId } : {},
+    }),
+});
+
+const candidatesEditBrief = defineCommand({
+  id: 'improvements.candidates.edit-brief',
+  summary: 'Edit the improvement brief of a candidate from a JSON body.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: { candidateId: uuid().required() },
+  cli: CANDIDATE_CLI,
+  body: BodyMode.JSON,
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'PATCH',
+      path: CANDIDATE_BRIEF_PATH,
+      pathParams: { candidateId: input.candidateId },
+      body: input.body,
+    }),
+});
+
+const candidatesSchedule = defineCommand({
+  id: 'improvements.candidates.schedule',
+  summary: 'Schedule an improvement task for a candidate.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: { candidateId: uuid().required(), scheduledFor: string().required(SCHEDULED_FOR_REQUIRED) },
+  cli: { ...CANDIDATE_CLI, placeholders: SCHEDULED_FOR_PLACEHOLDERS },
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'POST',
+      path: '/improvements/candidates/{candidateId}/schedule',
+      pathParams: { candidateId: input.candidateId },
+      body: { scheduled_for: input.scheduledFor },
+    }),
+});
+
+const tasksList = defineCommand({
+  id: 'improvements.tasks.list',
+  summary: 'List scheduled improvement tasks for a product.',
+  kind: CommandKind.READ,
+  toolsets: TOOLSETS,
+  input: productInput(),
+  cli: PRODUCT_CLI,
+  run: (input, ctx) =>
+    ctx.http({ method: 'GET', path: '/products/{productId}/improvements/tasks', pathParams: productParams(input) }),
+});
+
+const tasksReschedule = defineCommand({
+  id: 'improvements.tasks.reschedule',
+  summary: 'Reschedule an improvement task.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: { taskId: uuid().required(), scheduledFor: string().required(SCHEDULED_FOR_REQUIRED) },
+  cli: { ...TASK_CLI, placeholders: SCHEDULED_FOR_PLACEHOLDERS },
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'PATCH',
+      path: TASK_PATH,
+      pathParams: { taskId: input.taskId },
+      body: { scheduled_for: input.scheduledFor },
+    }),
+});
+
+const tasksCancel = defineCommand({
+  id: 'improvements.tasks.cancel',
+  summary: 'Cancel an improvement task.',
+  kind: CommandKind.DESTRUCTIVE,
+  toolsets: TOOLSETS,
+  input: { taskId: uuid().required() },
+  cli: TASK_CLI,
+  run: (input, ctx) => ctx.http({ method: 'DELETE', path: TASK_PATH, pathParams: { taskId: input.taskId } }),
+});
+
+const tasksEditBrief = defineCommand({
+  id: 'improvements.tasks.edit-brief',
+  summary: 'Edit the brief of an improvement task from a JSON body.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: { taskId: uuid().required() },
+  cli: TASK_CLI,
+  body: BodyMode.JSON,
+  run: (input, ctx) =>
+    ctx.http({ method: 'PATCH', path: `${TASK_PATH}/brief`, pathParams: { taskId: input.taskId }, body: input.body }),
+});
+
+const tasksExecute = defineCommand({
+  id: 'improvements.tasks.execute',
+  summary: 'Execute an improvement task now (multi-minute).',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: {
+    taskId: uuid().required(),
+    improveImages: bool({ serialize: BoolSerialize.ALWAYS }).guidance(IMPROVE_IMAGES_GUIDANCE),
+  },
+  cli: { ...TASK_CLI, options: { 'improve-images': { field: 'improveImages', takesValue: true } } },
+  longRunning: { pollTool: POLL_EXECUTIONS_GET },
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'POST',
+      path: `${TASK_PATH}/execute`,
+      pathParams: { taskId: input.taskId },
+      body: input.improveImages === undefined ? {} : { improve_images: input.improveImages },
+    }),
+});
+
+const executionsList = defineCommand({
+  id: 'improvements.executions.list',
+  summary: 'List improvement executions for a product.',
+  kind: CommandKind.READ,
+  toolsets: TOOLSETS,
+  input: {
+    ...productInput(),
+    reviewStatus: string(),
+    limit: int({ min: LIST_MIN_LIMIT, max: LIST_MAX_LIMIT }),
+    offset: int({ min: MIN_OFFSET }),
+  },
+  cli: PRODUCT_CLI,
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'GET',
+      path: '/products/{productId}/improvements/executions',
+      pathParams: productParams(input),
+      query: { review_status: input.reviewStatus, limit: input.limit, offset: input.offset },
+    }),
+});
+
+const executionsGet = defineCommand({
+  id: 'improvements.executions.get',
+  summary: 'Get one improvement execution with its proposed changes.',
+  kind: CommandKind.READ,
+  toolsets: TOOLSETS,
+  input: { executionId: uuid().required() },
+  cli: EXECUTION_CLI,
+  run: (input, ctx) =>
+    ctx.http({ method: 'GET', path: EXECUTION_PATH, pathParams: { executionId: input.executionId } }),
+});
+
+const executionsDecisions = defineCommand({
+  id: 'improvements.executions.decisions',
+  summary: 'Record review decisions for an execution from a JSON body.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: { executionId: uuid().required() },
+  cli: EXECUTION_CLI,
+  body: BodyMode.JSON,
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'PATCH',
+      path: `${EXECUTION_PATH}/decisions`,
+      pathParams: { executionId: input.executionId },
+      body: input.body,
+    }),
+});
+
+const executionsPush = defineCommand({
+  id: 'improvements.executions.push',
+  summary: 'Push an execution to the CMS, optionally with decisions in a JSON body.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: { executionId: uuid().required() },
+  cli: EXECUTION_CLI,
+  body: BodyMode.OPTIONAL_JSON_OR_EMPTY_OBJECT,
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'POST',
+      path: `${EXECUTION_PATH}/push`,
+      pathParams: { executionId: input.executionId },
+      body: input.body,
+    }),
+});
+
+const subGroup = ({ id, usage, actions, children }) =>
+  defineGroup({
+    id,
+    help: { usage, guidance: `Use: improvements ${id.slice(id.indexOf('.') + 1)} ${actions}.` },
+    unknown: (word) => ({
+      message: `Unknown ${id.slice(id.indexOf('.') + 1)} action: ${word}.`,
+      guidance: `Use: improvements ${id.slice(id.indexOf('.') + 1)} ${actions}.`,
+    }),
+    children,
   });
 
-const buildQueryPath = (basePath, searchParams) => {
-  const url = new URL(`https://local${basePath}`);
-  for (const [key, value] of Object.entries(searchParams)) {
-    if (value !== undefined && value !== null && value !== '') {
-      url.searchParams.set(key, String(value));
-    }
-  }
-  return `${url.pathname}${url.search}`;
-};
-
-const hasJsonSource = (parsed) =>
-  Boolean(getOption(parsed, 'json') || getOption(parsed, 'json-file') || hasFlag(parsed, 'json-stdin'));
-
-const parseImproveImages = (parsed) => {
-  const raw = getOption(parsed, 'improve-images');
-  if (raw === undefined) return undefined;
-  if (raw === 'true') return true;
-  if (raw === 'false') return false;
-  throw invalidUsage('--improve-images must be true or false.', 'Pass `--improve-images true` or `--improve-images false`, or omit it to use the default (images are regenerated).');
-};
-
-const requireScheduledFor = (parsed) => {
-  const value = getOption(parsed, 'scheduled-for');
-  if (!value) {
-    throw invalidUsage('Missing required option: --scheduled-for <iso-date>.', 'Pass a date or ISO timestamp, e.g. `--scheduled-for 2026-06-01`.');
-  }
-  return value;
-};
-
-const handleAnalyze = async (parsed) => {
-  const productId = getRequiredPositional(parsed, 0, '<product-id>');
-  const response = await requestAgentApi(parsed, {
-    method: 'POST',
-    path: `/products/${productId}/improvements/analyze`,
-  });
-  return response.payload;
-};
-
-const handleSettings = async (action, parsed) => {
-  const productId = getRequiredPositional(parsed, 0, '<product-id>');
-  if (action === 'get') {
-    const response = await requestAgentApi(parsed, {
-      method: 'GET',
-      path: `/products/${productId}/improvements/settings`,
-    });
-    return response.payload;
-  }
-  if (action === 'update') {
-    const body = await readJsonInput(parsed);
-    const response = await requestAgentApi(parsed, {
-      method: 'PATCH',
-      path: `/products/${productId}/improvements/settings`,
-      body,
-    });
-    return response.payload;
-  }
-  throw invalidUsage(`Unknown settings action: ${action ?? '(none)'}.`, 'Use: improvements settings get|update <product-id>.');
-};
-
-const handleCandidates = async (action, parsed) => {
-  if (action === 'list') {
-    const productId = getRequiredPositional(parsed, 0, '<product-id>');
-    const path = buildQueryPath(`/products/${productId}/improvements/candidates`, {
-      type: getOption(parsed, 'type'),
-      limit: parseIntegerOption(parsed, 'limit', { min: 1, max: 50 }),
-      offset: parseIntegerOption(parsed, 'offset', { min: 0 }),
-    });
-    const response = await requestAgentApi(parsed, { method: 'GET', path });
-    return response.payload;
-  }
-  if (action === 'brief') {
-    const candidateId = getRequiredPositional(parsed, 0, '<candidate-id>');
-    const taskId = getOption(parsed, 'task');
-    const response = await requestAgentApi(parsed, {
-      method: 'POST',
-      path: `/improvements/candidates/${candidateId}/brief`,
-      body: taskId ? { task_id: taskId } : {},
-    });
-    return response.payload;
-  }
-  if (action === 'edit-brief') {
-    const candidateId = getRequiredPositional(parsed, 0, '<candidate-id>');
-    const body = await readJsonInput(parsed);
-    const response = await requestAgentApi(parsed, {
-      method: 'PATCH',
-      path: `/improvements/candidates/${candidateId}/brief`,
-      body,
-    });
-    return response.payload;
-  }
-  if (action === 'schedule') {
-    const candidateId = getRequiredPositional(parsed, 0, '<candidate-id>');
-    const scheduledFor = requireScheduledFor(parsed);
-    const response = await requestAgentApi(parsed, {
-      method: 'POST',
-      path: `/improvements/candidates/${candidateId}/schedule`,
-      body: { scheduled_for: scheduledFor },
-    });
-    return response.payload;
-  }
-  throw invalidUsage(`Unknown candidates action: ${action ?? '(none)'}.`, 'Use: improvements candidates list|brief|edit-brief|schedule.');
-};
-
-const handleTasks = async (action, parsed) => {
-  if (action === 'list') {
-    const productId = getRequiredPositional(parsed, 0, '<product-id>');
-    const response = await requestAgentApi(parsed, {
-      method: 'GET',
-      path: `/products/${productId}/improvements/tasks`,
-    });
-    return response.payload;
-  }
-  if (action === 'reschedule') {
-    const taskId = getRequiredPositional(parsed, 0, '<task-id>');
-    const scheduledFor = requireScheduledFor(parsed);
-    const response = await requestAgentApi(parsed, {
-      method: 'PATCH',
-      path: `/improvements/tasks/${taskId}`,
-      body: { scheduled_for: scheduledFor },
-    });
-    return response.payload;
-  }
-  if (action === 'cancel') {
-    const taskId = getRequiredPositional(parsed, 0, '<task-id>');
-    const response = await requestAgentApi(parsed, {
-      method: 'DELETE',
-      path: `/improvements/tasks/${taskId}`,
-    });
-    return response.payload;
-  }
-  if (action === 'edit-brief') {
-    const taskId = getRequiredPositional(parsed, 0, '<task-id>');
-    const body = await readJsonInput(parsed);
-    const response = await requestAgentApi(parsed, {
-      method: 'PATCH',
-      path: `/improvements/tasks/${taskId}/brief`,
-      body,
-    });
-    return response.payload;
-  }
-  if (action === 'execute') {
-    const taskId = getRequiredPositional(parsed, 0, '<task-id>');
-    const improveImages = parseImproveImages(parsed);
-    const response = await requestAgentApi(parsed, {
-      method: 'POST',
-      path: `/improvements/tasks/${taskId}/execute`,
-      body: improveImages === undefined ? {} : { improve_images: improveImages },
-    });
-    return response.payload;
-  }
-  throw invalidUsage(`Unknown tasks action: ${action ?? '(none)'}.`, 'Use: improvements tasks list|reschedule|cancel|edit-brief|execute.');
-};
-
-const handleExecutions = async (action, parsed) => {
-  if (action === 'list') {
-    const productId = getRequiredPositional(parsed, 0, '<product-id>');
-    const path = buildQueryPath(`/products/${productId}/improvements/executions`, {
-      review_status: getOption(parsed, 'review-status'),
-      limit: parseIntegerOption(parsed, 'limit', { min: 1, max: 100 }),
-      offset: parseIntegerOption(parsed, 'offset', { min: 0 }),
-    });
-    const response = await requestAgentApi(parsed, { method: 'GET', path });
-    return response.payload;
-  }
-  if (action === 'get') {
-    const executionId = getRequiredPositional(parsed, 0, '<execution-id>');
-    const response = await requestAgentApi(parsed, {
-      method: 'GET',
-      path: `/improvements/executions/${executionId}`,
-    });
-    return response.payload;
-  }
-  if (action === 'decisions') {
-    const executionId = getRequiredPositional(parsed, 0, '<execution-id>');
-    const body = await readJsonInput(parsed);
-    const response = await requestAgentApi(parsed, {
-      method: 'PATCH',
-      path: `/improvements/executions/${executionId}/decisions`,
-      body,
-    });
-    return response.payload;
-  }
-  if (action === 'push') {
-    const executionId = getRequiredPositional(parsed, 0, '<execution-id>');
-    const body = hasJsonSource(parsed) ? await readJsonInput(parsed) : {};
-    const response = await requestAgentApi(parsed, {
-      method: 'POST',
-      path: `/improvements/executions/${executionId}/push`,
-      body,
-    });
-    return response.payload;
-  }
-  throw invalidUsage(`Unknown executions action: ${action ?? '(none)'}.`, 'Use: improvements executions list|get|decisions|push.');
-};
-
-export const handleImprovementsCommand = async (argv) => {
-  const subgroup = argv[0];
-  const wantsHelp =
-    !subgroup || subgroup === '--help' || subgroup === '-h' || subgroup === 'help';
-
-  if (wantsHelp) {
-    return cliSuccess(
-      {
-        usage: IMPROVEMENTS_HELP.trim(),
-      },
-      'Choose a sub-noun: settings, analyze, candidates, tasks, or executions. The typical flow is analyze -> candidates brief -> candidates schedule -> tasks execute -> executions push.',
-    );
-  }
-
-  if (subgroup === 'analyze') {
-    return handleAnalyze(parseArgs(argv.slice(1)));
-  }
-
-  const action = argv[1];
-  const parsed = parseArgs(argv.slice(2));
-
-  if (subgroup === 'settings') return handleSettings(action, parsed);
-  if (subgroup === 'candidates') return handleCandidates(action, parsed);
-  if (subgroup === 'tasks') return handleTasks(action, parsed);
-  if (subgroup === 'executions') return handleExecutions(action, parsed);
-
-  throw invalidUsage(`Unknown improvements sub-noun: ${subgroup}.`);
-};
+export const improvementsGroup = defineGroup({
+  id: 'improvements',
+  help: {
+    usage: IMPROVEMENTS_HELP,
+    guidance:
+      'Choose a sub-noun: settings, analyze, candidates, tasks, or executions. The typical flow is analyze -> ' +
+      'candidates brief -> candidates schedule -> tasks execute -> executions push.',
+  },
+  unknown: (word) => ({
+    message: `Unknown improvements sub-noun: ${word}.`,
+    guidance: 'Run `outrank-cli improvements --help` to see available improvement commands.',
+  }),
+  children: [
+    subGroup({
+      id: 'improvements.settings',
+      usage: SETTINGS_HELP,
+      actions: 'get|update <product-id>',
+      children: [settingsGet, settingsUpdate],
+    }),
+    analyze,
+    subGroup({
+      id: 'improvements.candidates',
+      usage: CANDIDATES_HELP,
+      actions: 'list|brief|edit-brief|schedule',
+      children: [candidatesList, candidatesBrief, candidatesEditBrief, candidatesSchedule],
+    }),
+    subGroup({
+      id: 'improvements.tasks',
+      usage: TASKS_HELP,
+      actions: 'list|reschedule|cancel|edit-brief|execute',
+      children: [tasksList, tasksReschedule, tasksCancel, tasksEditBrief, tasksExecute],
+    }),
+    subGroup({
+      id: 'improvements.executions',
+      usage: EXECUTIONS_HELP,
+      actions: 'list|get|decisions|push',
+      children: [executionsList, executionsGet, executionsDecisions, executionsPush],
+    }),
+  ],
+});

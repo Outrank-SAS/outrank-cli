@@ -6,6 +6,7 @@ import {
   NON_JSON_RESPONSE,
   NETWORK_ERROR_RESPONSE,
   NO_CONTENT_RESPONSE,
+  GATEWAY_TIMEOUT_RESPONSE,
 } from './shared.js';
 
 const PAYLOADS_DIR = 'tests/golden/fixtures/payloads';
@@ -220,4 +221,16 @@ export default [
   { name: 'executions-push-no-json', argv: ['improvements', 'executions', 'push', SECOND_ID] },
 
   { name: 'unknown-subgroup', argv: ['improvements', 'nonsense'] },
+  { name: 'analyze-gateway-502', argv: ['improvements', 'analyze', PRODUCT_ID], responses: [NON_JSON_RESPONSE] },
+  { name: 'analyze-gateway-504', argv: ['improvements', 'analyze', PRODUCT_ID], responses: [GATEWAY_TIMEOUT_RESPONSE] },
+  {
+    name: 'candidates-brief-gateway-502',
+    argv: ['improvements', 'candidates', 'brief', SECOND_ID],
+    responses: [NON_JSON_RESPONSE],
+  },
+  {
+    name: 'tasks-execute-gateway-502',
+    argv: ['improvements', 'tasks', 'execute', THIRD_ID],
+    responses: [NON_JSON_RESPONSE],
+  },
 ];

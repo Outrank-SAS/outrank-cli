@@ -1600,5 +1600,67 @@
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <integration-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
     "stderr": "",
     "requests": []
+  },
+  "prepare-invalid-provider": {
+    "argv": [
+      "products",
+      "integrations",
+      "prepare",
+      "bogus",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"<provider> must be one of: wordpress-plugin, wordpress-com, notion, framer, webflow, shopify, wix, webhook, nextjs-blog.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "connect-invalid-provider": {
+    "argv": [
+      "products",
+      "integrations",
+      "connect",
+      "bogus",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"<provider> must be one of: wordpress-plugin, wordpress-com, notion, framer, webflow, shopify, wix, webhook, nextjs-blog.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "framer-bogus-subcommand": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "bogus"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown products integrations framer subcommand: bogus.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products integrations framer --help` to see the available Framer discovery commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "notion-schema-non-uuid-database-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "notion",
+      "schema",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "abc123def456"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002/notion/databases/abc123def456/schema",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
   }
 }

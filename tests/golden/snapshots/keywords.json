@@ -1045,5 +1045,236 @@
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown keywords subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli keywords --help` to see available keyword commands.\"\n}\n",
     "stderr": "",
     "requests": []
+  },
+  "list-unknown-option": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limt",
+      "5"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown option: --limt.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the accepted options.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-value-option-before-option": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--q",
+      "--limit",
+      "5"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing value for --q.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-product-not-uuid": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "not-a-uuid"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--product must be a UUID.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-limit-not-integer": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limit",
+      "5.5"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be an integer.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-limit-with-whitespace": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limit",
+      " 5"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be an integer.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "add-json-array-body": {
+    "argv": [
+      "keywords",
+      "add",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "[1,2]"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--json must be a JSON object.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "add-json-empty-string": {
+    "argv": [
+      "keywords",
+      "add",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      ""
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--json requires a value.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "suggest-missing-product-and-term": {
+    "argv": [
+      "keywords",
+      "suggest"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --product <product-id>.\"\n  },\n  \"agent_guidance\": \"Pass the target product UUID with `--product <product-id>`. Use `outrank-cli products list` if you need to look it up first.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "suggest-keyword-named-help": {
+    "argv": [
+      "keywords",
+      "suggest",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--keyword",
+      "help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/suggest",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "keyword": "help"
+        }
+      }
+    ]
+  },
+  "generation-status-empty-200-body": {
+    "argv": [
+      "keywords",
+      "generation-status",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 200 with a malformed JSON body.\",\n    \"details\": {\n      \"status\": 200,\n      \"url\": \"https://www.outrank.so/api/agent/v1/keywords/generation-status?product_id=aaaaaaaa-0000-4000-8000-000000000001\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/generation-status?product_id=aaaaaaaa-0000-4000-8000-000000000001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "generate-gateway-502": {
+    "argv": [
+      "keywords",
+      "generate",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "5"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/keywords/generate\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli keywords generation-status until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/keywords/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "keywords_count": 5,
+          "filters": {
+            "isGenerateByCompetitors": true,
+            "isGenerateByAudiences": true
+          }
+        }
+      }
+    ]
+  },
+  "add-json-file-empty": {
+    "argv": [
+      "keywords",
+      "add",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file="
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--json-file requires a value.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-limit-repeated": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limit",
+      "5",
+      "--limit",
+      "6"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit was given more than once.\"\n  },\n  \"agent_guidance\": \"Pass each single-value option only once.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-product-repeated": {
+    "argv": [
+      "keywords",
+      "list",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--product",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--product was given more than once.\"\n  },\n  \"agent_guidance\": \"Pass each single-value option only once.\"\n}\n",
+    "stderr": "",
+    "requests": []
   }
 }

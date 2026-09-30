@@ -176,7 +176,8 @@ test('invalid JSON from --json, stdin, a file and a response body all produce No
 
   const body = await runCli(['usage', 'stats'], { config: CONFIG_WITH_KEY, responses: [{ rawBody: invalid }] });
   assert.equal(body.exitCode, 1);
-  assert.equal(parseJsonOutput(body.stdout).error.message, '<JSON_PARSE_ERROR>');
+  assert.equal(parseJsonOutput(body.stdout).error.code, 'CLI_NON_JSON_RESPONSE');
+  assert.doesNotMatch(body.stdout, /Unexpected|Expected property|JSON at position/);
 });
 
 test('stderr paths are normalized without treating backslash-letter pairs as JSON escapes', () => {
@@ -188,9 +189,10 @@ test('stderr paths are normalized without treating backslash-letter pairs as JSO
 
 test('generated UUIDs are normalized, UUIDs given as input are kept', async () => {
   const productId = '11111111-2222-4333-8444-555555555555';
+  const quoteDetails = { expected_recurring_total_cents: 9900 };
   const result = await runCli(['billing', 'purchase-products', 'quote', '--additional-products', '1'], {
     config: CONFIG_WITH_KEY,
-    responses: [{ status: 409, body: { ok: false, error: { code: 'CONFLICT', details: { x: 1 } } } }],
+    responses: [{ status: 409, body: { ok: false, error: { code: 'CONFLICT', details: quoteDetails } } }],
   });
   assert.equal(result.requests[0].headers['Idempotency-Key'], '<UUID-1>');
   assert.match(result.stdout, /<UUID-1>/);

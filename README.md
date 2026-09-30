@@ -33,7 +33,7 @@ You can also rotate keys at any time; each key is independent and can be revoked
 
 This repo currently targets the agent endpoints that already exist in `outrank`:
 
-- `auth whoami`
+- `auth login|whoami|status|profiles|logout`
 - `products list|get|create|update|pause|resume`
 - `products integrations providers|prepare|connect|poll|validate|list|create|get|update|test|delete`
 - `products integrations notion databases|schema`
@@ -69,9 +69,12 @@ The broader roadmap from the internal implementation plan is larger than the liv
 
 The CLI reads credentials in this order of precedence:
 
-1. `--api-key <key>` on the command line (highest priority, per-call)
-2. `OUTRANK_API_KEY` environment variable
-3. `~/.outrank/config.json`, populated by `outrank-cli auth login <api-key>` (lowest priority, persistent)
+1. `--api-key <key>` and `--base-url <url>` on the command line (highest priority, per-call)
+2. A profile selected with `--profile <name>` or `OUTRANK_PROFILE`. A selected profile is used as-is: `OUTRANK_API_KEY` and `OUTRANK_BASE_URL` are ignored, and a profile without a stored key fails with `CLI_AUTH_REQUIRED` instead of silently using another key
+3. `OUTRANK_API_KEY` and `OUTRANK_BASE_URL` environment variables
+4. The default profile in `~/.outrank/config.json`, populated by `outrank-cli auth login <api-key>` (lowest priority, persistent)
+
+`auth status` shows which profile is active and where its key and base URL came from (`flag`, `env`, `profile`, or `profile (env ignored)` when an environment variable was set but a higher-priority source won).
 
 Pick one. For interactive use on your own machine, `auth login` is simplest. For CI / ephemeral environments, prefer the env var.
 
@@ -94,8 +97,24 @@ On Windows PowerShell, set the env var with `$env:OUTRANK_API_KEY = "outr_live_x
 Sign out / rotate:
 
 ```bash
-outrank-cli auth logout     # clears apiKey from ~/.outrank/config.json
+outrank-cli auth logout     # clears apiKey from the default profile in ~/.outrank/config.json
 ```
+
+### Profiles (one per organization)
+
+API keys are scoped to one organization. Store one profile per organization and switch with `--profile`:
+
+```bash
+outrank-cli auth login outr_live_xxx --profile acme               # the first stored key becomes the default profile
+outrank-cli auth login outr_live_yyy --profile globex             # a second profile; the default does not change
+outrank-cli auth login outr_live_yyy --profile globex --default   # ...unless you ask for it
+outrank-cli auth profiles                                         # lists profiles with redacted keys, marks the default
+outrank-cli products list --profile globex                        # per call
+export OUTRANK_PROFILE=globex                                     # per shell
+outrank-cli auth logout --profile globex                          # clears only that profile's key
+```
+
+`auth login` and `auth logout` without `--profile` act on the default profile. `auth login` verifies against and stores the base URL it resolves with the same precedence as every other command: `--base-url`, else `OUTRANK_BASE_URL` (ignored when a profile is selected), else the profile's stored value, else the default. Re-running `auth login` for a stored profile therefore keeps that profile's base URL. The config file keeps the default profile mirrored in the top-level `apiKey` / `baseUrl` keys, so an older `outrank-cli` (0.5.x) on the same machine keeps working; it only ever sees the default profile. A config file that cannot be parsed, or that contains a profile name the CLI does not accept, fails every command with `CLI_CONFIG_UNREADABLE` (the path is in `error.details.config_path`), and `auth login` / `auth logout` never overwrite it. A failed save is `CLI_CONFIG_UNWRITABLE` and nothing is stored. `auth status` and `auth profiles` still work when the selected profile does not exist, so you can always inspect what is stored.
 
 ## Examples
 

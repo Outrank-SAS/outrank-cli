@@ -549,7 +549,7 @@
           "Content-Type": "application/json"
         },
         "body": {
-          "file_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+          "file_base64": "/9j/4AAQSkZJRgABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
           "file_name": "tiny.jpg",
           "file_type": "image/jpeg",
           "keyword": "email marketing"
@@ -630,7 +630,7 @@
           "Content-Type": "application/json"
         },
         "body": {
-          "file_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+          "file_base64": "R0lGODlhAQABAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
           "file_name": "tiny.gif",
           "file_type": "image/gif"
         }
@@ -813,6 +813,87 @@
     ],
     "exitCode": 1,
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown articles subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli articles --help` to see available article commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "generate-gateway-502": {
+    "argv": [
+      "articles",
+      "generate",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/articles/generate\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli articles list until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword_id": "bbbbbbbb-0000-4000-8000-000000000002"
+        }
+      }
+    ]
+  },
+  "precreate-gateway-504": {
+    "argv": [
+      "articles",
+      "precreate",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 504 without an error envelope.\",\n    \"details\": {\n      \"status\": 504,\n      \"url\": \"https://www.outrank.so/api/agent/v1/articles/precreate\",\n      \"body\": \"<html>Gateway timeout</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli articles list until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/precreate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword_id": "bbbbbbbb-0000-4000-8000-000000000002"
+        }
+      }
+    ]
+  },
+  "get-gateway-502-not-long-running": {
+    "argv": [
+      "articles",
+      "get",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_UPSTREAM_ERROR\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "upload-image-empty-file-flag": {
+    "argv": [
+      "articles",
+      "upload-image",
+      "--file=",
+      "--keyword",
+      "email"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--file requires a value.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
     "stderr": "",
     "requests": []
   }

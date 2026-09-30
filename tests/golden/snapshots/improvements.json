@@ -1205,5 +1205,91 @@
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown improvements sub-noun: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli improvements --help` to see available improvement commands.\"\n}\n",
     "stderr": "",
     "requests": []
+  },
+  "analyze-gateway-502": {
+    "argv": [
+      "improvements",
+      "analyze",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/analyze\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli improvements executions list until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/analyze",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "analyze-gateway-504": {
+    "argv": [
+      "improvements",
+      "analyze",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 504 without an error envelope.\",\n    \"details\": {\n      \"status\": 504,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/analyze\",\n      \"body\": \"<html>Gateway timeout</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli improvements executions list until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/improvements/analyze",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "candidates-brief-gateway-502": {
+    "argv": [
+      "improvements",
+      "candidates",
+      "brief",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/improvements/candidates/bbbbbbbb-0000-4000-8000-000000000002/brief\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli improvements candidates list until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/candidates/bbbbbbbb-0000-4000-8000-000000000002/brief",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
+  },
+  "tasks-execute-gateway-502": {
+    "argv": [
+      "improvements",
+      "tasks",
+      "execute",
+      "cccccccc-0000-4000-8000-000000000003"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/improvements/tasks/cccccccc-0000-4000-8000-000000000003/execute\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli improvements executions get until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/tasks/cccccccc-0000-4000-8000-000000000003/execute",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
   }
 }

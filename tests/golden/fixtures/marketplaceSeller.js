@@ -462,4 +462,13 @@ export default [
   { name: 'seller-integrations-bare-unknown-subcommand', argv: ['marketplace', 'seller', 'integrations'] },
   { name: 'seller-stripe-bare-missing-product-id', argv: ['marketplace', 'seller', 'stripe'] },
   { name: 'seller-placements-bare-unknown-subcommand', argv: ['marketplace', 'seller', 'placements'] },
+  {
+    name: 'status-refresh-stripe-equals-false',
+    argv: ['marketplace', 'seller', 'status', PRODUCT_ID, '--refresh-stripe=false'],
+  },
+  {
+    name: 'status-refresh-stripe-equals-invalid',
+    argv: ['marketplace', 'seller', 'status', PRODUCT_ID, '--refresh-stripe=yes'],
+  },
+  { name: 'eligibility-surplus-positional', argv: ['marketplace', 'seller', 'eligibility', PRODUCT_ID, 'extra'] },
 ];

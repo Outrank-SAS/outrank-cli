@@ -625,5 +625,19 @@
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
     "stderr": "",
     "requests": []
+  },
+  "subscribe-quote-invalid-plan": {
+    "argv": [
+      "products",
+      "backlinks",
+      "subscribe-quote",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--plan",
+      "gold"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--plan must be one of: premium, enterprise.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
   }
 }

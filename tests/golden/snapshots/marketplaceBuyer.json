@@ -1500,5 +1500,118 @@
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown marketplace buyer credits subcommand: undefined.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
     "stderr": "",
     "requests": []
+  },
+  "change-plan-cancel-with-confirm-subscription-id": {
+    "argv": [
+      "marketplace",
+      "buyer",
+      "change-plan",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--action",
+      "cancel_subscription",
+      "--confirm-subscription-id",
+      "sub_123"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/buyer/change-plan",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "action": "cancel_subscription",
+          "confirm_subscription_id": "sub_123"
+        }
+      }
+    ]
+  },
+  "target-pages-discover-gateway-502": {
+    "argv": [
+      "marketplace",
+      "buyer",
+      "target-pages",
+      "discover",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/buyer/target-pages/discover\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli marketplace buyer target-pages list until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/buyer/target-pages/discover",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "change-plan-cancel-scheduled-with-confirm-subscription-id": {
+    "argv": [
+      "marketplace",
+      "buyer",
+      "change-plan",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--action",
+      "cancel_scheduled",
+      "--confirm-subscription-id",
+      "sub_123"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/buyer/change-plan",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "action": "cancel_scheduled",
+          "confirm_subscription_id": "sub_123"
+        }
+      }
+    ]
+  },
+  "change-plan-cancel-with-empty-confirm-subscription-id": {
+    "argv": [
+      "marketplace",
+      "buyer",
+      "change-plan",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--action",
+      "cancel_subscription",
+      "--confirm-subscription-id="
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--confirm-subscription-id requires a value.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "change-plan-cancel-with-blank-confirm-subscription-id": {
+    "argv": [
+      "marketplace",
+      "buyer",
+      "change-plan",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--action",
+      "cancel_subscription",
+      "--confirm-subscription-id",
+      "   "
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"cancel_subscription requires --confirm-subscription-id.\"\n  },\n  \"agent_guidance\": \"Cancel actions apply immediately. Read the current subscription id with outrank-cli marketplace buyer subscription aaaaaaaa-0000-4000-8000-000000000001 and pass it as --confirm-subscription-id to confirm the cancellation.\"\n}\n",
+    "stderr": "",
+    "requests": []
   }
 }

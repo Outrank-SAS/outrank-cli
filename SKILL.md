@@ -24,6 +24,8 @@ Use `marketplace ...` for the Outrank Marketplace: seller onboarding and eligibi
 4. If a command fails with auth errors, tell the human exactly how to refresh the key, then retry.
 5. If the environment blocks writes to the default home directory, set `OUTRANK_CONFIG_DIR` to a writable folder before using `auth login`.
 6. If the API is hosted on a non-default Outrank deployment, set `OUTRANK_BASE_URL=<deployment-url>`. Use `--base-url <deployment-url>` only as a per-command override when needed.
+7. If the human works with several Outrank organizations, keep one profile per organization: `outrank-cli auth login <api-key> --profile <name>`, then `--profile <name>` on each call (or `OUTRANK_PROFILE=<name>` for the shell). `outrank-cli auth profiles` lists them and `outrank-cli auth status` shows which one is active. A selected profile ignores `OUTRANK_API_KEY`; if it has no stored key the call fails with `CLI_AUTH_REQUIRED` and names the profile to log in to.
+8. If any command fails with `CLI_CONFIG_UNREADABLE`, the local config file is corrupt: show the human `error.details.config_path` and ask them to fix or delete it. Never overwrite it blindly.
 
 ## Discovery
 
@@ -585,7 +587,7 @@ Start with `marketplace buyer status <productId>` — its guidance drives the wh
 2. **Target pages (mandatory before the dashboard opens)** — discover with `marketplace buyer target-pages discover <productId> [--source sitemap|root_url|integration]`, present candidates to the human, add with `marketplace buyer target-pages add <productId> --urls <u1,u2,...>` (own-domain only, max 10 pages, batches of up to 50), manage with `pause`/`activate`/`delete`
 3. **Participation** — `marketplace buyer participation on <productId>` (requires the plan plus >= 1 active target page)
 
-Then: `placements list`, `placements regenerate|revalidate`, `article get/edit <placementId>` (editable only while the placement is matched or publishing and unpublished; keep the placement backlink intact), `credits history`, and `notifications --role buyer`. Each placement costs the host site's Domain Rating x 3 in backlink credits. Plan upgrades via `change-plan` are dashboard-only (interactive payment confirmation); downgrades, cancellations, and restores work from the CLI.
+Then: `placements list`, `placements regenerate|revalidate`, `article get/edit <placementId>` (editable only while the placement is matched or publishing and unpublished; keep the placement backlink intact), `credits history`, and `notifications --role buyer`. Each placement costs the host site's Domain Rating x 3 in backlink credits. Plan upgrades via `change-plan` are dashboard-only (interactive payment confirmation); downgrades, cancellations, and restores work from the CLI. `--action cancel_scheduled` and `--action cancel_subscription` apply immediately and are refused without `--confirm-subscription-id <id>`: read the id with `marketplace buyer subscription <productId>`, confirm the cancellation with the human, then pass that id. Never invent or reuse an id.
 
 ## Error handling
 

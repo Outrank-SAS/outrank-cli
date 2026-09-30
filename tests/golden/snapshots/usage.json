@@ -85,5 +85,43 @@
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown usage subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli usage --help` to see available usage commands.\"\n}\n",
     "stderr": "",
     "requests": []
+  },
+  "stats-rate-limited": {
+    "argv": [
+      "usage",
+      "stats"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"RATE_LIMITED\",\n    \"message\": \"Slow down.\",\n    \"details\": {\n      \"retry_after\": \"30\",\n      \"rate_limit\": {\n        \"limit_minute\": \"60\",\n        \"remaining_minute\": \"0\",\n        \"limit_day\": \"5000\",\n        \"remaining_day\": \"4210\"\n      }\n    }\n  },\n  \"agent_guidance\": \"Wait.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/usage/stats",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "stats-rate-limited-invalid-headers": {
+    "argv": [
+      "usage",
+      "stats"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"RATE_LIMITED\",\n    \"message\": \"Slow down.\",\n    \"details\": {\n      \"rate_limit\": {\n        \"limit_day\": \"5000\"\n      }\n    }\n  },\n  \"agent_guidance\": \"Wait.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/usage/stats",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
   }
 }

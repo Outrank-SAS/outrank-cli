@@ -268,4 +268,41 @@ export default [
   { name: 'buyer-placements-bare-unknown-subcommand', argv: ['marketplace', 'buyer', 'placements'] },
   { name: 'buyer-article-bare-missing-placement-id', argv: ['marketplace', 'buyer', 'article'] },
   { name: 'buyer-credits-bare-unknown-subcommand', argv: ['marketplace', 'buyer', 'credits'] },
+  {
+    name: 'change-plan-cancel-with-confirm-subscription-id',
+    argv: [
+      'marketplace', 'buyer', 'change-plan', PRODUCT_ID,
+      '--action', 'cancel_subscription',
+      '--confirm-subscription-id', 'sub_123',
+    ],
+  },
+  {
+    name: 'target-pages-discover-gateway-502',
+    argv: ['marketplace', 'buyer', 'target-pages', 'discover', PRODUCT_ID],
+    responses: [NON_JSON_RESPONSE],
+  },
+  {
+    name: 'change-plan-cancel-scheduled-with-confirm-subscription-id',
+    argv: [
+      'marketplace', 'buyer', 'change-plan', PRODUCT_ID,
+      '--action', 'cancel_scheduled',
+      '--confirm-subscription-id', 'sub_123',
+    ],
+  },
+  {
+    name: 'change-plan-cancel-with-empty-confirm-subscription-id',
+    argv: [
+      'marketplace', 'buyer', 'change-plan', PRODUCT_ID,
+      '--action', 'cancel_subscription',
+      '--confirm-subscription-id=',
+    ],
+  },
+  {
+    name: 'change-plan-cancel-with-blank-confirm-subscription-id',
+    argv: [
+      'marketplace', 'buyer', 'change-plan', PRODUCT_ID,
+      '--action', 'cancel_subscription',
+      '--confirm-subscription-id', '   ',
+    ],
+  },
 ];

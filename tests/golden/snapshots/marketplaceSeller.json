@@ -1638,5 +1638,53 @@
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown marketplace seller placements subcommand: undefined.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
     "stderr": "",
     "requests": []
+  },
+  "status-refresh-stripe-equals-false": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--refresh-stripe=false"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/seller/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-refresh-stripe-equals-invalid": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--refresh-stripe=yes"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--refresh-stripe accepts only true or false.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "eligibility-surplus-positional": {
+    "argv": [
+      "marketplace",
+      "seller",
+      "eligibility",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "extra"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unexpected argument: extra.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
   }
 }

@@ -10,8 +10,24 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SNAPSHOT_DIR = path.resolve(HERE, '..', 'tests', 'golden', 'snapshots');
 const CONCURRENCY = 6;
 
-const requestedGroups = process.argv.slice(2);
+const ONLY_NEW_FLAG = '--only-new';
+const ONLY_PREFIX = '--only=';
+const cliArguments = process.argv.slice(2);
+const onlyNew = cliArguments.includes(ONLY_NEW_FLAG);
+const onlyNames = new Set(
+  cliArguments
+    .filter((argument) => argument.startsWith(ONLY_PREFIX))
+    .flatMap((argument) => argument.slice(ONLY_PREFIX.length).split(',')),
+);
+const requestedGroups = cliArguments.filter((argument) => !argument.startsWith('--'));
 const groups = requestedGroups.length > 0 ? requestedGroups : Object.keys(FIXTURE_GROUPS);
+const partialCapture = onlyNew || onlyNames.size > 0;
+
+const isCaptureTarget = (fixture, existing) => {
+  if (onlyNames.size > 0) return onlyNames.has(fixture.name);
+  if (onlyNew) return !(fixture.name in existing);
+  return true;
+};
 
 const unknownGroups = groups.filter((group) => !FIXTURE_GROUPS[group]);
 if (unknownGroups.length > 0) {
@@ -69,8 +85,9 @@ const captureGroup = async (group) => {
   const fixtures = FIXTURE_GROUPS[group];
   assertFixtureNamesUnique(group, fixtures);
   const existing = await loadExistingSnapshot(group);
+  const targets = fixtures.filter((fixture) => isCaptureTarget(fixture, existing));
 
-  const results = await runWithConcurrency(fixtures, async (fixture) => {
+  const results = await runWithConcurrency(targets, async (fixture) => {
     const options = resolveFixtureOptions(fixture);
     const result = await runCli(fixture.argv, options);
     assertCaptureIsPlausible(group, fixture, result, options);
@@ -84,13 +101,16 @@ const captureGroup = async (group) => {
     return [fixture.name, entry];
   });
 
-  const snapshot = Object.fromEntries(results);
+  const captured = Object.fromEntries(results);
+  const snapshot = partialCapture
+    ? Object.fromEntries(fixtures.map((fixture) => [fixture.name, captured[fixture.name] ?? existing[fixture.name]]))
+    : captured;
   const changed = results.filter(([name, entry]) => !isDeepStrictEqual(existing[name], entry)).map(([name]) => name);
   const removed = Object.keys(existing).filter((name) => !(name in snapshot));
 
   await fs.mkdir(SNAPSHOT_DIR, { recursive: true });
   await fs.writeFile(path.join(SNAPSHOT_DIR, `${group}.json`), `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8');
-  return { count: fixtures.length, changed, removed };
+  return { count: targets.length, changed, removed };
 };
 
 let total = 0;

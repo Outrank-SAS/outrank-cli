@@ -916,5 +916,47 @@
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown products linking targets subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products linking targets --help` to see available linking-target commands.\"\n}\n",
     "stderr": "",
     "requests": []
+  },
+  "detect-gateway-504": {
+    "argv": [
+      "products",
+      "linking",
+      "detect",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 504 without an error envelope.\",\n    \"details\": {\n      \"status\": 504,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/linking/detect\",\n      \"body\": \"<html>Gateway timeout</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli products linking targets list until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/linking/detect",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "detect-network-error": {
+    "argv": [
+      "products",
+      "linking",
+      "detect",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/linking/detect",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
   }
 }

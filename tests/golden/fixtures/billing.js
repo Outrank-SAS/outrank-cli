@@ -5,9 +5,19 @@ const QUOTE_409_WITH_DETAILS = {
   body: {
     ok: false,
     error: {
-      code: 'QUOTE_REQUIRED',
-      message: 'Review the quoted recurring total before confirming.',
-      details: { additional_products: 2, recurring_total_cents: 19800, currency: 'usd' },
+      code: 'CONFLICT',
+      message: 'Charge confirmation required. Adding 2 products will set the recurring monthly total to $198.00.',
+      details: {
+        current_product_count: 1,
+        adding: 2,
+        new_total_products: 3,
+        billing_interval: 'month',
+        expected_recurring_total_cents: 19800,
+        expected_recurring_total_dollars: 198,
+        volume_discount_percent: 0,
+        volume_discount_amount_cents: 0,
+        per_product_cents: 6600,
+      },
     },
     agent_guidance: 'stub guidance',
   },

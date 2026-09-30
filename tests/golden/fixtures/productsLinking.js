@@ -5,6 +5,7 @@ import {
   NON_JSON_RESPONSE,
   NETWORK_ERROR_RESPONSE,
   NO_CONTENT_RESPONSE,
+  GATEWAY_TIMEOUT_RESPONSE,
 } from './shared.js';
 
 const TARGET_ID = SECOND_ID;
@@ -209,4 +210,6 @@ export default [
     argv: ['products', 'linking', 'targets', 'delete', PRODUCT_ID],
   },
   { name: 'targets-unknown-subcommand', argv: ['products', 'linking', 'targets', 'nonsense', PRODUCT_ID] },
+  { name: 'detect-gateway-504', argv: ['products', 'linking', 'detect', PRODUCT_ID], responses: [GATEWAY_TIMEOUT_RESPONSE] },
+  { name: 'detect-network-error', argv: ['products', 'linking', 'detect', PRODUCT_ID], responses: [NETWORK_ERROR_RESPONSE] },
 ];

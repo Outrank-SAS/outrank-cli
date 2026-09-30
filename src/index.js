@@ -3,16 +3,11 @@
 import { readFileSync } from 'node:fs';
 
 import { emitAndExit } from './core/io.js';
-import { cliError, cliSuccess } from './core/errors.js';
-import { handleAuthCommand } from './commands/auth.js';
-import { handleProductsCommand } from './commands/products.js';
-import { handleBillingCommand } from './commands/billing.js';
-import { handleSubscriptionCommand } from './commands/subscription.js';
-import { handleUsageCommand } from './commands/usage.js';
-import { handleKeywordsCommand } from './commands/keywords.js';
-import { handleArticlesCommand } from './commands/articles.js';
-import { handleImprovementsCommand } from './commands/improvements.js';
-import { handleMarketplaceCommand } from './commands/marketplace.js';
+import { cliSuccess, toErrorEnvelope, usageError } from './core/errors.js';
+import { runRegistryCommand } from './adapters/cli/run.js';
+import { registry } from './commands/index.js';
+
+const EXIT_FAILURE = 1;
 
 const getVersion = () => {
   try {
@@ -45,6 +40,7 @@ Groups:
 Global Auth Options:
   --api-key <key>      Override the API key for this command only.
   --base-url <url>     Override the Outrank base URL for this command only.
+  --profile <name>     Use a stored profile for this command only (see auth --help).
 
 JSON Input Conventions:
   Complex write commands accept one of:
@@ -106,44 +102,16 @@ const main = async () => {
     return;
   }
 
-  const group = argv[0];
-  const rest = argv.slice(1);
-
-  let result;
-  if (group === 'auth') {
-    result = await handleAuthCommand(rest);
-  } else if (group === 'products') {
-    result = await handleProductsCommand(rest);
-  } else if (group === 'keywords') {
-    result = await handleKeywordsCommand(rest);
-  } else if (group === 'articles') {
-    result = await handleArticlesCommand(rest);
-  } else if (group === 'improvements') {
-    result = await handleImprovementsCommand(rest);
-  } else if (group === 'marketplace') {
-    result = await handleMarketplaceCommand(rest);
-  } else if (group === 'subscription') {
-    result = await handleSubscriptionCommand(rest);
-  } else if (group === 'usage') {
-    result = await handleUsageCommand(rest);
-  } else if (group === 'billing') {
-    result = await handleBillingCommand(rest);
-  } else {
-    throw Object.assign(new Error(`Unknown command group: ${group}.`), {
-      cliCode: 'CLI_INVALID_USAGE',
-      guidance: 'Run `outrank-cli --help` to see the available top-level groups.',
-    });
+  const registryOutcome = await runRegistryCommand(registry, argv);
+  if (!registryOutcome) {
+    throw usageError(
+      `Unknown command group: ${argv[0]}.`,
+      'Run `outrank-cli --help` to see the available top-level groups.',
+    );
   }
-
-  emitAndExit(result, result?.ok === false ? 1 : 0);
+  emitAndExit(registryOutcome.envelope, registryOutcome.exitCode);
 };
 
 main().catch((error) => {
-  const message = error?.message || 'Unexpected CLI failure.';
-  const code = error?.cliCode || 'CLI_UNEXPECTED_ERROR';
-  const guidance =
-    error?.guidance ||
-    'Retry with --help for usage details. If the command and inputs look correct, inspect the error details and try again.';
-
-  emitAndExit(cliError(code, message, guidance), 1);
+  emitAndExit(toErrorEnvelope(error), EXIT_FAILURE);
 });

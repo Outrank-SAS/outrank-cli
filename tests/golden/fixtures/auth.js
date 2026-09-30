@@ -1,14 +1,25 @@
 import {
+  ACME_PROFILE,
+  BROKEN_CONFIG,
+  BROKEN_PROFILE,
   CONFIG_API_KEY,
+  INVALID_PROFILE_NAME_CONFIG_TEXT,
+  KEYLESS_DEFAULT_CONFIG,
   CONFIG_BASE_URL,
   ENV_API_KEY,
   ENV_BASE_URL,
   FLAG_API_KEY,
   FLAG_BASE_URL,
+  KEYLESS_PROFILE,
+  PROFILES_CONFIG,
   STUB_API_KEY,
   STUB_BASE_URL,
   CORRUPT_CONFIG_TEXT,
 } from './shared.js';
+
+const UNKNOWN_PROFILE = 'nope';
+const INVALID_PROFILE = '__proto__';
+const PROFILE_ENV = { OUTRANK_PROFILE: ACME_PROFILE };
 
 const WHOAMI_OK = {
   status: 200,
@@ -21,6 +32,7 @@ const WHOAMI_INVALID = {
 const CONFIG_WITH_OWN_KEY = { apiKey: CONFIG_API_KEY, baseUrl: STUB_BASE_URL };
 const CONFIG_WITH_OWN_BASE_URL = { apiKey: STUB_API_KEY, baseUrl: CONFIG_BASE_URL };
 const STAGING_BASE_URL = 'https://staging.example.com';
+const ALLOW_CUSTOM_HOSTS = { OUTRANK_ALLOW_CUSTOM_BASE_URL: '1' };
 
 export default [
   { name: 'help', argv: ['auth', '--help'], config: null },
@@ -28,6 +40,12 @@ export default [
   { name: 'login-no-verify', argv: ['auth', 'login', STUB_API_KEY, '--no-verify'], config: null },
   {
     name: 'login-with-base-url',
+    argv: ['auth', 'login', STUB_API_KEY, '--base-url', STAGING_BASE_URL, '--no-verify'],
+    config: null,
+    env: ALLOW_CUSTOM_HOSTS,
+  },
+  {
+    name: 'login-with-disallowed-base-url',
     argv: ['auth', 'login', STUB_API_KEY, '--base-url', STAGING_BASE_URL, '--no-verify'],
     config: null,
   },
@@ -78,27 +96,33 @@ export default [
   {
     name: 'whoami-flag-and-env-base-urls',
     argv: ['auth', 'whoami', '--base-url', FLAG_BASE_URL],
-    env: { OUTRANK_BASE_URL: ENV_BASE_URL },
+    env: { OUTRANK_BASE_URL: ENV_BASE_URL, ...ALLOW_CUSTOM_HOSTS },
     responses: [WHOAMI_OK],
   },
   {
     name: 'whoami-flag-and-config-base-urls',
     argv: ['auth', 'whoami', '--base-url', FLAG_BASE_URL],
     config: CONFIG_WITH_OWN_BASE_URL,
+    env: ALLOW_CUSTOM_HOSTS,
     responses: [WHOAMI_OK],
   },
   {
     name: 'whoami-env-and-config-base-urls',
     argv: ['auth', 'whoami'],
     config: CONFIG_WITH_OWN_BASE_URL,
-    env: { OUTRANK_BASE_URL: ENV_BASE_URL },
+    env: { OUTRANK_BASE_URL: ENV_BASE_URL, ...ALLOW_CUSTOM_HOSTS },
     responses: [WHOAMI_OK],
   },
   {
     name: 'whoami-flag-env-and-config-base-urls',
     argv: ['auth', 'whoami', '--base-url', FLAG_BASE_URL],
     config: CONFIG_WITH_OWN_BASE_URL,
-    env: { OUTRANK_BASE_URL: ENV_BASE_URL },
+    env: { OUTRANK_BASE_URL: ENV_BASE_URL, ...ALLOW_CUSTOM_HOSTS },
+    responses: [WHOAMI_OK],
+  },
+  {
+    name: 'whoami-disallowed-base-url-host',
+    argv: ['auth', 'whoami', '--base-url', FLAG_BASE_URL],
     responses: [WHOAMI_OK],
   },
   { name: 'status-config', argv: ['auth', 'status'] },
@@ -118,7 +142,7 @@ export default [
     name: 'status-flag-env-and-config-base-urls',
     argv: ['auth', 'status', '--base-url', FLAG_BASE_URL],
     config: CONFIG_WITH_OWN_BASE_URL,
-    env: { OUTRANK_BASE_URL: ENV_BASE_URL },
+    env: { OUTRANK_BASE_URL: ENV_BASE_URL, ...ALLOW_CUSTOM_HOSTS },
   },
   { name: 'status-missing', argv: ['auth', 'status'], config: null },
   { name: 'status-corrupt-config', argv: ['auth', 'status'], rawConfig: CORRUPT_CONFIG_TEXT },
@@ -126,4 +150,196 @@ export default [
   { name: 'logout', argv: ['auth', 'logout'] },
   { name: 'logout-nothing-stored', argv: ['auth', 'logout'], config: null },
   { name: 'unknown-subcommand', argv: ['auth', 'nonsense'], config: null },
+  { name: 'whoami-http-base-url', argv: ['auth', 'whoami', '--base-url', 'http://www.outrank.so'] },
+  {
+    name: 'whoami-loopback-http-base-url-allowed',
+    argv: ['auth', 'whoami', '--base-url', 'http://127.0.0.1:3333'],
+    env: ALLOW_CUSTOM_HOSTS,
+    responses: [WHOAMI_OK],
+  },
+  {
+    name: 'whoami-loopback-http-base-url-not-allowed',
+    argv: ['auth', 'whoami', '--base-url', 'http://127.0.0.1:3333'],
+  },
+  { name: 'whoami-empty-api-key-flag', argv: ['auth', 'whoami', '--api-key='] },
+  { name: 'whoami-empty-base-url-flag', argv: ['auth', 'whoami', '--base-url='] },
+  { name: 'whoami-surplus-positional', argv: ['auth', 'whoami', 'extra'] },
+  { name: 'status-disallowed-base-url-host', argv: ['auth', 'status', '--base-url', FLAG_BASE_URL] },
+  { name: 'logout-disallowed-base-url-host', argv: ['auth', 'logout', '--base-url', FLAG_BASE_URL] },
+  { name: 'profiles-list', argv: ['auth', 'profiles'], config: PROFILES_CONFIG },
+  { name: 'profiles-legacy-config', argv: ['auth', 'profiles'] },
+  { name: 'profiles-none', argv: ['auth', 'profiles'], config: null },
+  { name: 'profiles-corrupt-config', argv: ['auth', 'profiles'], rawConfig: CORRUPT_CONFIG_TEXT },
+  {
+    name: 'profiles-unknown-profile',
+    argv: ['auth', 'profiles', '--profile', UNKNOWN_PROFILE],
+    config: PROFILES_CONFIG,
+  },
+  {
+    name: 'login-new-profile-becomes-default',
+    argv: ['auth', 'login', STUB_API_KEY, '--profile', ACME_PROFILE, '--no-verify'],
+    config: null,
+  },
+  {
+    name: 'login-second-profile-not-default',
+    argv: ['auth', 'login', STUB_API_KEY, '--profile', ACME_PROFILE, '--no-verify'],
+  },
+  {
+    name: 'login-second-profile-with-default-flag',
+    argv: ['auth', 'login', STUB_API_KEY, '--profile', ACME_PROFILE, '--default', '--no-verify'],
+  },
+  {
+    name: 'login-profile-verifies-with-profile-env-key-ignored',
+    argv: ['auth', 'login', FLAG_API_KEY, '--profile', ACME_PROFILE],
+    config: PROFILES_CONFIG,
+    env: { OUTRANK_API_KEY: ENV_API_KEY },
+    responses: [WHOAMI_OK],
+  },
+  {
+    name: 'login-invalid-profile-name',
+    argv: ['auth', 'login', STUB_API_KEY, '--profile', INVALID_PROFILE, '--no-verify'],
+    config: null,
+  },
+  {
+    name: 'login-empty-profile-flag',
+    argv: ['auth', 'login', STUB_API_KEY, '--profile=', '--no-verify'],
+    config: null,
+  },
+  {
+    name: 'login-corrupt-config',
+    argv: ['auth', 'login', STUB_API_KEY, '--no-verify'],
+    rawConfig: CORRUPT_CONFIG_TEXT,
+  },
+  { name: 'status-profile-flag', argv: ['auth', 'status', '--profile', ACME_PROFILE], config: PROFILES_CONFIG },
+  { name: 'status-profile-env', argv: ['auth', 'status'], config: PROFILES_CONFIG, env: PROFILE_ENV },
+  {
+    name: 'status-profile-flag-ignores-env-key-and-base-url',
+    argv: ['auth', 'status', '--profile', ACME_PROFILE],
+    config: PROFILES_CONFIG,
+    env: { OUTRANK_API_KEY: ENV_API_KEY, OUTRANK_BASE_URL: ENV_BASE_URL, ...ALLOW_CUSTOM_HOSTS },
+  },
+  {
+    name: 'status-api-key-flag-beats-profile',
+    argv: ['auth', 'status', '--profile', ACME_PROFILE, '--api-key', FLAG_API_KEY],
+    config: PROFILES_CONFIG,
+  },
+  { name: 'status-unknown-profile', argv: ['auth', 'status', '--profile', UNKNOWN_PROFILE], config: PROFILES_CONFIG },
+  { name: 'status-unknown-profile-none-stored', argv: ['auth', 'status', '--profile', UNKNOWN_PROFILE], config: null },
+  {
+    name: 'status-keyless-profile-ignores-env-key',
+    argv: ['auth', 'status', '--profile', KEYLESS_PROFILE],
+    config: PROFILES_CONFIG,
+    env: { OUTRANK_API_KEY: ENV_API_KEY },
+  },
+  {
+    name: 'whoami-profile-flag-ignores-env-key',
+    argv: ['auth', 'whoami', '--profile', ACME_PROFILE],
+    config: PROFILES_CONFIG,
+    env: { OUTRANK_API_KEY: ENV_API_KEY },
+    responses: [WHOAMI_OK],
+  },
+  {
+    name: 'whoami-profile-env',
+    argv: ['auth', 'whoami'],
+    config: PROFILES_CONFIG,
+    env: PROFILE_ENV,
+    responses: [WHOAMI_OK],
+  },
+  {
+    name: 'whoami-keyless-profile',
+    argv: ['auth', 'whoami', '--profile', KEYLESS_PROFILE],
+    config: PROFILES_CONFIG,
+    env: { OUTRANK_API_KEY: ENV_API_KEY },
+  },
+  { name: 'whoami-unknown-profile', argv: ['auth', 'whoami', '--profile', UNKNOWN_PROFILE], config: PROFILES_CONFIG },
+  {
+    name: 'whoami-repeated-profile-flag',
+    argv: ['auth', 'whoami', '--profile', ACME_PROFILE, '--profile', ACME_PROFILE],
+    config: PROFILES_CONFIG,
+  },
+  { name: 'logout-profile-flag', argv: ['auth', 'logout', '--profile', ACME_PROFILE], config: PROFILES_CONFIG },
+  { name: 'logout-profile-env', argv: ['auth', 'logout'], config: PROFILES_CONFIG, env: PROFILE_ENV },
+  { name: 'logout-unknown-profile', argv: ['auth', 'logout', '--profile', UNKNOWN_PROFILE], config: PROFILES_CONFIG },
+  { name: 'logout-corrupt-config', argv: ['auth', 'logout'], rawConfig: CORRUPT_CONFIG_TEXT },
+  { name: 'logout-keyless-profile', argv: ['auth', 'logout', '--profile', KEYLESS_PROFILE], config: PROFILES_CONFIG },
+  {
+    name: 'whoami-allow-custom-base-url-false-text',
+    argv: ['auth', 'whoami', '--base-url', FLAG_BASE_URL, '--allow-custom-base-url=false'],
+  },
+  {
+    name: 'whoami-allow-custom-base-url-true-text',
+    argv: ['auth', 'whoami', '--base-url', FLAG_BASE_URL, '--allow-custom-base-url=true'],
+    responses: [WHOAMI_OK],
+  },
+  {
+    name: 'login-keeps-stored-base-url',
+    argv: ['auth', 'login', FLAG_API_KEY, '--profile', ACME_PROFILE],
+    config: PROFILES_CONFIG,
+    responses: [WHOAMI_OK],
+  },
+  {
+    name: 'login-flag-base-url-replaces-stored',
+    argv: ['auth', 'login', FLAG_API_KEY, '--profile', ACME_PROFILE, '--base-url', STUB_BASE_URL, '--no-verify'],
+    config: PROFILES_CONFIG,
+  },
+  { name: 'whoami-default-profile-keyless', argv: ['auth', 'whoami'], config: KEYLESS_DEFAULT_CONFIG },
+  {
+    name: 'status-invalid-stored-base-url',
+    argv: ['auth', 'status', '--profile', BROKEN_PROFILE],
+    config: BROKEN_CONFIG,
+  },
+  {
+    name: 'profiles-hand-edited-invalid-name',
+    argv: ['auth', 'profiles'],
+    rawConfig: INVALID_PROFILE_NAME_CONFIG_TEXT,
+  },
+  { name: 'logout-hand-edited-invalid-name', argv: ['auth', 'logout'], rawConfig: INVALID_PROFILE_NAME_CONFIG_TEXT },
+  {
+    name: 'whoami-invalid-stored-base-url',
+    argv: ['auth', 'whoami', '--profile', BROKEN_PROFILE],
+    config: BROKEN_CONFIG,
+  },
+  {
+    name: 'logout-invalid-stored-base-url',
+    argv: ['auth', 'logout', '--profile', BROKEN_PROFILE],
+    config: BROKEN_CONFIG,
+  },
+  {
+    name: 'login-env-base-url-replaces-stored',
+    argv: ['auth', 'login', FLAG_API_KEY, '--no-verify'],
+    config: CONFIG_WITH_OWN_BASE_URL,
+    env: { OUTRANK_BASE_URL: ENV_BASE_URL, ...ALLOW_CUSTOM_HOSTS },
+  },
+  {
+    name: 'login-profile-ignores-env-base-url',
+    argv: ['auth', 'login', FLAG_API_KEY, '--profile', ACME_PROFILE, '--no-verify'],
+    config: PROFILES_CONFIG,
+    env: { OUTRANK_BASE_URL: ENV_BASE_URL, ...ALLOW_CUSTOM_HOSTS },
+  },
+  {
+    name: 'whoami-allow-custom-base-url-false-overrides-env',
+    argv: ['auth', 'whoami', '--base-url', FLAG_BASE_URL, '--allow-custom-base-url=false'],
+    env: ALLOW_CUSTOM_HOSTS,
+  },
+  {
+    name: 'status-unknown-profile-env',
+    argv: ['auth', 'status'],
+    config: PROFILES_CONFIG,
+    env: { OUTRANK_PROFILE: UNKNOWN_PROFILE },
+  },
+  {
+    name: 'status-unknown-profile-with-api-key-flag',
+    argv: ['auth', 'status', '--profile', UNKNOWN_PROFILE, '--api-key', FLAG_API_KEY],
+    config: PROFILES_CONFIG,
+  },
+  {
+    name: 'whoami-keyless-profile-env',
+    argv: ['auth', 'whoami'],
+    config: PROFILES_CONFIG,
+    env: { OUTRANK_PROFILE: KEYLESS_PROFILE },
+  },
+  { name: 'whoami-pasted-key-as-argument', argv: ['auth', 'whoami', STUB_API_KEY], config: null },
+  { name: 'profiles-invalid-stored-base-url', argv: ['auth', 'profiles'], config: BROKEN_CONFIG },
+  { name: 'whoami-base-url-with-credentials', argv: ['auth', 'whoami', '--base-url', 'ftp://user:secret@h'] },
+  { name: 'status-invalid-profile-name-env', argv: ['auth', 'status'], env: { OUTRANK_PROFILE: 'bad name' } },
 ];

@@ -7,6 +7,8 @@ import {
   INVALID_JSON_STDIN,
   INVALID_JSON_FILE,
   MISSING_JSON_FILE,
+  EMPTY_200_RESPONSE,
+  SANITIZED_UPSTREAM_BODY_RESPONSE,
 } from './shared.js';
 
 const CREATE_JSON_FILE = 'tests/golden/fixtures/payloads/products-create.json';
@@ -180,4 +182,8 @@ export default [
       COMPETITORS_JSON_FILE,
     ],
   },
+  { name: 'pause-surplus-positional', argv: ['products', 'pause', PRODUCT_ID, 'extra'] },
+  { name: 'list-empty-200-body', argv: ['products', 'list'], responses: [EMPTY_200_RESPONSE] },
+  { name: 'list-sanitized-upstream-body', argv: ['products', 'list'], responses: [SANITIZED_UPSTREAM_BODY_RESPONSE] },
+  { name: 'list-global-option-repeated', argv: ['products', 'list', '--api-key', 'outr_live_a', '--api-key', 'outr_live_b'] },
 ];

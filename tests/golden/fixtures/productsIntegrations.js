@@ -395,4 +395,11 @@ export default [
     responses: [NO_CONTENT_RESPONSE],
   },
   { name: 'delete-missing-integration-id', argv: ['products', 'integrations', 'delete', PRODUCT_ID] },
+  { name: 'prepare-invalid-provider', argv: ['products', 'integrations', 'prepare', 'bogus', PRODUCT_ID] },
+  { name: 'connect-invalid-provider', argv: ['products', 'integrations', 'connect', 'bogus', PRODUCT_ID] },
+  { name: 'framer-bogus-subcommand', argv: ['products', 'integrations', 'framer', 'bogus'] },
+  {
+    name: 'notion-schema-non-uuid-database-id',
+    argv: ['products', 'integrations', 'notion', 'schema', PRODUCT_ID, SECOND_ID, 'abc123def456'],
+  },
 ];

@@ -127,4 +127,5 @@ export default [
   },
   { name: 'subscribe-quote-missing-plan', argv: ['products', 'backlinks', 'subscribe-quote', PRODUCT_ID] },
   { name: 'subscribe-quote-missing-id', argv: ['products', 'backlinks', 'subscribe-quote', '--plan', 'premium'] },
+  { name: 'subscribe-quote-invalid-plan', argv: ['products', 'backlinks', 'subscribe-quote', PRODUCT_ID, '--plan', 'gold'] },
 ];

@@ -5,6 +5,7 @@ import {
   NON_JSON_RESPONSE,
   NETWORK_ERROR_RESPONSE,
   NO_CONTENT_RESPONSE,
+  GATEWAY_TIMEOUT_RESPONSE,
 } from './shared.js';
 
 const PAYLOADS_DIR = 'tests/golden/fixtures/payloads';
@@ -154,4 +155,8 @@ export default [
   { name: 'generate-missing-id', argv: ['articles', 'generate'] },
 
   { name: 'unknown-subcommand', argv: ['articles', 'nonsense'] },
+  { name: 'generate-gateway-502', argv: ['articles', 'generate', SECOND_ID], responses: [NON_JSON_RESPONSE] },
+  { name: 'precreate-gateway-504', argv: ['articles', 'precreate', SECOND_ID], responses: [GATEWAY_TIMEOUT_RESPONSE] },
+  { name: 'get-gateway-502-not-long-running', argv: ['articles', 'get', SECOND_ID], responses: [NON_JSON_RESPONSE] },
+  { name: 'upload-image-empty-file-flag', argv: ['articles', 'upload-image', '--file=', '--keyword', 'email'] },
 ];

@@ -1147,5 +1147,69 @@
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
     "stderr": "",
     "requests": []
+  },
+  "pause-surplus-positional": {
+    "argv": [
+      "products",
+      "pause",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "extra"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unexpected argument: extra.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-empty-200-body": {
+    "argv": [
+      "products",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 200 with a malformed JSON body.\",\n    \"details\": {\n      \"status\": 200,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-sanitized-upstream-body": {
+    "argv": [
+      "products",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_UPSTREAM_ERROR\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products\",\n      \"body\": \"Authorization: Bearer <redacted>[31mred xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-global-option-repeated": {
+    "argv": [
+      "products",
+      "list",
+      "--api-key",
+      "outr_live_a",
+      "--api-key",
+      "outr_live_b"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--api-key was given more than once.\"\n  },\n  \"agent_guidance\": \"Pass each single-value option only once.\"\n}\n",
+    "stderr": "",
+    "requests": []
   }
 }

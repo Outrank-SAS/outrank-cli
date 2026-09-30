@@ -1,16 +1,7 @@
-﻿import fs from 'node:fs/promises';
-import path from 'node:path';
-
-import {
-  parseArgs,
-  getRequiredPositional,
-  readJsonInput,
-  hasFlag,
-  parseIntegerOption,
-  getOption,
-} from '../core/args.js';
-import { requestAgentApi } from '../core/api.js';
-import { cliSuccess } from '../core/errors.js';
+import { LIST_MAX_LIMIT, LIST_MIN_LIMIT, MIN_OFFSET } from '../core/constants.js';
+import { usageError } from '../core/errors.js';
+import { image, int, string, uuid } from '../core/schema.js';
+import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from './registry.js';
 
 export const ARTICLES_HELP = `Usage:
   outrank-cli articles list [--product <product-id>] [--status generated|approved|published|failed|deleted] [--title <text>] [--keyword <text>] [--content <text>] [--slug <text>] [--created-from <date>] [--created-to <date>] [--scheduled-from <date>] [--scheduled-to <date>] [--sort-by created_at|status|title] [--sort-order asc|desc] [--limit <n>] [--offset <n>]
@@ -46,256 +37,246 @@ Examples:
   outrank-cli articles generate 00000000-0000-0000-0000-000000000000
 `;
 
-const IMAGE_MIME_BY_EXTENSION = {
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.png': 'image/png',
-  '.webp': 'image/webp',
-  '.gif': 'image/gif',
-};
+const TOOLSETS = [Toolset.ARTICLES];
+const ARTICLE_PATH = '/articles/{articleId}';
+const ARTICLE_ID_CLI = { positionals: ['articleId'] };
+const KEYWORD_ID_CLI = { positionals: ['keywordId'] };
+const FILE_PLACEHOLDERS = { file: '<path>' };
+const FILE_REQUIRED = { guidance: 'Pass a local image path with `--file <path>`.' };
+const UPLOAD_TARGET_GUIDANCE =
+  'Pass `--article <article-id>` for an existing article editor-style upload, or `--keyword <text>` when you ' +
+  'want keyword-driven image metadata without an existing article.';
 
-const buildQueryPath = (basePath, searchParams) => {
-  const url = new URL(`https://local${basePath}`);
-  for (const [key, value] of Object.entries(searchParams)) {
-    if (value !== undefined && value !== null && value !== '') {
-      url.searchParams.set(key, String(value));
-    }
-  }
-  return `${url.pathname}${url.search}`;
-};
+const articleIdInput = () => ({ articleId: uuid().required() });
+const articleIdParams = (input) => ({ articleId: input.articleId });
 
-const resolveImageUploadPayload = async (parsed) => {
-  const filePath = getOption(parsed, 'file');
-  if (!filePath) {
-    throw Object.assign(new Error('Missing required option: --file <path>.'), {
-      cliCode: 'CLI_INVALID_USAGE',
-      guidance: 'Pass a local image path with `--file <path>`.',
-    });
-  }
-
-  const absolutePath = path.resolve(process.cwd(), filePath);
-  const buffer = await fs.readFile(absolutePath).catch((error) => {
-    throw Object.assign(new Error(`Failed to read file: ${error.message}`), {
-      cliCode: 'CLI_INVALID_USAGE',
-      guidance: `Confirm that ${absolutePath} exists and is readable, then retry.`,
-    });
-  });
-
-  const fileName = path.basename(absolutePath);
-  const extension = path.extname(fileName).toLowerCase();
-  const fileType = IMAGE_MIME_BY_EXTENSION[extension];
-
-  if (!fileType) {
-    throw Object.assign(new Error(`Unsupported image file extension: ${extension || '(none)'}.`), {
-      cliCode: 'CLI_INVALID_USAGE',
-      guidance: 'Use one of: .jpg, .jpeg, .png, .webp, .gif.',
-    });
-  }
-
-  return {
-    file_base64: buffer.toString('base64'),
-    file_name: fileName,
-    file_type: fileType,
-  };
-};
-
-const handleArticlesList = async (parsed) => {
-  const path = buildQueryPath('/articles', {
-    product_id: getOption(parsed, 'product'),
-    status: getOption(parsed, 'status'),
-    title: getOption(parsed, 'title'),
-    keyword: getOption(parsed, 'keyword'),
-    content: getOption(parsed, 'content'),
-    slug: getOption(parsed, 'slug'),
-    created_from: getOption(parsed, 'created-from'),
-    created_to: getOption(parsed, 'created-to'),
-    scheduled_from: getOption(parsed, 'scheduled-from'),
-    scheduled_to: getOption(parsed, 'scheduled-to'),
-    sort_by: getOption(parsed, 'sort-by'),
-    sort_order: getOption(parsed, 'sort-order'),
-    limit: parseIntegerOption(parsed, 'limit', { min: 1, max: 100 }),
-    offset: parseIntegerOption(parsed, 'offset', { min: 0 }),
-  });
-  const response = await requestAgentApi(parsed, {
-    method: 'GET',
-    path,
-  });
-  return response.payload;
-};
-
-const handleArticlesGet = async (parsed) => {
-  const articleId = getRequiredPositional(parsed, 0, '<article-id>');
-  const response = await requestAgentApi(parsed, {
-    method: 'GET',
-    path: `/articles/${articleId}`,
-  });
-  return response.payload;
-};
-
-const handleArticlesGetContent = async (parsed) => {
-  const articleId = getRequiredPositional(parsed, 0, '<article-id>');
-  const path = buildQueryPath(`/articles/${articleId}/content`, {
-    format: getOption(parsed, 'format'),
-  });
-  const response = await requestAgentApi(parsed, {
-    method: 'GET',
-    path,
-  });
-  return response.payload;
-};
-
-const handleArticlesUpdate = async (parsed) => {
-  const articleId = getRequiredPositional(parsed, 0, '<article-id>');
-  const body = await readJsonInput(parsed);
-  const response = await requestAgentApi(parsed, {
-    method: 'PATCH',
-    path: `/articles/${articleId}`,
-    body,
-  });
-  return response.payload;
-};
-
-const handleArticlesUpdateContent = async (parsed) => {
-  const articleId = getRequiredPositional(parsed, 0, '<article-id>');
-  const body = await readJsonInput(parsed);
-  const response = await requestAgentApi(parsed, {
-    method: 'PUT',
-    path: `/articles/${articleId}/content`,
-    body,
-  });
-  return response.payload;
-};
-
-const handleArticlesReplace = async (parsed) => {
-  const articleId = getRequiredPositional(parsed, 0, '<article-id>');
-  const body = await readJsonInput(parsed);
-  const response = await requestAgentApi(parsed, {
-    method: 'POST',
-    path: `/articles/${articleId}/replace`,
-    body,
-  });
-  return response.payload;
-};
-
-const handleArticlesBulkReplace = async (parsed) => {
-  const body = await readJsonInput(parsed);
-  const response = await requestAgentApi(parsed, {
-    method: 'POST',
-    path: '/articles/bulk-replace',
-    body,
-  });
-  return response.payload;
-};
-
-const handleArticlesUploadImage = async (parsed) => {
-  const imagePayload = await resolveImageUploadPayload(parsed);
-  const articleId = getOption(parsed, 'article');
-  const keyword = getOption(parsed, 'keyword');
-
-  if (!articleId && !keyword) {
-    throw Object.assign(new Error('Provide at least one of: --article <article-id> or --keyword <text>.'), {
-      cliCode: 'CLI_INVALID_USAGE',
-      guidance:
-        'Pass `--article <article-id>` for an existing article editor-style upload, or `--keyword <text>` when you want keyword-driven image metadata without an existing article.',
-    });
-  }
-
-  const response = await requestAgentApi(parsed, {
-    method: 'POST',
-    path: '/articles/images/upload',
-    body: {
-      ...imagePayload,
-      ...(articleId ? { article_id: articleId } : {}),
-      ...(keyword ? { keyword } : {}),
-    },
-  });
-  return response.payload;
-};
-
-const handleArticlesUploadFeaturedImage = async (parsed) => {
-  const articleId = getRequiredPositional(parsed, 0, '<article-id>');
-  const imagePayload = await resolveImageUploadPayload(parsed);
-  const response = await requestAgentApi(parsed, {
-    method: 'POST',
-    path: `/articles/${articleId}/featured-image/upload`,
-    body: imagePayload,
-  });
-  return response.payload;
-};
-
-const handleArticlesRetryPublish = async (parsed) => {
-  const articleId = getRequiredPositional(parsed, 0, '<article-id>');
-  const response = await requestAgentApi(parsed, {
-    method: 'POST',
-    path: `/articles/${articleId}/retry-publish`,
-  });
-  return response.payload;
-};
-
-const handleArticlesDelete = async (parsed) => {
-  const articleId = getRequiredPositional(parsed, 0, '<article-id>');
-  const response = await requestAgentApi(parsed, {
-    method: 'DELETE',
-    path: `/articles/${articleId}`,
-  });
-  return response.payload;
-};
-
-const handleArticlesPrecreate = async (parsed) => {
-  const keywordId = getRequiredPositional(parsed, 0, '<keyword-id>');
-  const response = await requestAgentApi(parsed, {
-    method: 'POST',
-    path: '/articles/precreate',
-    body: {
-      keyword_id: keywordId,
-    },
-  });
-  return response.payload;
-};
-
-const handleArticlesGenerate = async (parsed) => {
-  const keywordId = getRequiredPositional(parsed, 0, '<keyword-id>');
-  const response = await requestAgentApi(parsed, {
-    method: 'POST',
-    path: '/articles/generate',
-    body: {
-      keyword_id: keywordId,
-    },
-  });
-  return response.payload;
-};
-
-export const handleArticlesCommand = async (argv) => {
-  const subcommand = argv[0];
-  const parsed = parseArgs(argv.slice(1));
-  const wantsHelp = !subcommand || subcommand === '--help' || subcommand === '-h' || subcommand === 'help' || hasFlag(parsed, 'help');
-
-  if (wantsHelp) {
-    return cliSuccess(
-      {
-        usage: ARTICLES_HELP.trim(),
+const listCommand = defineCommand({
+  id: 'articles.list',
+  summary: 'List articles with optional filters, sorting and pagination.',
+  kind: CommandKind.READ,
+  toolsets: TOOLSETS,
+  input: {
+    productId: uuid(),
+    status: string(),
+    title: string(),
+    keyword: string(),
+    content: string(),
+    slug: string(),
+    createdFrom: string(),
+    createdTo: string(),
+    scheduledFrom: string(),
+    scheduledTo: string(),
+    sortBy: string(),
+    sortOrder: string(),
+    limit: int({ min: LIST_MIN_LIMIT, max: LIST_MAX_LIMIT }),
+    offset: int({ min: MIN_OFFSET }),
+  },
+  cli: { options: { product: 'productId' } },
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'GET',
+      path: '/articles',
+      query: {
+        product_id: input.productId,
+        status: input.status,
+        title: input.title,
+        keyword: input.keyword,
+        content: input.content,
+        slug: input.slug,
+        created_from: input.createdFrom,
+        created_to: input.createdTo,
+        scheduled_from: input.scheduledFrom,
+        scheduled_to: input.scheduledTo,
+        sort_by: input.sortBy,
+        sort_order: input.sortOrder,
+        limit: input.limit,
+        offset: input.offset,
       },
-      'Choose one of: list, get, get-content, update, update-content, replace, bulk-replace, upload-image, upload-featured-image, retry-publish, delete, precreate, generate.',
-    );
-  }
+    }),
+});
 
-  if (subcommand === 'list') return handleArticlesList(parsed);
-  if (subcommand === 'get') return handleArticlesGet(parsed);
-  if (subcommand === 'get-content') return handleArticlesGetContent(parsed);
-  if (subcommand === 'update') return handleArticlesUpdate(parsed);
-  if (subcommand === 'update-content') return handleArticlesUpdateContent(parsed);
-  if (subcommand === 'replace') return handleArticlesReplace(parsed);
-  if (subcommand === 'bulk-replace') return handleArticlesBulkReplace(parsed);
-  if (subcommand === 'upload-image') return handleArticlesUploadImage(parsed);
-  if (subcommand === 'upload-featured-image') return handleArticlesUploadFeaturedImage(parsed);
-  if (subcommand === 'retry-publish') return handleArticlesRetryPublish(parsed);
-  if (subcommand === 'delete') return handleArticlesDelete(parsed);
-  if (subcommand === 'precreate') return handleArticlesPrecreate(parsed);
-  if (subcommand === 'generate') return handleArticlesGenerate(parsed);
+const getCommand = defineCommand({
+  id: 'articles.get',
+  summary: 'Get article metadata by id.',
+  kind: CommandKind.READ,
+  toolsets: TOOLSETS,
+  input: articleIdInput(),
+  cli: ARTICLE_ID_CLI,
+  run: (input, ctx) => ctx.http({ method: 'GET', path: ARTICLE_PATH, pathParams: articleIdParams(input) }),
+});
 
-  throw Object.assign(new Error(`Unknown articles subcommand: ${subcommand}.`), {
-    cliCode: 'CLI_INVALID_USAGE',
-    guidance: 'Run `outrank-cli articles --help` to see available article commands.',
+const getContentCommand = defineCommand({
+  id: 'articles.get-content',
+  summary: 'Get the article body as markdown or HTML.',
+  kind: CommandKind.READ,
+  toolsets: TOOLSETS,
+  input: { ...articleIdInput(), format: string() },
+  cli: ARTICLE_ID_CLI,
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'GET',
+      path: `${ARTICLE_PATH}/content`,
+      pathParams: articleIdParams(input),
+      query: { format: input.format },
+    }),
+});
+
+const bodyCommand = ({ id, summary, kind, method, pathSuffix }) =>
+  defineCommand({
+    id,
+    summary,
+    kind,
+    toolsets: TOOLSETS,
+    input: articleIdInput(),
+    cli: ARTICLE_ID_CLI,
+    body: BodyMode.JSON,
+    run: (input, ctx) =>
+      ctx.http({ method, path: `${ARTICLE_PATH}${pathSuffix}`, pathParams: articleIdParams(input), body: input.body }),
   });
-};
 
+const updateCommand = bodyCommand({
+  id: 'articles.update',
+  summary: 'Update article metadata from a JSON body.',
+  kind: CommandKind.WRITE,
+  method: 'PATCH',
+  pathSuffix: '',
+});
+
+const updateContentCommand = bodyCommand({
+  id: 'articles.update-content',
+  summary: 'Replace the article body from a JSON body.',
+  kind: CommandKind.WRITE,
+  method: 'PUT',
+  pathSuffix: '/content',
+});
+
+const replaceCommand = bodyCommand({
+  id: 'articles.replace',
+  summary: 'Find and replace text inside one article.',
+  kind: CommandKind.WRITE,
+  method: 'POST',
+  pathSuffix: '/replace',
+});
+
+const bulkReplaceCommand = defineCommand({
+  id: 'articles.bulk-replace',
+  summary: 'Find and replace text across several articles from a JSON body.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  body: BodyMode.JSON,
+  run: (input, ctx) => ctx.http({ method: 'POST', path: '/articles/bulk-replace', body: input.body }),
+});
+
+const uploadImageCommand = defineCommand({
+  id: 'articles.upload-image',
+  summary: 'Upload an image for an article or a keyword.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: { file: image().required(FILE_REQUIRED), articleId: uuid(), keyword: string() },
+  cli: { options: { article: 'articleId' }, placeholders: FILE_PLACEHOLDERS },
+  refine: (input) => {
+    if (!input.articleId && !input.keyword) {
+      throw usageError('Provide at least one of: --article <article-id> or --keyword <text>.', UPLOAD_TARGET_GUIDANCE);
+    }
+  },
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'POST',
+      path: '/articles/images/upload',
+      body: {
+        ...input.file,
+        ...(input.articleId ? { article_id: input.articleId } : {}),
+        ...(input.keyword ? { keyword: input.keyword } : {}),
+      },
+    }),
+});
+
+const uploadFeaturedImageCommand = defineCommand({
+  id: 'articles.upload-featured-image',
+  summary: 'Upload the featured image of an article.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: { ...articleIdInput(), file: image().required(FILE_REQUIRED) },
+  cli: { ...ARTICLE_ID_CLI, placeholders: FILE_PLACEHOLDERS },
+  run: (input, ctx) =>
+    ctx.http({
+      method: 'POST',
+      path: `${ARTICLE_PATH}/featured-image/upload`,
+      pathParams: articleIdParams(input),
+      body: input.file,
+    }),
+});
+
+const retryPublishCommand = defineCommand({
+  id: 'articles.retry-publish',
+  summary: 'Retry publishing an article to its integration.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: articleIdInput(),
+  cli: ARTICLE_ID_CLI,
+  run: (input, ctx) =>
+    ctx.http({ method: 'POST', path: `${ARTICLE_PATH}/retry-publish`, pathParams: articleIdParams(input) }),
+});
+
+const deleteCommand = defineCommand({
+  id: 'articles.delete',
+  summary: 'Delete an article.',
+  kind: CommandKind.DESTRUCTIVE,
+  toolsets: TOOLSETS,
+  input: articleIdInput(),
+  cli: ARTICLE_ID_CLI,
+  run: (input, ctx) => ctx.http({ method: 'DELETE', path: ARTICLE_PATH, pathParams: articleIdParams(input) }),
+});
+
+const keywordActionCommand = ({ id, summary, actionPath }) =>
+  defineCommand({
+    id,
+    summary,
+    kind: CommandKind.WRITE,
+    toolsets: TOOLSETS,
+    input: { keywordId: uuid().required() },
+    cli: KEYWORD_ID_CLI,
+    longRunning: { pollTool: 'articles.list' },
+    run: (input, ctx) => ctx.http({ method: 'POST', path: actionPath, body: { keyword_id: input.keywordId } }),
+  });
+
+const precreateCommand = keywordActionCommand({
+  id: 'articles.precreate',
+  summary: 'Pre-create the article for an eligible future scheduled keyword.',
+  actionPath: '/articles/precreate',
+});
+
+const generateCommand = keywordActionCommand({
+  id: 'articles.generate',
+  summary: 'Generate the article for a keyword scheduled for today.',
+  actionPath: '/articles/generate',
+});
+
+export const articlesGroup = defineGroup({
+  id: 'articles',
+  help: {
+    usage: ARTICLES_HELP,
+    guidance:
+      'Choose one of: list, get, get-content, update, update-content, replace, bulk-replace, upload-image, ' +
+      'upload-featured-image, retry-publish, delete, precreate, generate.',
+  },
+  unknown: (word) => ({
+    message: `Unknown articles subcommand: ${word}.`,
+    guidance: 'Run `outrank-cli articles --help` to see available article commands.',
+  }),
+  children: [
+    listCommand,
+    getCommand,
+    getContentCommand,
+    updateCommand,
+    updateContentCommand,
+    replaceCommand,
+    bulkReplaceCommand,
+    uploadImageCommand,
+    uploadFeaturedImageCommand,
+    retryPublishCommand,
+    deleteCommand,
+    precreateCommand,
+    generateCommand,
+  ],
+});

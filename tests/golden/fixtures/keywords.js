@@ -6,6 +6,7 @@ import {
   NON_JSON_RESPONSE,
   NETWORK_ERROR_RESPONSE,
   NO_CONTENT_RESPONSE,
+  EMPTY_200_RESPONSE,
 } from './shared.js';
 
 const KEYWORDS_ADD_PAYLOAD_PATH = 'tests/golden/fixtures/payloads/keywords-add.json';
@@ -198,4 +199,26 @@ export default [
   { name: 'bulk-delete-no-json-source', argv: ['keywords', 'bulk-delete'] },
 
   { name: 'unknown-subcommand', argv: ['keywords', 'nonsense'] },
+  { name: 'list-unknown-option', argv: ['keywords', 'list', '--product', PRODUCT_ID, '--limt', '5'] },
+  { name: 'list-value-option-before-option', argv: ['keywords', 'list', '--product', PRODUCT_ID, '--q', '--limit', '5'] },
+  { name: 'list-product-not-uuid', argv: ['keywords', 'list', '--product', 'not-a-uuid'] },
+  { name: 'list-limit-not-integer', argv: ['keywords', 'list', '--product', PRODUCT_ID, '--limit', '5.5'] },
+  { name: 'list-limit-with-whitespace', argv: ['keywords', 'list', '--product', PRODUCT_ID, '--limit', ' 5'] },
+  { name: 'add-json-array-body', argv: ['keywords', 'add', '--product', PRODUCT_ID, '--json', '[1,2]'] },
+  { name: 'add-json-empty-string', argv: ['keywords', 'add', '--product', PRODUCT_ID, '--json', ''] },
+  { name: 'suggest-missing-product-and-term', argv: ['keywords', 'suggest'] },
+  { name: 'suggest-keyword-named-help', argv: ['keywords', 'suggest', '--product', PRODUCT_ID, '--keyword', 'help'] },
+  {
+    name: 'generation-status-empty-200-body',
+    argv: ['keywords', 'generation-status', '--product', PRODUCT_ID],
+    responses: [EMPTY_200_RESPONSE],
+  },
+  {
+    name: 'generate-gateway-502',
+    argv: ['keywords', 'generate', '--product', PRODUCT_ID, '--count', '5'],
+    responses: [NON_JSON_RESPONSE],
+  },
+  { name: 'add-json-file-empty', argv: ['keywords', 'add', '--product', PRODUCT_ID, '--json-file='] },
+  { name: 'list-limit-repeated', argv: ['keywords', 'list', '--product', PRODUCT_ID, '--limit', '5', '--limit', '6'] },
+  { name: 'list-product-repeated', argv: ['keywords', 'list', '--product', PRODUCT_ID, '--product', SECOND_ID] },
 ];
