@@ -1,6 +1,6 @@
 {
   "name": "outrank-cli",
-  "version": "0.5.0",
+  "version": "0.6.0-rc.1",
   "description": "Agent-first CLI and MCP server for the Outrank agent API",
   "type": "module",
   "files": [
@@ -41,13 +41,13 @@
   ],
   "author": "Outrank SAS",
   "license": "MIT",
-  "homepage": "https://github.com/Outrank-SAS/outrank-cli#readme",
+  "homepage": "https://www.outrank.so",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Outrank-SAS/outrank-cli.git"
   },
   "bugs": {
-    "url": "https://github.com/Outrank-SAS/outrank-cli/issues"
+    "url": "https://www.outrank.so"
   },
   "engines": {
     "node": ">=18"

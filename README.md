@@ -11,15 +11,6 @@ npm install -g outrank-cli
 outrank-cli --help
 ```
 
-Or run it from a clone without installing globally:
-
-```bash
-git clone https://github.com/Outrank-SAS/outrank-cli.git
-cd outrank-cli
-npm install
-node ./src/index.js --help
-```
-
 ## Get an API key
 
 1. Sign in to your Outrank account at <https://www.outrank.so>.
@@ -731,12 +722,6 @@ The agent API expects product UUIDs, not numeric ids like `88`.
 Entitlements are a hint for choosing which commands to offer, not an access boundary: they are merged across the organization's active products, and the endpoints that need a subscription check it per product on their own.
 
 `products list`, `products get`, `products update` and `products create` include `services: [{ service, status }]` per product (`service` is one of `articles`, `tools_builder`, `backlink_enterprise`, `marketplace_seller`; `status` is `active`, `read_only` or `cancelled`), sorted by service name. On `products create` the field is `null` when the services could not be read back after creation.
-
-If you do not want a global link yet, you can run the CLI directly from this repo:
-
-```bash
-node ./src/index.js auth whoami --api-key outr_live_xxx
-```
 
 ## JSON-first contract
 
