@@ -1,0 +1,41 @@
+{
+  "help": {
+    "argv": [
+      "subscription",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli subscription status\\n\\nCommands:\\n  status    Return the current subscription, plan, trial, quota, and add-on status.\"\n  },\n  \"agent_guidance\": \"Use `status` to inspect the current plan, quota, trial, and add-on state.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "status": {
+    "argv": [
+      "subscription",
+      "status"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/subscription/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "unknown-subcommand": {
+    "argv": [
+      "subscription",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown subscription subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli subscription --help` to see available subscription commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

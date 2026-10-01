@@ -1,0 +1,4 @@
+{
+  "dailyArticleLimit": 2,
+  "publishingDays": [1, 3, 5]
+}

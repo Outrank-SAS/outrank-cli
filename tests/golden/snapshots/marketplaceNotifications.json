@@ -1,0 +1,510 @@
+{
+  "help-notifications-group": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli marketplace seller status <product-id> [--refresh-stripe]\\n  outrank-cli marketplace seller onboard <product-id> [--country <ISO2>]\\n  outrank-cli marketplace seller eligibility <product-id> [--refresh]\\n  outrank-cli marketplace seller eligibility recheck <product-id>\\n  outrank-cli marketplace seller settings get <product-id>\\n  outrank-cli marketplace seller settings update <product-id> --json '<object>'\\n  outrank-cli marketplace seller integrations status <product-id>\\n  outrank-cli marketplace seller integrations adopt <product-id>\\n  outrank-cli marketplace seller integrations claim <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller integrations set-activation <product-id> --integration <integration-id> --type <platform> --status active|disabled\\n  outrank-cli marketplace seller integrations delete <product-id> --integration <integration-id> --type <platform>\\n  outrank-cli marketplace seller stripe onboard <product-id> --country <ISO2>\\n  outrank-cli marketplace seller stripe manage <product-id>\\n  outrank-cli marketplace seller stripe reset <product-id>\\n  outrank-cli marketplace seller complete-onboarding <product-id>\\n  outrank-cli marketplace seller placements list <product-id> [--status all|needs_approval|planned|live|link_not_found|lost] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace seller placements approve <placement-id>\\n  outrank-cli marketplace seller placements decline <placement-id>\\n  outrank-cli marketplace seller placements publish <placement-id>\\n  outrank-cli marketplace seller placements regenerate <placement-id>\\n  outrank-cli marketplace seller earnings <product-id>\\n  outrank-cli marketplace seller content-history <product-id> [--status <status>] [--limit <n>] [--offset <n>]\\n  outrank-cli marketplace notifications list <product-id> --role seller|buyer [--type <type>] [--sort oldest] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace notifications mark-read <product-id> --role seller|buyer [--ids <id1,id2,...>]\\n\\n  outrank-cli marketplace buyer status <product-id>\\n  outrank-cli marketplace buyer billing-status <product-id>\\n  outrank-cli marketplace buyer subscription <product-id>\\n  outrank-cli marketplace buyer subscribe-quote <product-id>\\n  outrank-cli marketplace buyer checkout <product-id> --tier <tier>\\n  outrank-cli marketplace buyer change-plan <product-id> --action change_tier|cancel_scheduled|cancel_subscription|restore_subscription [--tier <tier>]\\n  outrank-cli marketplace buyer target-pages list <product-id>\\n  outrank-cli marketplace buyer target-pages add <product-id> --urls <url1,url2,...> [--source manual|discovered]\\n  outrank-cli marketplace buyer target-pages discover <product-id> [--source sitemap|root_url|integration] [--source-url <url>]\\n  outrank-cli marketplace buyer target-pages pause <target-page-id>\\n  outrank-cli marketplace buyer target-pages activate <target-page-id>\\n  outrank-cli marketplace buyer target-pages delete <target-page-id>\\n  outrank-cli marketplace buyer participation on <product-id>\\n  outrank-cli marketplace buyer participation off <product-id>\\n  outrank-cli marketplace buyer placements list <product-id> [--status all|live|in_progress|lost|rejected] [--search <text>] [--page <n>] [--page-size <n>]\\n  outrank-cli marketplace buyer placements regenerate <placement-id>\\n  outrank-cli marketplace buyer placements revalidate <placement-id>\\n  outrank-cli marketplace buyer article get <placement-id>\\n  outrank-cli marketplace buyer article edit <placement-id> --json '<object>'\\n  outrank-cli marketplace buyer credits history <product-id> [--kind all|charge|refund] [--page <n>] [--page-size <n>]\\n\\nNotes:\\n  Seller onboarding wizard order: Blog (content details + Google Search Console) -> Articles (article settings + publishing schedule) -> Integration (marketplace CMS) -> Payouts (Stripe Express).\\n  `seller onboard` reports every remaining step, auto-adopts an existing reusable CMS without asking, and creates the Stripe Express account when the earlier steps are done and --country is provided.\\n  Admin-only commands (need an API key created by an org admin who still holds that role): settings update, all integrations writes, all stripe commands, complete-onboarding, placements decline, and buyer checkout/change-plan/participation. Buyer target-page writes are open to every org member.\\n  The mandatory buyer sequence: Enterprise backlink plan (subscribe-quote -> a human org admin completes checkout) -> add target pages -> participation on.\\n  Purchasing the Enterprise backlink plan is admin-only and happens through interactive Stripe checkout — surface subscription_management_url to the human.\\n\\nExamples:\\n  outrank-cli marketplace seller status <UUID-1>\\n  outrank-cli marketplace seller onboard <UUID-1> --country US\\n  outrank-cli marketplace seller settings update <UUID-1> --json '{\\\"dailyArticleLimit\\\":2,\\\"publishingDays\\\":[1,3,5]}'\\n  outrank-cli marketplace seller placements list <UUID-1> --status needs_approval\\n  outrank-cli marketplace seller placements approve <UUID-1>\\n  outrank-cli marketplace notifications list <UUID-1> --role seller\\n  outrank-cli marketplace buyer status <UUID-1>\\n  outrank-cli marketplace buyer target-pages add <UUID-1> --urls https://example.com/pricing,https://example.com/features\"\n  },\n  \"agent_guidance\": \"Choose `seller`, `buyer`, or `notifications`. Sellers earn by hosting marketplace backlinks in their articles; buyers spend backlink credits to place links on high-authority articles. Start buyers with `marketplace buyer status` and sellers with `marketplace seller status`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-basic-seller": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications?role=seller",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-basic-buyer": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "buyer"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications?role=buyer",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-with-type": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller",
+      "--type",
+      "placement_approved"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications?role=seller&type=placement_approved",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-with-sort-oldest": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller",
+      "--sort",
+      "oldest"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications?role=seller&sort=oldest",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-with-page-page-size": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller",
+      "--page",
+      "2",
+      "--page-size",
+      "10"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications?role=seller&page=2&page_size=10",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-page-zero-error": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller",
+      "--page",
+      "0"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--page must be >= 1.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-page-size-over-max-error": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller",
+      "--page-size",
+      "101"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--page-size must be <= 100.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-missing-role": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --role seller|buyer.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-unknown-role-passthrough": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "notarole"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications?role=notarole",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-missing-product-id": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list-not-found": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications?role=seller",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-non-json-response": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 502 without a JSON body.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications?role=seller\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications?role=seller",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-network-error": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications?role=seller",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-no-api-key": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "mark-read-basic-seller": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "mark-read",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "role": "seller"
+        }
+      }
+    ]
+  },
+  "mark-read-basic-buyer": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "mark-read",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "buyer"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "role": "buyer"
+        }
+      }
+    ]
+  },
+  "mark-read-ids-repeated": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "mark-read",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller",
+      "--ids",
+      "id-1,id-2",
+      "--ids",
+      "id-3"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "role": "seller",
+          "ids": [
+            "id-1",
+            "id-2",
+            "id-3"
+          ]
+        }
+      }
+    ]
+  },
+  "mark-read-ids-single-comma": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "mark-read",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller",
+      "--ids",
+      "id-1,id-2,id-3"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "role": "seller",
+          "ids": [
+            "id-1",
+            "id-2",
+            "id-3"
+          ]
+        }
+      }
+    ]
+  },
+  "mark-read-missing-role": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "mark-read",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --role seller|buyer.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "mark-read-unknown-role-passthrough": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "mark-read",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "notarole"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "role": "notarole"
+        }
+      }
+    ]
+  },
+  "mark-read-admin-role-required": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "mark-read",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--role",
+      "seller"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"ADMIN_ROLE_REQUIRED\",\n    \"message\": \"This action requires an organization admin API key.\"\n  },\n  \"agent_guidance\": \"Ask an organization admin to run this, or create a new API key while holding the admin role.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/marketplace/notifications",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "role": "seller"
+        }
+      }
+    ]
+  },
+  "mark-read-missing-product-id": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "mark-read"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "notifications-unknown-subcommand": {
+    "argv": [
+      "marketplace",
+      "notifications",
+      "frobnicate",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown marketplace notifications subcommand: frobnicate.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli marketplace --help` to see the available marketplace commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "help": {
+    "argv": [
+      "usage",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli usage stats\\n\\nCommands:\\n  stats    Return current usage and quota metrics for articles, backlinks, free tools, and product slots.\"\n  },\n  \"agent_guidance\": \"Use `stats` to inspect current quota consumption and activity.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "stats": {
+    "argv": [
+      "usage",
+      "stats"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/usage/stats",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "stats-api-error": {
+    "argv": [
+      "usage",
+      "stats"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/usage/stats",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "stats-malformed-json-body": {
+    "argv": [
+      "usage",
+      "stats"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_UNEXPECTED_ERROR\",\n    \"message\": \"<JSON_PARSE_ERROR>\"\n  },\n  \"agent_guidance\": \"Retry with --help for usage details. If the command and inputs look correct, inspect the error details and try again.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/usage/stats",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "stats-no-key": {
+    "argv": [
+      "usage",
+      "stats"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-subcommand": {
+    "argv": [
+      "usage",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown usage subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli usage --help` to see available usage commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "stats-rate-limited": {
+    "argv": [
+      "usage",
+      "stats"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"RATE_LIMITED\",\n    \"message\": \"Slow down.\",\n    \"details\": {\n      \"retry_after\": \"30\",\n      \"rate_limit\": {\n        \"limit_minute\": \"60\",\n        \"remaining_minute\": \"0\",\n        \"limit_day\": \"5000\",\n        \"remaining_day\": \"4210\"\n      }\n    }\n  },\n  \"agent_guidance\": \"Wait.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/usage/stats",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "stats-rate-limited-invalid-headers": {
+    "argv": [
+      "usage",
+      "stats"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"RATE_LIMITED\",\n    \"message\": \"Slow down.\",\n    \"details\": {\n      \"rate_limit\": {\n        \"limit_day\": \"5000\"\n      }\n    }\n  },\n  \"agent_guidance\": \"Wait.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/usage/stats",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  }
+}

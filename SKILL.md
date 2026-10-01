@@ -1,9 +1,25 @@
 ﻿---
 name: outrank
-description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage publishing integrations, inspect or manage keyword plans, inspect or edit articles, discover/schedule/run/review/publish article improvements for existing posts, manage article settings, target audiences, competitors, Google Search Console connections, internal linking configuration, quote/buy product slots, or work with the Outrank Marketplace (seller onboarding, eligibility, placements, earnings, Stripe payouts, buyer target pages and placements). Requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
+description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage publishing integrations, inspect or manage keyword plans, inspect or edit articles, discover/schedule/run/review/publish article improvements for existing posts, manage article settings, target audiences, competitors, Google Search Console connections, internal linking configuration, quote/buy product slots, or work with the Outrank Marketplace (seller onboarding, eligibility, placements, earnings, Stripe payouts, buyer target pages and placements). Uses the Outrank MCP server when it is connected; otherwise requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
 ---
 
 # Outrank Skill
+
+## If the Outrank MCP server is connected
+
+When tools such as `products_list`, `keywords_list` or `auth_whoami` from an `outrank` MCP server are available, use them instead of the terminal:
+
+- Every command in this document has a tool with the same name written with underscores: `products integrations list` is `products_integrations_list`, `marketplace seller status` is `marketplace_seller_status`. Options become arguments in snake_case (`--product <id>` is `product_id`, `--scheduled-for` is `scheduled_for`), ids are UUIDs, and `--json` payloads go into the `body` argument as an object.
+- Skip the Setup section below. Do not ask the human for an API key and do not run `auth login`: the server already holds its credentials. If a tool returns `CLI_AUTH_REQUIRED`, tell the human to add `OUTRANK_API_KEY` to the server entry in their MCP client configuration (or to run `outrank-cli auth login` in a terminal) and restart the server. Never ask them to paste the key into the conversation.
+- Each result is `{ ok, data | error, agent_guidance, organization }`. `organization` names the one organization this server works on; to work on another organization the human registers a second server with another profile.
+- The tool list depends on what the organization has. If a tool named in this document is missing, read the server instructions: they say which toolsets are off and why. `auth_whoami` refreshes the list after the human buys a new service.
+- `auth login`, `auth logout` and `auth profiles` exist only in the terminal CLI.
+- Image uploads take `file_path` (an absolute path inside the server's upload directory) or `file_base64` with `file_name`.
+- For long-running and publishing tools (`improvements_analyze`, `improvements_candidates_brief`, `improvements_tasks_execute`, `improvements_executions_push`, `articles_generate`, `articles_precreate`, `articles_retry_publish`, `keywords_generate`): if the call times out or returns `CLI_OPERATION_MAY_STILL_BE_RUNNING`, poll the tool named in the guidance. Do not call it again.
+- If any other tool that changes something fails with a network error whose guidance says the outcome is unknown, read the current state before repeating the change.
+- Everything else in this document (workflows, confirmation rules, wording for humans) applies unchanged.
+
+## Using the terminal CLI
 
 Use `outrank-cli` to drive Outrank from the terminal. The CLI is JSON-first and every command returns `agent_guidance`, so read that field after each step and let it steer the next call.
 
@@ -24,6 +40,8 @@ Use `marketplace ...` for the Outrank Marketplace: seller onboarding and eligibi
 4. If a command fails with auth errors, tell the human exactly how to refresh the key, then retry.
 5. If the environment blocks writes to the default home directory, set `OUTRANK_CONFIG_DIR` to a writable folder before using `auth login`.
 6. If the API is hosted on a non-default Outrank deployment, set `OUTRANK_BASE_URL=<deployment-url>`. Use `--base-url <deployment-url>` only as a per-command override when needed.
+7. If the human works with several Outrank organizations, keep one profile per organization: `outrank-cli auth login <api-key> --profile <name>`, then `--profile <name>` on each call (or `OUTRANK_PROFILE=<name>` for the shell). `outrank-cli auth profiles` lists them and `outrank-cli auth status` shows which one is active. A selected profile ignores `OUTRANK_API_KEY`; if it has no stored key the call fails with `CLI_AUTH_REQUIRED` and names the profile to log in to.
+8. If any command fails with `CLI_CONFIG_UNREADABLE`, the local config file is corrupt: show the human `error.details.config_path` and ask them to fix or delete it. Never overwrite it blindly.
 
 ## Discovery
 
@@ -585,7 +603,7 @@ Start with `marketplace buyer status <productId>` — its guidance drives the wh
 2. **Target pages (mandatory before the dashboard opens)** — discover with `marketplace buyer target-pages discover <productId> [--source sitemap|root_url|integration]`, present candidates to the human, add with `marketplace buyer target-pages add <productId> --urls <u1,u2,...>` (own-domain only, max 10 pages, batches of up to 50), manage with `pause`/`activate`/`delete`
 3. **Participation** — `marketplace buyer participation on <productId>` (requires the plan plus >= 1 active target page)
 
-Then: `placements list`, `placements regenerate|revalidate`, `article get/edit <placementId>` (editable only while the placement is matched or publishing and unpublished; keep the placement backlink intact), `credits history`, and `notifications --role buyer`. Each placement costs the host site's Domain Rating x 3 in backlink credits. Plan upgrades via `change-plan` are dashboard-only (interactive payment confirmation); downgrades, cancellations, and restores work from the CLI.
+Then: `placements list`, `placements regenerate|revalidate`, `article get/edit <placementId>` (editable only while the placement is matched or publishing and unpublished; keep the placement backlink intact), `credits history`, and `notifications --role buyer`. Each placement costs the host site's Domain Rating x 3 in backlink credits. Plan upgrades via `change-plan` are dashboard-only (interactive payment confirmation); downgrades, cancellations, and restores work from the CLI. `--action cancel_scheduled` and `--action cancel_subscription` apply immediately and are refused without `--confirm-subscription-id <id>`: read the id with `marketplace buyer subscription <productId>`, confirm the cancellation with the human, then pass that id. Never invent or reuse an id.
 
 ## Error handling
 

@@ -1,0 +1,1666 @@
+{
+  "help": {
+    "argv": [
+      "products",
+      "integrations",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products integrations providers\\n  outrank-cli products integrations prepare <provider> <product-id> [--json <object>]\\n  outrank-cli products integrations connect <provider> <product-id> [--json <object>]\\n  outrank-cli products integrations poll <provider> <product-id> --attempt-id <attempt-id>\\n  outrank-cli products integrations notion databases <product-id> <integration-id>\\n  outrank-cli products integrations notion schema <product-id> <integration-id> <database-id>\\n  outrank-cli products integrations framer collections --json <object>\\n  outrank-cli products integrations framer fields --json <object>\\n  outrank-cli products integrations webflow sites --json <object>\\n  outrank-cli products integrations webflow collections --json <object>\\n  outrank-cli products integrations webflow fields --json <object>\\n  outrank-cli products integrations webflow items --json <object>\\n  outrank-cli products integrations validate <provider> --json <object>\\n  outrank-cli products integrations list <product-id>\\n  outrank-cli products integrations create <product-id> --json <object>\\n  outrank-cli products integrations get <product-id> <integration-id>\\n  outrank-cli products integrations update <product-id> <integration-id> --json <object>\\n  outrank-cli products integrations test <product-id> <integration-id>\\n  outrank-cli products integrations delete <product-id> <integration-id>\"\n  },\n  \"agent_guidance\": \"Use `providers` to inspect known provider availability, auth method, required connect/create fields, and provider notes. For WordPress Plugin, start with `prepare` to generate the integration token, then validate and create. For WordPress.com and Notion, use `connect`, have the human open the returned connect_url, then `poll` until the OAuth handoff completes. Notion exposes `notion databases` and `notion schema` discovery commands. Framer exposes `framer collections` and `framer fields` discovery for the newer Server API-based setup, not the older plugin flow. Webflow exposes `webflow sites`, `webflow collections`, `webflow fields`, and `webflow items` discovery before create or update. Shopify validation returns the resolved `shop_name` plus available blogs, so the human should only need to provide the access token before blog selection. Wix is a direct validate/create/update/test flow using `site_id`, `api_key`, and `publish_status`. Next.js Blog is a one-step create flow that returns a one-time API key in the response. V2 products are intended to keep one publishing integration; multiple rows usually indicate legacy cleanup work.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "notion-help": {
+    "argv": [
+      "products",
+      "integrations",
+      "notion",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products integrations notion databases <product-id> <integration-id>\\n  outrank-cli products integrations notion schema <product-id> <integration-id> <database-id>\"\n  },\n  \"agent_guidance\": \"Use `databases` after Notion OAuth completes to list accessible Notion databases, then use `schema` to inspect one database before PATCHing the saved integration row with name, database_id, and fields.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "webflow-help": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products integrations webflow sites --json <object>\\n  outrank-cli products integrations webflow collections --json <object>\\n  outrank-cli products integrations webflow fields --json <object>\\n  outrank-cli products integrations webflow items --json <object>\"\n  },\n  \"agent_guidance\": \"Use `sites` first to validate a Webflow token and list accessible sites, then `collections`, `fields`, and `items` to build the exact create or update payload for the chosen CMS collection.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "framer-help": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products integrations framer collections --json <object>\\n  outrank-cli products integrations framer fields --json <object>\"\n  },\n  \"agent_guidance\": \"Use `collections` first with the Framer project URL and Server API key. Then use `fields` for one chosen collection if you want `collection_setup_mode: \\\"existing\\\"` instead of auto-creating a new collection.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-subcommand": {
+    "argv": [
+      "products",
+      "integrations",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "api-error": {
+    "argv": [
+      "products",
+      "integrations",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "non-json-response": {
+    "argv": [
+      "products",
+      "integrations",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 502 without a JSON body.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "network-error": {
+    "argv": [
+      "products",
+      "integrations",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "no-key": {
+    "argv": [
+      "products",
+      "integrations",
+      "providers"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "providers": {
+    "argv": [
+      "products",
+      "integrations",
+      "providers"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "prepare-no-json": {
+    "argv": [
+      "products",
+      "integrations",
+      "prepare",
+      "wordpress-plugin",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/prepare/wordpress-plugin",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "prepare-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "prepare",
+      "wordpress-plugin",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"domain\":\"https://acme.example.com\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/prepare/wordpress-plugin",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "https://acme.example.com"
+        }
+      }
+    ]
+  },
+  "prepare-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "prepare",
+      "wordpress-plugin",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/integrations-prepare.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/prepare/wordpress-plugin",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "https://acme.example.com"
+        }
+      }
+    ]
+  },
+  "prepare-json-stdin": {
+    "argv": [
+      "products",
+      "integrations",
+      "prepare",
+      "wordpress-plugin",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/prepare/wordpress-plugin",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "https://stdin.example.com"
+        }
+      }
+    ]
+  },
+  "prepare-two-json-sources": {
+    "argv": [
+      "products",
+      "integrations",
+      "prepare",
+      "wordpress-plugin",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"domain\":\"https://acme.example.com\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/integrations-prepare.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "prepare-missing-provider": {
+    "argv": [
+      "products",
+      "integrations",
+      "prepare"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <provider>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "prepare-missing-product-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "prepare",
+      "wordpress-plugin"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "connect-no-json": {
+    "argv": [
+      "products",
+      "integrations",
+      "connect",
+      "notion",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/connect/notion",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "connect-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "connect",
+      "wordpress-com",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"name\":\"Main WordPress.com\",\"publish_status\":\"publish\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/connect/wordpress-com",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Main WordPress.com",
+          "publish_status": "publish"
+        }
+      }
+    ]
+  },
+  "connect-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "connect",
+      "wordpress-com",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/integrations-connect.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/connect/wordpress-com",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Main WordPress.com",
+          "publish_status": "publish"
+        }
+      }
+    ]
+  },
+  "connect-json-stdin": {
+    "argv": [
+      "products",
+      "integrations",
+      "connect",
+      "wordpress-com",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/connect/wordpress-com",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Stdin WordPress.com"
+        }
+      }
+    ]
+  },
+  "connect-two-json-sources": {
+    "argv": [
+      "products",
+      "integrations",
+      "connect",
+      "wordpress-com",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"name\":\"Main WordPress.com\",\"publish_status\":\"publish\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/integrations-connect.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "connect-missing-product-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "connect",
+      "wordpress-com"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "poll": {
+    "argv": [
+      "products",
+      "integrations",
+      "poll",
+      "wordpress-com",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--attempt-id",
+      "attempt-123"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/connect/wordpress-com?attempt_id=attempt-123",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "poll-missing-attempt-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "poll",
+      "wordpress-com",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --attempt-id <attempt-id>.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products integrations poll <provider> <product-id> --attempt-id <attempt-id>` after connect starts.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "poll-missing-product-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "poll",
+      "wordpress-com",
+      "--attempt-id",
+      "attempt-123"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "notion-databases": {
+    "argv": [
+      "products",
+      "integrations",
+      "notion",
+      "databases",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002/notion/databases",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "notion-databases-missing-integration-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "notion",
+      "databases",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <integration-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "notion-schema": {
+    "argv": [
+      "products",
+      "integrations",
+      "notion",
+      "schema",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "cccccccc-0000-4000-8000-000000000003"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002/notion/databases/cccccccc-0000-4000-8000-000000000003/schema",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "notion-schema-missing-database-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "notion",
+      "schema",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <database-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "notion-unknown-subcommand": {
+    "argv": [
+      "products",
+      "integrations",
+      "notion",
+      "bogus",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown products integrations notion subcommand: bogus.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products integrations notion --help` to see the available Notion discovery commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "webflow-sites-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "sites",
+      "--json",
+      "{\"api_token\":\"wf_token\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webflow/discover/sites",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "api_token": "wf_token"
+        }
+      }
+    ]
+  },
+  "webflow-sites-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "sites",
+      "--json-file",
+      "tests/golden/fixtures/payloads/webflow-sites.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webflow/discover/sites",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "api_token": "wf_token"
+        }
+      }
+    ]
+  },
+  "webflow-sites-json-stdin": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "sites",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webflow/discover/sites",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "api_token": "wf_stdin_token"
+        }
+      }
+    ]
+  },
+  "webflow-sites-no-json-source": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "sites"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "webflow-sites-two-json-sources": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "sites",
+      "--json",
+      "{\"api_token\":\"wf_token\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/webflow-sites.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "webflow-arbitrary-subcommand": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "bogus",
+      "--json",
+      "{\"api_token\":\"wf_token\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webflow/discover/bogus",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "api_token": "wf_token"
+        }
+      }
+    ]
+  },
+  "webflow-collections-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "collections",
+      "--json",
+      "{\"api_token\":\"wf_token\",\"site_id\":\"site_id\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webflow/discover/collections",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "api_token": "wf_token",
+          "site_id": "site_id"
+        }
+      }
+    ]
+  },
+  "webflow-collections-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "collections",
+      "--json-file",
+      "tests/golden/fixtures/payloads/webflow-collections.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webflow/discover/collections",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "api_token": "wf_token",
+          "site_id": "site_id"
+        }
+      }
+    ]
+  },
+  "webflow-collections-no-json-source": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "collections"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "webflow-fields-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "fields",
+      "--json",
+      "{\"api_token\":\"wf_token\",\"collection_id\":\"collection_id\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webflow/discover/fields",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "api_token": "wf_token",
+          "collection_id": "collection_id"
+        }
+      }
+    ]
+  },
+  "webflow-fields-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "fields",
+      "--json-file",
+      "tests/golden/fixtures/payloads/webflow-fields.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webflow/discover/fields",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "api_token": "wf_token",
+          "collection_id": "collection_id"
+        }
+      }
+    ]
+  },
+  "webflow-fields-two-json-sources": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "fields",
+      "--json",
+      "{\"api_token\":\"wf_token\",\"collection_id\":\"collection_id\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/webflow-fields.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "webflow-items-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "items",
+      "--json",
+      "{\"api_token\":\"wf_token\",\"collection_id\":\"collection_id\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webflow/discover/items",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "api_token": "wf_token",
+          "collection_id": "collection_id"
+        }
+      }
+    ]
+  },
+  "webflow-items-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "items",
+      "--json-file",
+      "tests/golden/fixtures/payloads/webflow-items.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webflow/discover/items",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "api_token": "wf_token",
+          "collection_id": "collection_id"
+        }
+      }
+    ]
+  },
+  "webflow-items-no-json-source": {
+    "argv": [
+      "products",
+      "integrations",
+      "webflow",
+      "items"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "framer-collections-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "collections",
+      "--json",
+      "{\"project_url\":\"https://framer.com/projects/your-project\",\"server_api_key\":\"framer_server_key\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/framer/discover/collections",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "project_url": "https://framer.com/projects/your-project",
+          "server_api_key": "framer_server_key"
+        }
+      }
+    ]
+  },
+  "framer-collections-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "collections",
+      "--json-file",
+      "tests/golden/fixtures/payloads/framer-collections.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/framer/discover/collections",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "project_url": "https://framer.com/projects/your-project",
+          "server_api_key": "framer_server_key"
+        }
+      }
+    ]
+  },
+  "framer-collections-json-stdin": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "collections",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/framer/discover/collections",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "project_url": "https://framer.com/projects/stdin-project",
+          "server_api_key": "framer_stdin_key"
+        }
+      }
+    ]
+  },
+  "framer-collections-no-json-source": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "collections"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "framer-collections-two-json-sources": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "collections",
+      "--json",
+      "{\"project_url\":\"https://framer.com/projects/your-project\",\"server_api_key\":\"framer_server_key\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/framer-collections.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "framer-fields-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "fields",
+      "--json",
+      "{\"project_url\":\"https://framer.com/projects/your-project\",\"server_api_key\":\"framer_server_key\",\"collection_id\":\"collection_id\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/framer/discover/fields",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "project_url": "https://framer.com/projects/your-project",
+          "server_api_key": "framer_server_key",
+          "collection_id": "collection_id"
+        }
+      }
+    ]
+  },
+  "framer-fields-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "fields",
+      "--json-file",
+      "tests/golden/fixtures/payloads/framer-fields.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/framer/discover/fields",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "project_url": "https://framer.com/projects/your-project",
+          "server_api_key": "framer_server_key",
+          "collection_id": "collection_id"
+        }
+      }
+    ]
+  },
+  "framer-fields-no-json-source": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "fields"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "validate-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "validate",
+      "webhook",
+      "--json",
+      "{\"endpoint\":\"https://api.example.com/webhook\",\"access_token\":\"secret\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webhook/validate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "endpoint": "https://api.example.com/webhook",
+          "access_token": "secret"
+        }
+      }
+    ]
+  },
+  "validate-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "validate",
+      "webhook",
+      "--json-file",
+      "tests/golden/fixtures/payloads/integrations-validate-webhook.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webhook/validate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "endpoint": "https://api.example.com/webhook",
+          "access_token": "secret"
+        }
+      }
+    ]
+  },
+  "validate-json-stdin": {
+    "argv": [
+      "products",
+      "integrations",
+      "validate",
+      "webhook",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/integration-providers/webhook/validate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "endpoint": "https://api.example.com/webhook-stdin",
+          "access_token": "stdin-secret"
+        }
+      }
+    ]
+  },
+  "validate-no-json-source": {
+    "argv": [
+      "products",
+      "integrations",
+      "validate",
+      "webhook"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "validate-two-json-sources": {
+    "argv": [
+      "products",
+      "integrations",
+      "validate",
+      "webhook",
+      "--json",
+      "{\"endpoint\":\"https://api.example.com/webhook\",\"access_token\":\"secret\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/integrations-validate-webhook.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "validate-missing-provider": {
+    "argv": [
+      "products",
+      "integrations",
+      "validate"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <provider>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "list": {
+    "argv": [
+      "products",
+      "integrations",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-missing-product-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "list"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"provider\":\"webhook\",\"name\":\"Main Webhook\",\"endpoint\":\"https://api.example.com/webhook\",\"access_token\":\"secret\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "provider": "webhook",
+          "name": "Main Webhook",
+          "endpoint": "https://api.example.com/webhook",
+          "access_token": "secret"
+        }
+      }
+    ]
+  },
+  "create-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/integrations-create.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "provider": "webhook",
+          "name": "Main Webhook",
+          "endpoint": "https://api.example.com/webhook",
+          "access_token": "secret"
+        }
+      }
+    ]
+  },
+  "create-json-stdin": {
+    "argv": [
+      "products",
+      "integrations",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "provider": "nextjs-blog"
+        }
+      }
+    ]
+  },
+  "create-no-json-source": {
+    "argv": [
+      "products",
+      "integrations",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-two-json-sources": {
+    "argv": [
+      "products",
+      "integrations",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"provider\":\"webhook\",\"name\":\"Main Webhook\",\"endpoint\":\"https://api.example.com/webhook\",\"access_token\":\"secret\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/integrations-create.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "get": {
+    "argv": [
+      "products",
+      "integrations",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "get-missing-integration-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <integration-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "update-json-inline": {
+    "argv": [
+      "products",
+      "integrations",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"endpoint\":\"https://api.example.com/webhook-v2\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "endpoint": "https://api.example.com/webhook-v2"
+        }
+      }
+    ]
+  },
+  "update-json-file": {
+    "argv": [
+      "products",
+      "integrations",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json-file",
+      "tests/golden/fixtures/payloads/integrations-update.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "endpoint": "https://api.example.com/webhook-v2"
+        }
+      }
+    ]
+  },
+  "update-json-stdin": {
+    "argv": [
+      "products",
+      "integrations",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json-stdin"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "publish_status": "draft"
+        }
+      }
+    ]
+  },
+  "update-no-json-source": {
+    "argv": [
+      "products",
+      "integrations",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "update-two-json-sources": {
+    "argv": [
+      "products",
+      "integrations",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"endpoint\":\"https://api.example.com/webhook-v2\"}",
+      "--json-file",
+      "tests/golden/fixtures/payloads/integrations-update.json"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "test": {
+    "argv": [
+      "products",
+      "integrations",
+      "test",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002/test",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "test-missing-integration-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "test",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <integration-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "delete": {
+    "argv": [
+      "products",
+      "integrations",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "delete-204-non-json": {
+    "argv": [
+      "products",
+      "integrations",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NON_JSON_RESPONSE\",\n    \"message\": \"Outrank returned HTTP 204 without a JSON body.\",\n    \"details\": {\n      \"status\": 204,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "delete-missing-integration-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <integration-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "prepare-invalid-provider": {
+    "argv": [
+      "products",
+      "integrations",
+      "prepare",
+      "bogus",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"<provider> must be one of: wordpress-plugin, wordpress-com, notion, framer, webflow, shopify, wix, webhook, nextjs-blog.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "connect-invalid-provider": {
+    "argv": [
+      "products",
+      "integrations",
+      "connect",
+      "bogus",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"<provider> must be one of: wordpress-plugin, wordpress-com, notion, framer, webflow, shopify, wix, webhook, nextjs-blog.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "framer-bogus-subcommand": {
+    "argv": [
+      "products",
+      "integrations",
+      "framer",
+      "bogus"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown products integrations framer subcommand: bogus.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products integrations framer --help` to see the available Framer discovery commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "notion-schema-non-uuid-database-id": {
+    "argv": [
+      "products",
+      "integrations",
+      "notion",
+      "schema",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "abc123def456"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/integrations/bbbbbbbb-0000-4000-8000-000000000002/notion/databases/abc123def456/schema",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  }
+}

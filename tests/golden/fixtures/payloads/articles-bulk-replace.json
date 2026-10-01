@@ -1,0 +1,6 @@
+{
+  "find": "Old brand",
+  "replace_with": "New brand",
+  "article_ids": ["article-1"],
+  "confirm": true
+}

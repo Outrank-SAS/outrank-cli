@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "data": {
+    "user": {
+      "email": "agent@example.com",
+      "role": "admin"
+    },
+    "organization": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "onboarded": true,
+      "subscribed": false,
+      "article_credits_used": 0,
+      "article_credits_limit": 3,
+      "article_credits_remaining": 3,
+      "product_count": 1
+    },
+    "api_key": {
+      "name": "agent-key"
+    },
+    "entitlements": {
+      "toolsets": {
+        "core": "full",
+        "keywords": "read",
+        "articles": "read",
+        "integrations": "read",
+        "gsc": "read",
+        "linking": "read",
+        "backlinks": "read",
+        "billing": "read",
+        "improvements": "read"
+      },
+      "unverified_toolsets": {},
+      "flows": {
+        "articles": true,
+        "marketplace_buyer": false,
+        "marketplace_seller": false
+      },
+      "disabled_products_with_services": 0
+    }
+  },
+  "agent_guidance": "Authenticated as agent@example.com (admin) using API key \"agent-key\". 3 of 3 article credits remaining this period. No active subscription — paid actions will require checkout via the billing commands. Available command groups: core, keywords (read), articles (read), integrations (read), gsc (read), linking (read), backlinks (read), billing (read), improvements (read). Groups marked (read) belong to a subscription that is no longer active: use them to inspect existing data. Writes that need the subscription, such as scheduling keywords or generating articles, are rejected until it is restored. Not started yet (the start endpoints named here work even though their group is not listed above): Marketplace buyer (start with GET /api/agent/v1/products/<id>/marketplace/buyer/status); Marketplace seller (start with GET /api/agent/v1/products/<id>/marketplace/seller/status). Common next steps: list products; inspect or update a product's General settings with GET/PATCH /api/agent/v1/products/<id>; inspect or update a product's Article settings with GET/PATCH /api/agent/v1/products/<id>/output-settings; inspect the content plan with GET /api/agent/v1/keywords?product_id=<id>; review billing commands. Run `outrank-cli --help` to see available command groups."
+}

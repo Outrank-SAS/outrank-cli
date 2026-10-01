@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 
-import { readFileSync } from 'node:fs';
-
-import { parseArgs } from './core/args.js';
 import { emitAndExit } from './core/io.js';
-import { cliError, cliSuccess } from './core/errors.js';
-import { handleAuthCommand } from './commands/auth.js';
-import { handleProductsCommand } from './commands/products.js';
-import { handleBillingCommand } from './commands/billing.js';
-import { handleSubscriptionCommand } from './commands/subscription.js';
-import { handleUsageCommand } from './commands/usage.js';
-import { handleKeywordsCommand } from './commands/keywords.js';
-import { handleArticlesCommand } from './commands/articles.js';
-import { handleImprovementsCommand } from './commands/improvements.js';
-import { handleMarketplaceCommand } from './commands/marketplace.js';
+import { cliSuccess, toErrorEnvelope, usageError } from './core/errors.js';
+import { runRegistryCommand } from './adapters/cli/run.js';
+import { MCP_COMMAND } from './adapters/mcp/constants.js';
+import { MCP_HELP, MCP_HELP_GUIDANCE } from './adapters/mcp/help.js';
+import { registry } from './commands/index.js';
+import { getVersion } from './core/version.js';
 
-const getVersion = () => {
-  try {
-    const packageJson = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-    return packageJson.version || 'unknown';
-  } catch {
-    return 'unknown';
-  }
-};
+const EXIT_FAILURE = 1;
+const HELP_TOKENS = ['--help', '-h', 'help'];
 
 const ROOT_HELP = `Outrank CLI
 
@@ -43,9 +30,13 @@ Groups:
   usage       Inspect current usage and quota consumption.
   billing     Product-slot purchase flows.
 
+MCP Server:
+  outrank-cli mcp      Start the Outrank MCP server on stdio (see outrank-cli mcp --help).
+
 Global Auth Options:
   --api-key <key>      Override the API key for this command only.
   --base-url <url>     Override the Outrank base URL for this command only.
+  --profile <name>     Use a stored profile for this command only (see auth --help).
 
 JSON Input Conventions:
   Complex write commands accept one of:
@@ -81,7 +72,6 @@ Examples:
 
 const main = async () => {
   const argv = process.argv.slice(2);
-  const parsed = parseArgs(argv);
   const first = argv[0];
 
   if (argv.length === 0 || first === '--help' || first === '-h' || first === 'help') {
@@ -108,44 +98,26 @@ const main = async () => {
     return;
   }
 
-  const group = argv[0];
-  const rest = argv.slice(1);
-
-  let result;
-  if (group === 'auth') {
-    result = await handleAuthCommand(rest);
-  } else if (group === 'products') {
-    result = await handleProductsCommand(rest);
-  } else if (group === 'keywords') {
-    result = await handleKeywordsCommand(rest);
-  } else if (group === 'articles') {
-    result = await handleArticlesCommand(rest);
-  } else if (group === 'improvements') {
-    result = await handleImprovementsCommand(rest);
-  } else if (group === 'marketplace') {
-    result = await handleMarketplaceCommand(rest);
-  } else if (group === 'subscription') {
-    result = await handleSubscriptionCommand(rest);
-  } else if (group === 'usage') {
-    result = await handleUsageCommand(rest);
-  } else if (group === 'billing') {
-    result = await handleBillingCommand(rest);
-  } else {
-    throw Object.assign(new Error(`Unknown command group: ${group}.`), {
-      cliCode: 'CLI_INVALID_USAGE',
-      guidance: 'Run `outrank-cli --help` to see the available top-level groups.',
-    });
+  if (first === MCP_COMMAND) {
+    if (argv.slice(1).some((token) => HELP_TOKENS.includes(token))) {
+      emitAndExit(cliSuccess({ usage: MCP_HELP.trim() }, MCP_HELP_GUIDANCE));
+      return;
+    }
+    const { runMcpServer } = await import('./adapters/mcp/main.js');
+    await runMcpServer(argv.slice(1), { input: process.stdin });
+    return;
   }
 
-  emitAndExit(result, result?.ok === false ? 1 : 0);
+  const registryOutcome = await runRegistryCommand(registry, argv);
+  if (!registryOutcome) {
+    throw usageError(
+      `Unknown command group: ${argv[0]}.`,
+      'Run `outrank-cli --help` to see the available top-level groups.',
+    );
+  }
+  emitAndExit(registryOutcome.envelope, registryOutcome.exitCode);
 };
 
 main().catch((error) => {
-  const message = error?.message || 'Unexpected CLI failure.';
-  const code = error?.cliCode || 'CLI_UNEXPECTED_ERROR';
-  const guidance =
-    error?.guidance ||
-    'Retry with --help for usage details. If the command and inputs look correct, inspect the error details and try again.';
-
-  emitAndExit(cliError(code, message, guidance), 1);
+  emitAndExit(toErrorEnvelope(error), EXIT_FAILURE);
 });

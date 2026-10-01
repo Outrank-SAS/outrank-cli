@@ -1,0 +1,7 @@
+{
+  "competitors": [
+    { "url": "https://competitor-one.example.com" },
+    { "url": "https://competitor-two.example.com" },
+    { "url": "https://competitor-three.example.com" }
+  ]
+}
