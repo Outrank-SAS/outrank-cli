@@ -32,5 +32,27 @@
     "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown command group: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli --help` to see the available top-level groups.\"\n}\n",
     "stderr": "",
     "requests": []
+  },
+  "mcp-help": {
+    "argv": [
+      "mcp",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli mcp [--toolsets <names|all|auto>] [--read-only] [--profile <name>] [--upload-dir <directory>]\\n\\nStarts the Outrank MCP server on stdio. Every CLI command except auth login, auth logout and auth profiles is\\nexposed as a tool whose name is the command with underscores (products integrations list -> products_integrations_list).\\n\\nOptions:\\n  --toolsets <names>    Comma-separated toolsets to expose, or all. Default: auto (from the organization's\\n                        entitlements, plus the setup tools of every area).\\n                        Toolsets: core, integrations, gsc, linking, backlinks, keywords, articles, improvements,\\n                        marketplace-seller, marketplace-buyer, billing.\\n  --read-only           Expose only tools that do not change anything.\\n  --profile <name>      Use a stored profile (one per organization). See: outrank-cli auth profiles\\n  --upload-dir <dir>    Directory image uploads may be read from. Default: the directory the server starts in.\\n\\nEnvironment:\\n  OUTRANK_API_KEY           API key, unless a profile is selected.\\n  OUTRANK_PROFILE           Same as --profile.\\n  OUTRANK_MCP_TOOLSETS      Same as --toolsets.\\n  OUTRANK_MCP_READ_ONLY=1   Same as --read-only.\\n  OUTRANK_MCP_UPLOAD_DIR    Same as --upload-dir.\\n  OUTRANK_MCP_DEBUG=1       Log tool calls to stderr (never headers; secrets are redacted).\\n\\nNotes:\\n  The key is never a tool argument. A base URL outside outrank.so is accepted only when the key and the URL come\\n  from the same stored profile.\\n\\nExamples:\\n  claude mcp add outrank --env OUTRANK_API_KEY=outr_live_xxx -- npx -y outrank-cli mcp\\n  outrank-cli mcp --profile acme --toolsets core,keywords,articles --read-only\"\n  },\n  \"agent_guidance\": \"Register this command as a stdio MCP server in the client configuration; do not run it interactively.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "mcp-help-after-options": {
+    "argv": [
+      "mcp",
+      "--toolsets",
+      "all",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli mcp [--toolsets <names|all|auto>] [--read-only] [--profile <name>] [--upload-dir <directory>]\\n\\nStarts the Outrank MCP server on stdio. Every CLI command except auth login, auth logout and auth profiles is\\nexposed as a tool whose name is the command with underscores (products integrations list -> products_integrations_list).\\n\\nOptions:\\n  --toolsets <names>    Comma-separated toolsets to expose, or all. Default: auto (from the organization's\\n                        entitlements, plus the setup tools of every area).\\n                        Toolsets: core, integrations, gsc, linking, backlinks, keywords, articles, improvements,\\n                        marketplace-seller, marketplace-buyer, billing.\\n  --read-only           Expose only tools that do not change anything.\\n  --profile <name>      Use a stored profile (one per organization). See: outrank-cli auth profiles\\n  --upload-dir <dir>    Directory image uploads may be read from. Default: the directory the server starts in.\\n\\nEnvironment:\\n  OUTRANK_API_KEY           API key, unless a profile is selected.\\n  OUTRANK_PROFILE           Same as --profile.\\n  OUTRANK_MCP_TOOLSETS      Same as --toolsets.\\n  OUTRANK_MCP_READ_ONLY=1   Same as --read-only.\\n  OUTRANK_MCP_UPLOAD_DIR    Same as --upload-dir.\\n  OUTRANK_MCP_DEBUG=1       Log tool calls to stderr (never headers; secrets are redacted).\\n\\nNotes:\\n  The key is never a tool argument. A base URL outside outrank.so is accepted only when the key and the URL come\\n  from the same stored profile.\\n\\nExamples:\\n  claude mcp add outrank --env OUTRANK_API_KEY=outr_live_xxx -- npx -y outrank-cli mcp\\n  outrank-cli mcp --profile acme --toolsets core,keywords,articles --read-only\"\n  },\n  \"agent_guidance\": \"Register this command as a stdio MCP server in the client configuration; do not run it interactively.\"\n}\n",
+    "stderr": "",
+    "requests": []
   }
 }

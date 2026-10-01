@@ -1,22 +1,15 @@
 #!/usr/bin/env node
 
-import { readFileSync } from 'node:fs';
-
 import { emitAndExit } from './core/io.js';
 import { cliSuccess, toErrorEnvelope, usageError } from './core/errors.js';
 import { runRegistryCommand } from './adapters/cli/run.js';
+import { MCP_COMMAND } from './adapters/mcp/constants.js';
+import { MCP_HELP, MCP_HELP_GUIDANCE } from './adapters/mcp/help.js';
 import { registry } from './commands/index.js';
+import { getVersion } from './core/version.js';
 
 const EXIT_FAILURE = 1;
-
-const getVersion = () => {
-  try {
-    const packageJson = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-    return packageJson.version || 'unknown';
-  } catch {
-    return 'unknown';
-  }
-};
+const HELP_TOKENS = ['--help', '-h', 'help'];
 
 const ROOT_HELP = `Outrank CLI
 
@@ -36,6 +29,9 @@ Groups:
   subscription Inspect plan, trial, quota, and add-on status.
   usage       Inspect current usage and quota consumption.
   billing     Product-slot purchase flows.
+
+MCP Server:
+  outrank-cli mcp      Start the Outrank MCP server on stdio (see outrank-cli mcp --help).
 
 Global Auth Options:
   --api-key <key>      Override the API key for this command only.
@@ -99,6 +95,16 @@ const main = async () => {
         'Version returned.',
       ),
     );
+    return;
+  }
+
+  if (first === MCP_COMMAND) {
+    if (argv.slice(1).some((token) => HELP_TOKENS.includes(token))) {
+      emitAndExit(cliSuccess({ usage: MCP_HELP.trim() }, MCP_HELP_GUIDANCE));
+      return;
+    }
+    const { runMcpServer } = await import('./adapters/mcp/main.js');
+    await runMcpServer(argv.slice(1), { input: process.stdin });
     return;
   }
 

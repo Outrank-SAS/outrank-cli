@@ -1,7 +1,9 @@
 import { BODY_INPUT_NAME, BodyMode, JSON_BODY_MODES, assertEnvelope } from '../commands/registry.js';
-import { LONG_RUNNING_GATEWAY_STATUSES } from './constants.js';
+import { LONG_RUNNING_GATEWAY_STATUSES, Surface } from './constants.js';
 import { CliErrorCode, cliError, toErrorEnvelope } from './errors.js';
 import { validateInput } from './schema.js';
+
+const INTERRUPTED_DETAILS = Object.freeze(['timed_out', 'cancelled', 'outcome_unknown']);
 
 const stillRunningGuidance = (ctx, spec) =>
   `The request did not complete, but the server may still be processing it. Do not retry; poll ${ctx.ref(
@@ -21,7 +23,8 @@ const mapLongRunningResult = (spec, result, ctx) => {
 };
 
 const mapLongRunningError = (spec, error, ctx) => {
-  if (!spec.longRunning || error?.cliCode !== CliErrorCode.NETWORK_ERROR || !error?.details?.timed_out) return null;
+  const interrupted = INTERRUPTED_DETAILS.some((detail) => error?.details?.[detail] === true);
+  if (!spec.longRunning || error?.cliCode !== CliErrorCode.NETWORK_ERROR || !interrupted) return null;
   return mayStillBeRunning(ctx, spec, error.message, error.details);
 };
 
@@ -47,12 +50,13 @@ const mergeBody = (spec, input, body) => {
 };
 
 export const executeCommand = async ({ spec, raw, loadBody = async () => undefined, ctx, labels = {} }) => {
+  const validation = { ...labels, splitLists: ctx.surface !== Surface.MCP };
   try {
     const { bodyField, rest } = splitBodyField(spec.input);
-    const input = validateInput(rest, raw, labels);
+    const input = validateInput(rest, raw, validation);
     const rawBody = await resolveBody(spec, loadBody);
     if (bodyField) {
-      const validated = validateInput({ [BODY_INPUT_NAME]: bodyField }, { [BODY_INPUT_NAME]: rawBody }, labels);
+      const validated = validateInput({ [BODY_INPUT_NAME]: bodyField }, { [BODY_INPUT_NAME]: rawBody }, validation);
       if (BODY_INPUT_NAME in validated) input[BODY_INPUT_NAME] = mergeBody(spec, input, validated[BODY_INPUT_NAME]);
     } else if (rawBody !== undefined) {
       input[BODY_INPUT_NAME] = rawBody;

@@ -884,6 +884,26 @@
       }
     ]
   },
+  "retry-publish-gateway-504": {
+    "argv": [
+      "articles",
+      "retry-publish",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 504 without an error envelope.\",\n    \"details\": {\n      \"status\": 504,\n      \"url\": \"https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/retry-publish\",\n      \"body\": \"<html>Gateway timeout</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli articles get until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/retry-publish",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
   "upload-image-empty-file-flag": {
     "argv": [
       "articles",

@@ -1,9 +1,25 @@
 ﻿---
 name: outrank
-description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage publishing integrations, inspect or manage keyword plans, inspect or edit articles, discover/schedule/run/review/publish article improvements for existing posts, manage article settings, target audiences, competitors, Google Search Console connections, internal linking configuration, quote/buy product slots, or work with the Outrank Marketplace (seller onboarding, eligibility, placements, earnings, Stripe payouts, buyer target pages and placements). Requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
+description: Drive the Outrank agent API from the terminal via outrank-cli. Use when the user asks to list/create/update Outrank products, inspect or manage publishing integrations, inspect or manage keyword plans, inspect or edit articles, discover/schedule/run/review/publish article improvements for existing posts, manage article settings, target audiences, competitors, Google Search Console connections, internal linking configuration, quote/buy product slots, or work with the Outrank Marketplace (seller onboarding, eligibility, placements, earnings, Stripe payouts, buyer target pages and placements). Uses the Outrank MCP server when it is connected; otherwise requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
 ---
 
 # Outrank Skill
+
+## If the Outrank MCP server is connected
+
+When tools such as `products_list`, `keywords_list` or `auth_whoami` from an `outrank` MCP server are available, use them instead of the terminal:
+
+- Every command in this document has a tool with the same name written with underscores: `products integrations list` is `products_integrations_list`, `marketplace seller status` is `marketplace_seller_status`. Options become arguments in snake_case (`--product <id>` is `product_id`, `--scheduled-for` is `scheduled_for`), ids are UUIDs, and `--json` payloads go into the `body` argument as an object.
+- Skip the Setup section below. Do not ask the human for an API key and do not run `auth login`: the server already holds its credentials. If a tool returns `CLI_AUTH_REQUIRED`, tell the human to add `OUTRANK_API_KEY` to the server entry in their MCP client configuration (or to run `outrank-cli auth login` in a terminal) and restart the server. Never ask them to paste the key into the conversation.
+- Each result is `{ ok, data | error, agent_guidance, organization }`. `organization` names the one organization this server works on; to work on another organization the human registers a second server with another profile.
+- The tool list depends on what the organization has. If a tool named in this document is missing, read the server instructions: they say which toolsets are off and why. `auth_whoami` refreshes the list after the human buys a new service.
+- `auth login`, `auth logout` and `auth profiles` exist only in the terminal CLI.
+- Image uploads take `file_path` (an absolute path inside the server's upload directory) or `file_base64` with `file_name`.
+- For long-running and publishing tools (`improvements_analyze`, `improvements_candidates_brief`, `improvements_tasks_execute`, `improvements_executions_push`, `articles_generate`, `articles_precreate`, `articles_retry_publish`, `keywords_generate`): if the call times out or returns `CLI_OPERATION_MAY_STILL_BE_RUNNING`, poll the tool named in the guidance. Do not call it again.
+- If any other tool that changes something fails with a network error whose guidance says the outcome is unknown, read the current state before repeating the change.
+- Everything else in this document (workflows, confirmation rules, wording for humans) applies unchanged.
+
+## Using the terminal CLI
 
 Use `outrank-cli` to drive Outrank from the terminal. The CLI is JSON-first and every command returns `agent_guidance`, so read that field after each step and let it steer the next call.
 

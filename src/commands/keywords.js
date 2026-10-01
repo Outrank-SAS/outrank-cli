@@ -8,8 +8,9 @@ import {
   MIN_DIFFICULTY,
   MIN_OFFSET,
   MIN_SEARCH_VOLUME,
+  Surface,
 } from '../core/constants.js';
-import { usageError } from '../core/errors.js';
+import { MCP_USAGE_GUIDANCE, usageError } from '../core/errors.js';
 import { int, list, oneOf, string, uuid } from '../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from './registry.js';
 
@@ -195,10 +196,12 @@ const suggestCommand = defineCommand({
     limit: int({ min: LIST_MIN_LIMIT, max: KEYWORDS_SUGGEST_MAX_LIMIT }),
   },
   cli: productCli,
-  refine: (input) => {
-    if (!input.keyword && !input.theme) {
-      throw usageError('Missing required option: --keyword <text> or --theme <text>.', SUGGEST_TERM_GUIDANCE);
+  refine: (input, ctx) => {
+    if (input.keyword || input.theme) return;
+    if (ctx.surface === Surface.MCP) {
+      throw usageError('Missing required argument: keyword or theme.', MCP_USAGE_GUIDANCE);
     }
+    throw usageError('Missing required option: --keyword <text> or --theme <text>.', SUGGEST_TERM_GUIDANCE);
   },
   run: (input, ctx) =>
     ctx.http({
@@ -252,7 +255,7 @@ const generateCommand = defineCommand({
 const bulkProcessCommand = defineCommand({
   id: 'keywords.bulk-process',
   summary: 'Bulk-process a list of keywords for a product from a JSON body.',
-  kind: CommandKind.WRITE,
+  kind: CommandKind.READ,
   toolsets: TOOLSETS,
   input: { productId: productOption(), keywordRegion: string() },
   cli: productCli,

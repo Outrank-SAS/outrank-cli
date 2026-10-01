@@ -1291,5 +1291,28 @@
         "body": {}
       }
     ]
+  },
+  "executions-push-gateway-502": {
+    "argv": [
+      "improvements",
+      "executions",
+      "push",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/improvements/executions/bbbbbbbb-0000-4000-8000-000000000002/push\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli improvements executions get until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/improvements/executions/bbbbbbbb-0000-4000-8000-000000000002/push",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
   }
 }

@@ -158,5 +158,10 @@ export default [
   { name: 'generate-gateway-502', argv: ['articles', 'generate', SECOND_ID], responses: [NON_JSON_RESPONSE] },
   { name: 'precreate-gateway-504', argv: ['articles', 'precreate', SECOND_ID], responses: [GATEWAY_TIMEOUT_RESPONSE] },
   { name: 'get-gateway-502-not-long-running', argv: ['articles', 'get', SECOND_ID], responses: [NON_JSON_RESPONSE] },
+  {
+    name: 'retry-publish-gateway-504',
+    argv: ['articles', 'retry-publish', SECOND_ID],
+    responses: [GATEWAY_TIMEOUT_RESPONSE],
+  },
   { name: 'upload-image-empty-file-flag', argv: ['articles', 'upload-image', '--file=', '--keyword', 'email'] },
 ];

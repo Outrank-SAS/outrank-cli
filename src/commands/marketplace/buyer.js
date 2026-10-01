@@ -139,7 +139,8 @@ const changePlan = defineCommand({
   cli: { ...PRODUCT_CLI, placeholders: { action: CHANGE_PLAN_ACTIONS } },
   refine: (input, ctx) => {
     input.confirmSubscriptionId = input.confirmSubscriptionId?.trim() || undefined;
-    if (IMMEDIATE_CANCEL_ACTIONS.includes(input.action) && !input.confirmSubscriptionId) {
+    const action = input.action.trim().toLowerCase();
+    if (IMMEDIATE_CANCEL_ACTIONS.includes(action) && !input.confirmSubscriptionId) {
       throw usageError(
         `${input.action} requires ${confirmSubscriptionLabel(ctx)}.`,
         confirmSubscriptionGuidance(input, ctx),

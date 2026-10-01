@@ -7,6 +7,7 @@ import {
   LOOPBACK_HOSTNAMES,
   PROFILE_ENV,
   ProfileSource,
+  Surface,
 } from './constants.js';
 import { CliErrorCode, codedError } from './errors.js';
 import {
@@ -20,7 +21,7 @@ import {
 import { requestAgentApi } from './http.js';
 import { profileSelectedByEnvHint } from './profileSelection.js';
 
-export { ProfileSource };
+export { ProfileSource, Surface };
 
 export const ContextSource = Object.freeze({
   FLAG: 'flag',
@@ -29,8 +30,6 @@ export const ContextSource = Object.freeze({
   DEFAULT: 'default',
   MISSING: 'missing',
 });
-
-export const Surface = Object.freeze({ CLI: 'cli', MCP: 'mcp' });
 
 const TRUTHY_ENV_VALUES = new Set(['1', 'true', 'yes']);
 const HTTPS_PROTOCOL = 'https:';
@@ -52,25 +51,42 @@ const cleartextGuidance =
   'The API key travels in the Authorization header, so only https is accepted. Plain http is allowed only for ' +
   `loopback hosts (${LOOPBACK_HOSTNAMES.join(', ')}) together with ${ALLOW_CUSTOM_BASE_URL_ENV}=1.`;
 
+const storedProfileOnlyGuidance = (host) =>
+  `This server sends the API key to ${ALLOWED_BASE_URL_HOSTS.join(' or ')} only, unless both the key and the base ` +
+  `URL come from the same stored profile. If ${host} is a deployment you control, run ` +
+  '`outrank-cli auth login <api-key> --profile <name> --base-url <url> --allow-custom-base-url` in a terminal, ' +
+  'then start the server with `--profile <name>`. Environment variables cannot unlock a custom host here.';
+
 const profileNameGuidance =
   'Profile names start with a letter or digit and may contain letters, digits, dots, dashes and underscores.';
 
 const describeProfileSource = (source) => (source === ProfileSource.ENV ? PROFILE_ENV : PROFILE_FLAG);
 
-const unknownProfileGuidance = (profiles, source) => {
+const HIDDEN_PROFILES_NOTE = 'Run `outrank-cli auth profiles` in a terminal to see the stored profiles.';
+
+const describeStoredProfiles = (profiles, revealLocalDetails) => {
+  if (!revealLocalDetails) return HIDDEN_PROFILES_NOTE;
   const names = Object.keys(profiles).sort();
-  const stored =
-    names.length === 0
-      ? 'No profiles are stored yet.'
-      : `Stored profiles: ${names.join(', ')}. Run \`outrank-cli auth profiles\` to inspect them.`;
+  return names.length === 0
+    ? 'No profiles are stored yet.'
+    : `Stored profiles: ${names.join(', ')}. Run \`outrank-cli auth profiles\` to inspect them.`;
+};
+
+const unknownProfileGuidance = (profiles, source, revealLocalDetails) => {
+  const stored = describeStoredProfiles(profiles, revealLocalDetails);
   return (
     `${stored} Run \`outrank-cli auth login <api-key> --profile <name>\` to create a new one.` +
     profileSelectedByEnvHint(source)
   );
 };
 
-const storedBaseUrlGuidance = (profile) =>
-  `Edit the baseUrl of profile ${profile} in the config file at details.config_path, run ` +
+const configFileReference = (revealLocalDetails) =>
+  revealLocalDetails
+    ? 'the config file at details.config_path'
+    : 'the outrank-cli config file (run `outrank-cli auth status` in a terminal to see its path)';
+
+const storedBaseUrlGuidance = (profile, revealLocalDetails) =>
+  `Edit the baseUrl of profile ${profile} in ${configFileReference(revealLocalDetails)}, run ` +
   `\`outrank-cli auth login <api-key> --profile ${profile} --base-url <url>\` to replace it, or pass --base-url ` +
   'for this call. `auth status`, `auth profiles` and `auth logout` keep working with the broken value.';
 
@@ -97,7 +113,7 @@ export const normalizeBaseUrl = (value) => {
   return url.origin;
 };
 
-const assertAllowedBaseUrl = (baseUrl, allowCustomBaseUrl) => {
+const assertAllowedBaseUrl = (baseUrl, allowCustomBaseUrl, guidanceFor = allowlistGuidance) => {
   const url = new URL(baseUrl);
   const loopback = LOOPBACK_HOSTNAMES.includes(url.hostname) || LOOPBACK_HOSTNAMES.includes(`[${url.hostname}]`);
   if (url.protocol === HTTP_PROTOCOL && !(loopback && allowCustomBaseUrl)) {
@@ -107,7 +123,7 @@ const assertAllowedBaseUrl = (baseUrl, allowCustomBaseUrl) => {
   throw codedError(
     CliErrorCode.INVALID_USAGE,
     `Base URL host ${url.host} is not allowed.`,
-    allowlistGuidance(url.host),
+    guidanceFor(url.host),
   );
 };
 
@@ -117,7 +133,7 @@ const assertFlagsHaveValues = (flags) => {
   if (flags.profile === '') throw emptyFlagError('--profile');
 };
 
-const selectProfile = ({ flags, env, state, allowUnknownProfile }) => {
+const selectProfile = ({ flags, env, state, allowUnknownProfile, revealLocalDetails }) => {
   const [source, name] = pickFirst([
     [ProfileSource.FLAG, flags.profile],
     [ProfileSource.ENV, env[PROFILE_ENV]],
@@ -136,13 +152,13 @@ const selectProfile = ({ flags, env, state, allowUnknownProfile }) => {
     throw codedError(
       CliErrorCode.INVALID_USAGE,
       `Unknown profile: ${name} (from ${describeProfileSource(source)}).`,
-      unknownProfileGuidance(state.profiles, source),
+      unknownProfileGuidance(state.profiles, source, revealLocalDetails),
     );
   }
   return { name, source, explicit, known, values: known ? state.profiles[name] : {} };
 };
 
-const normalizeResolvedBaseUrl = ({ value, source, profileName, tolerateStored }) => {
+const normalizeResolvedBaseUrl = ({ value, source, profileName, tolerateStored, revealLocalDetails }) => {
   try {
     return normalizeBaseUrl(value);
   } catch (error) {
@@ -151,7 +167,7 @@ const normalizeResolvedBaseUrl = ({ value, source, profileName, tolerateStored }
     throw codedError(
       CliErrorCode.INVALID_USAGE,
       `Invalid base URL stored in profile ${profileName}.`,
-      storedBaseUrlGuidance(profileName),
+      storedBaseUrlGuidance(profileName, revealLocalDetails),
       { config_path: getConfigPath() },
     );
   }
@@ -163,9 +179,17 @@ export const resolveContext = ({
   config = {},
   enforceAllowlist = true,
   allowUnknownProfile = false,
+  customBaseUrlFromStoredProfileOnly = false,
+  revealLocalDetails = true,
 } = {}) => {
   assertFlagsHaveValues(flags);
-  const profile = selectProfile({ flags, env, state: readProfiles(config), allowUnknownProfile });
+  const profile = selectProfile({
+    flags,
+    env,
+    state: readProfiles(config),
+    allowUnknownProfile,
+    revealLocalDetails,
+  });
   const envApiKey = profile.explicit ? undefined : env[API_KEY_ENV];
   const envBaseUrl = profile.explicit ? undefined : env[BASE_URL_ENV];
   const [apiKeySource, apiKey] = pickFirst([
@@ -179,17 +203,23 @@ export const resolveContext = ({
     [ContextSource.PROFILE, profile.values.baseUrl],
     [ContextSource.DEFAULT, DEFAULT_BASE_URL],
   ]);
-  const allowCustomBaseUrl =
+  const storedPair = apiKeySource === ContextSource.PROFILE && baseUrlSource === ContextSource.PROFILE;
+  const requestedCustomBaseUrl =
     typeof flags.allowCustomBaseUrl === 'boolean'
       ? flags.allowCustomBaseUrl
       : TRUTHY_ENV_VALUES.has(env[ALLOW_CUSTOM_BASE_URL_ENV]);
+  const allowCustomBaseUrl = customBaseUrlFromStoredProfileOnly ? storedPair : requestedCustomBaseUrl;
   const baseUrl = normalizeResolvedBaseUrl({
     value: rawBaseUrl,
     source: baseUrlSource,
     profileName: profile.name,
     tolerateStored: !enforceAllowlist,
+    revealLocalDetails,
   });
-  if (enforceAllowlist && baseUrlSource !== ContextSource.DEFAULT) assertAllowedBaseUrl(baseUrl, allowCustomBaseUrl);
+  if (enforceAllowlist && baseUrlSource !== ContextSource.DEFAULT) {
+    const guidanceFor = customBaseUrlFromStoredProfileOnly ? storedProfileOnlyGuidance : allowlistGuidance;
+    assertAllowedBaseUrl(baseUrl, allowCustomBaseUrl, guidanceFor);
+  }
 
   return {
     apiKey,
@@ -205,8 +235,18 @@ export const resolveContext = ({
   };
 };
 
-export const loadContext = async (flags = {}, { enforceAllowlist = true, allowUnknownProfile = false } = {}) =>
-  resolveContext({ flags, env: process.env, config: await loadConfig(), enforceAllowlist, allowUnknownProfile });
+export const loadContext = async (
+  flags = {},
+  { enforceAllowlist = true, allowUnknownProfile = false, customBaseUrlFromStoredProfileOnly = false } = {},
+) =>
+  resolveContext({
+    flags,
+    env: process.env,
+    config: await loadConfig(),
+    enforceAllowlist,
+    allowUnknownProfile,
+    customBaseUrlFromStoredProfileOnly,
+  });
 
 const renderCliReference = (spec, args) => {
   const words = spec.id.split('.');

@@ -13,6 +13,7 @@ export const ProfileSource = Object.freeze({
   ENV: 'env',
   DEFAULT: 'default',
 });
+export const Surface = Object.freeze({ CLI: 'cli', MCP: 'mcp' });
 export const DEFAULT_PROFILE_NAME = 'default';
 export const PROFILE_NAME_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 export const MAX_PROFILE_NAME_LENGTH = 64;
@@ -24,7 +25,8 @@ export const HTTP_REQUEST_TIMEOUT_MS = 60_000;
 export const HTTP_LONG_RUNNING_TIMEOUT_MS = 330_000;
 export const MCP_STARTUP_RESOLVE_TIMEOUT_MS = 3_000;
 
-export const MAX_IMAGE_UPLOAD_BYTES = 5 * BYTES_PER_MB;
+export const MAX_IMAGE_UPLOAD_MEGABYTES = 5;
+export const MAX_IMAGE_UPLOAD_BYTES = MAX_IMAGE_UPLOAD_MEGABYTES * BYTES_PER_MB;
 export const MAX_UPSTREAM_ERROR_BODY_CHARS = 500;
 export const MAX_RATE_LIMIT_HEADER_LENGTH = 64;
 export const MAX_TOOL_NAME_LENGTH = 46;

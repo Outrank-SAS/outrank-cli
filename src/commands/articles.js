@@ -1,5 +1,5 @@
-import { LIST_MAX_LIMIT, LIST_MIN_LIMIT, MIN_OFFSET } from '../core/constants.js';
-import { usageError } from '../core/errors.js';
+import { LIST_MAX_LIMIT, LIST_MIN_LIMIT, MIN_OFFSET, Surface } from '../core/constants.js';
+import { MCP_USAGE_GUIDANCE, usageError } from '../core/errors.js';
 import { image, int, string, uuid } from '../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from './registry.js';
 
@@ -174,10 +174,12 @@ const uploadImageCommand = defineCommand({
   toolsets: TOOLSETS,
   input: { file: image().required(FILE_REQUIRED), articleId: uuid(), keyword: string() },
   cli: { options: { article: 'articleId' }, placeholders: FILE_PLACEHOLDERS },
-  refine: (input) => {
-    if (!input.articleId && !input.keyword) {
-      throw usageError('Provide at least one of: --article <article-id> or --keyword <text>.', UPLOAD_TARGET_GUIDANCE);
+  refine: (input, ctx) => {
+    if (input.articleId || input.keyword) return;
+    if (ctx.surface === Surface.MCP) {
+      throw usageError('Provide at least one of: article_id or keyword.', MCP_USAGE_GUIDANCE);
     }
+    throw usageError('Provide at least one of: --article <article-id> or --keyword <text>.', UPLOAD_TARGET_GUIDANCE);
   },
   run: (input, ctx) =>
     ctx.http({
@@ -214,6 +216,7 @@ const retryPublishCommand = defineCommand({
   toolsets: TOOLSETS,
   input: articleIdInput(),
   cli: ARTICLE_ID_CLI,
+  longRunning: { pollTool: 'articles.get' },
   run: (input, ctx) =>
     ctx.http({ method: 'POST', path: `${ARTICLE_PATH}/retry-publish`, pathParams: articleIdParams(input) }),
 });

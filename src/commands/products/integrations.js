@@ -1,3 +1,4 @@
+import { usageError } from '../../core/errors.js';
 import { oneOf, string, uuid } from '../../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from '../registry.js';
 import { PRODUCT_CLI, productInput, productParams, withProduct } from './shared.js';
@@ -60,6 +61,8 @@ const FRAMER_GUIDANCE =
   'collection if you want `collection_setup_mode: "existing"` instead of auto-creating a new collection.';
 
 const TOOLSETS = [Toolset.INTEGRATIONS];
+const NOTION_ID_PATTERN = /^[A-Za-z0-9-]{1,64}$/;
+const NOTION_ID_GUIDANCE = 'Use a database id returned by the Notion databases command.';
 const PROVIDERS = Object.freeze([
   'wordpress-plugin',
   'wordpress-com',
@@ -161,6 +164,11 @@ const notionSchema = defineCommand({
   toolsets: TOOLSETS,
   input: { ...integrationInput(), databaseId: string().required() },
   cli: withProduct(['integrationId', 'databaseId']),
+  refine: (input) => {
+    if (!NOTION_ID_PATTERN.test(input.databaseId)) {
+      throw usageError('A Notion database id contains only letters, digits and dashes.', NOTION_ID_GUIDANCE);
+    }
+  },
   run: (input, ctx) =>
     ctx.http({
       method: 'GET',
@@ -231,6 +239,7 @@ const create = defineCommand({
   summary: 'Create a publishing integration for a product from a JSON body.',
   kind: CommandKind.WRITE,
   toolsets: TOOLSETS,
+  mcp: SENSITIVE_BODY,
   input: productInput(),
   cli: PRODUCT_CLI,
   body: BodyMode.JSON,
@@ -258,6 +267,7 @@ const update = defineCommand({
   summary: 'Update one integration of a product from a JSON body.',
   kind: CommandKind.WRITE,
   toolsets: TOOLSETS,
+  mcp: SENSITIVE_BODY,
   input: integrationInput(),
   cli: INTEGRATION_CLI,
   body: BodyMode.JSON,

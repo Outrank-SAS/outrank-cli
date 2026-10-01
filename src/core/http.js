@@ -9,6 +9,7 @@ import {
   MAX_UPSTREAM_ERROR_BODY_CHARS,
   NO_BODY_STATUSES,
   RATE_LIMIT_HEADERS,
+  Surface,
 } from './constants.js';
 import { CliErrorCode, cliError, cliSuccess, codedError, isEnvelope } from './errors.js';
 import { profileSelectedByEnvHint } from './profileSelection.js';
@@ -19,7 +20,21 @@ const PATH_PARAM_PATTERN = /\{([a-zA-Z0-9_]+)\}/g;
 const FORBIDDEN_PATH_SEGMENTS = new Set(['.', '..', '']);
 const TIMEOUT_ERROR_NAME = 'TimeoutError';
 const TIMEOUT_ABORT_MESSAGE = 'The request timed out.';
-const UNDICI_TIMEOUT_CODES = new Set(['UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT', 'UND_ERR_CONNECT_TIMEOUT']);
+const READ_METHOD = 'GET';
+const RESPONSE_TIMEOUT_CODES = new Set(['UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT']);
+const NEVER_SENT_CODES = new Set([
+  'ENOTFOUND',
+  'EAI_AGAIN',
+  'ECONNREFUSED',
+  'ENETUNREACH',
+  'EHOSTUNREACH',
+  'UND_ERR_CONNECT_TIMEOUT',
+  'CERT_HAS_EXPIRED',
+  'DEPTH_ZERO_SELF_SIGNED_CERT',
+  'SELF_SIGNED_CERT_IN_CHAIN',
+  'UNABLE_TO_VERIFY_LEAF_SIGNATURE',
+  'ERR_TLS_CERT_ALTNAME_INVALID',
+]);
 const NUMERIC_HEADER_PATTERN = /^\d{1,10}$/;
 const FIRST_PRINTABLE_CODE = 0x20;
 const DELETE_CODE = 0x7f;
@@ -45,7 +60,26 @@ const INVALID_API_KEY_GUIDANCE =
   'The API key contains characters that cannot be sent in an HTTP header (whitespace or control characters). ' +
   'Copy the key again from https://outrank.so/dashboard/settings/api-keys and store it with `auth login`.';
 
+const MCP_AUTH_REQUIRED_GUIDANCE =
+  'This MCP server has no usable Outrank API key. Ask the human to add OUTRANK_API_KEY to the server entry in ' +
+  'their MCP client configuration, or to run `outrank-cli auth login <api-key>` in a terminal, and then restart ' +
+  'the server. Never ask the human to paste the key into this conversation.';
+const mcpProfileAuthRequiredGuidance = (profile) =>
+  `The profile ${profile} selected for this MCP server has no stored API key. Ask the human to run ` +
+  `\`outrank-cli auth login <api-key> --profile ${profile}\` in a terminal and restart the server. Never ask ` +
+  'the human to paste the key into this conversation.';
+
+const mcpAuthRequiredError = (ctx) =>
+  ctx.profile?.explicit
+    ? codedError(
+        CliErrorCode.AUTH_REQUIRED,
+        `Profile ${ctx.profile.name} has no API key stored.`,
+        mcpProfileAuthRequiredGuidance(ctx.profile.name),
+      )
+    : codedError(CliErrorCode.AUTH_REQUIRED, 'No Outrank API key is configured.', MCP_AUTH_REQUIRED_GUIDANCE);
+
 const authRequiredError = (ctx) => {
+  if (ctx.surface === Surface.MCP) return mcpAuthRequiredError(ctx);
   if (ctx.profile?.explicit) {
     return codedError(
       CliErrorCode.AUTH_REQUIRED,
@@ -99,11 +133,29 @@ const networkGuidance = (baseUrl) =>
   `The CLI could not reach ${baseUrl}. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, ` +
   'then retry.';
 
-const timeoutGuidance = (timeoutMs, longRunning) =>
-  longRunning
-    ? `The request exceeded ${timeoutMs} ms. The operation may still be running on the server; do not retry blindly, ` +
-      'poll the matching status or list command first.'
-    : `The request exceeded ${timeoutMs} ms. Check the network and the Outrank deployment, then retry.`;
+const timeoutGuidance = (timeoutMs, longRunning, changesState) => {
+  if (longRunning) {
+    return (
+      `The request exceeded ${timeoutMs} ms. The operation may still be running on the server; do not retry ` +
+      'blindly, poll the matching status or list command first.'
+    );
+  }
+  if (changesState) {
+    return (
+      `The request exceeded ${timeoutMs} ms, so its outcome is unknown: the change may have been applied. Inspect ` +
+      'the current state with a read command before repeating it.'
+    );
+  }
+  return `The request exceeded ${timeoutMs} ms. Check the network and the Outrank deployment, then retry.`;
+};
+
+const unknownOutcomeGuidance = (baseUrl) =>
+  `The connection to ${baseUrl} failed after the request may have been sent, so its outcome is unknown: the ` +
+  'change may have been applied. Inspect the current state with a read command before repeating it.';
+
+const CANCELLED_GUIDANCE =
+  'The caller cancelled the request, so its outcome is unknown. Inspect the current state with a read command ' +
+  'before repeating a write.';
 
 const nonJsonGuidance = (status, baseUrl, pathname) =>
   status === HttpStatus.NOT_FOUND
@@ -174,8 +226,11 @@ const linkAbortSignals = (externalSignal, timeoutMs) => {
   return { signal: controller.signal, release, timedOut: () => timedOut };
 };
 
-const isTransportTimeout = (error) =>
-  UNDICI_TIMEOUT_CODES.has(error?.cause?.code) || UNDICI_TIMEOUT_CODES.has(error?.code);
+const transportCode = (error) => error?.cause?.code ?? error?.code;
+
+const isResponseTimeout = (error) => RESPONSE_TIMEOUT_CODES.has(transportCode(error));
+
+const wasNeverSent = (error) => NEVER_SENT_CODES.has(transportCode(error)) || isRedirectFailure(error);
 
 const readRateLimit = (headers) => {
   const read = (name) => {
@@ -275,19 +330,37 @@ export const requestAgentApi = async (
   const url = buildRequestUrl({ baseUrl: ctx.baseUrl, path, pathParams, query });
   const timeoutMs = resolveTimeoutMs(ctx, isLongRunning);
   const abort = linkAbortSignals(ctx.signal, timeoutMs);
+  const changesState = method !== READ_METHOD;
   const timeoutError = () =>
     codedError(
       CliErrorCode.NETWORK_ERROR,
       `Request timed out after ${timeoutMs} ms: ${method} ${url.pathname}`,
-      timeoutGuidance(timeoutMs, isLongRunning),
+      timeoutGuidance(timeoutMs, isLongRunning, changesState),
       { timed_out: true, long_running: isLongRunning },
     );
-  const networkError = (error) =>
+  const failureMessage = (error) => `Request failed: ${redactSecrets(describeTransportError(error))}`;
+  const unreachableError = (error) =>
     codedError(
       CliErrorCode.NETWORK_ERROR,
-      `Request failed: ${redactSecrets(describeTransportError(error))}`,
+      failureMessage(error),
       isRedirectFailure(error) ? REDIRECT_GUIDANCE : networkGuidance(ctx.baseUrl),
     );
+  const unknownOutcomeError = (error) =>
+    codedError(CliErrorCode.NETWORK_ERROR, failureMessage(error), unknownOutcomeGuidance(ctx.baseUrl), {
+      outcome_unknown: true,
+      long_running: isLongRunning,
+    });
+  const cancelledError = (error) =>
+    codedError(CliErrorCode.NETWORK_ERROR, failureMessage(error), CANCELLED_GUIDANCE, {
+      cancelled: true,
+      long_running: isLongRunning,
+    });
+  const failure = (error) => {
+    if (abort.timedOut() || isResponseTimeout(error)) return timeoutError();
+    if (ctx.signal?.aborted) return cancelledError(error);
+    if (wasNeverSent(error) || !(changesState || isLongRunning)) return unreachableError(error);
+    return unknownOutcomeError(error);
+  };
 
   let response;
   try {
@@ -300,16 +373,14 @@ export const requestAgentApi = async (
     });
   } catch (error) {
     abort.release();
-    if (abort.timedOut() || isTransportTimeout(error)) throw timeoutError();
-    throw networkError(error);
+    throw failure(error);
   }
 
   let rawBody;
   try {
     rawBody = await response.text();
   } catch (error) {
-    if (abort.timedOut() || isTransportTimeout(error)) throw timeoutError();
-    throw networkError(error);
+    throw failure(error);
   } finally {
     abort.release();
   }

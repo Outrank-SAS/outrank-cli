@@ -322,6 +322,7 @@ const executionsPush = defineCommand({
   input: { executionId: uuid().required() },
   cli: EXECUTION_CLI,
   body: BodyMode.OPTIONAL_JSON_OR_EMPTY_OBJECT,
+  longRunning: { pollTool: POLL_EXECUTIONS_GET },
   run: (input, ctx) =>
     ctx.http({
       method: 'POST',

@@ -74,6 +74,7 @@ const PLACEMENTS_USAGE = `Usage:
   outrank-cli marketplace seller placements publish <placement-id>
   outrank-cli marketplace seller placements regenerate <placement-id>`;
 
+const DECLINE_ACTION = 'decline';
 const SELLER_GUIDANCE =
   'Choose a seller subcommand: status, onboard, eligibility, settings, integrations, stripe, complete-onboarding, ' +
   'placements, earnings, content-history.';
@@ -491,6 +492,7 @@ const stripeGroup = defineGroup({
       id: 'stripe.manage',
       summary: 'Get the Stripe Express dashboard link (admin only).',
       suffix: '/stripe-connect/manage',
+      kind: CommandKind.READ,
     }),
     sellerPost({
       id: 'stripe.reset',
@@ -525,11 +527,11 @@ const placementsGroup = defineGroup({
           query: listFilterQuery(input),
         }),
     }),
-    ...['approve', 'decline', 'publish', 'regenerate'].map((action) =>
+    ...['approve', DECLINE_ACTION, 'publish', 'regenerate'].map((action) =>
       defineCommand({
         id: `marketplace.seller.placements.${action}`,
         summary: `${action[0].toUpperCase()}${action.slice(1)} a marketplace placement.`,
-        kind: CommandKind.WRITE,
+        kind: action === DECLINE_ACTION ? CommandKind.DESTRUCTIVE : CommandKind.WRITE,
         toolsets: TOOLSETS,
         input: placementInput(),
         cli: PLACEMENT_CLI,

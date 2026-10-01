@@ -948,7 +948,7 @@
     }
   },
   "marketplaceSeller/onboard-network-error-on-adopt": {
-    "reason": "Plan 1.32 / review fix: a failed onboard step reports completed_steps only for steps whose envelope was ok and includes the automatic actions taken so far in error.details.actions",
+    "reason": "Phase 3 review (HIGH-1/2): a connection that fails after a write or long-running request may have been sent reports an unknown outcome instead of telling the caller to retry",
     "expected": {
       "argv": [
         "marketplace",
@@ -957,7 +957,7 @@
         "aaaaaaaa-0000-4000-8000-000000000001"
       ],
       "exitCode": 1,
-      "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\",\n    \"details\": {\n      \"step\": \"adopt-existing-integration\",\n      \"completed_steps\": [\n        \"status\"\n      ],\n      \"actions\": []\n    }\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+      "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\",\n    \"details\": {\n      \"step\": \"adopt-existing-integration\",\n      \"completed_steps\": [\n        \"status\"\n      ],\n      \"actions\": [],\n      \"outcome_unknown\": true,\n      \"long_running\": false\n    }\n  },\n  \"agent_guidance\": \"The connection to https://www.outrank.so failed after the request may have been sent, so its outcome is unknown: the change may have been applied. Inspect the current state with a read command before repeating it.\"\n}\n",
       "stderr": "",
       "requests": [
         {
@@ -1477,23 +1477,23 @@
     }
   },
   "root/no-args-shows-help": {
-    "reason": "Plan 2.2: root help documents the --profile global option",
+    "reason": "Phase 3 (3.12): root help lists the new mcp subcommand",
     "expected": {
       "argv": [],
       "exitCode": 0,
-      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Outrank CLI\\n\\nAgent-first CLI for Outrank's public agent API.\\n\\nUsage:\\n  outrank-cli <group> <command> [options]\\n  outrank-cli <group> --help\\n\\nGroups:\\n  auth        Store or verify API-key authentication.\\n  products    List, create, inspect, and configure products, integrations, article settings, Google Search Console, linking, and backlinks.\\n  keywords    Inspect, check write status, add, reschedule, delete, suggest, generate, and export keyword plans.\\n  articles    Inspect article metadata and bodies, edit content, retry publish, precreate, and generate.\\n  improvements Discover, brief, schedule, run, review, and publish article improvements for existing posts.\\n  marketplace Seller onboarding, eligibility, placements, earnings, Stripe payouts, and buyer setup for the Outrank Marketplace.\\n  subscription Inspect plan, trial, quota, and add-on status.\\n  usage       Inspect current usage and quota consumption.\\n  billing     Product-slot purchase flows.\\n\\nGlobal Auth Options:\\n  --api-key <key>      Override the API key for this command only.\\n  --base-url <url>     Override the Outrank base URL for this command only.\\n  --profile <name>     Use a stored profile for this command only (see auth --help).\\n\\nJSON Input Conventions:\\n  Complex write commands accept one of:\\n  --json '<object>'\\n  --json-file payload.json\\n  --json-stdin\\n\\nExamples:\\n  outrank-cli auth login outr_live_xxx\\n  outrank-cli auth whoami\\n  outrank-cli products list --limit 20\\n  outrank-cli keywords list --product <UUID-1> --scope all\\n  outrank-cli articles list --product <UUID-1> --status published\\n  outrank-cli improvements candidates list <UUID-1> --type ctr_gap\\n  outrank-cli improvements tasks execute <UUID-1>\\n  outrank-cli subscription status\\n  outrank-cli usage stats\\n  outrank-cli products create --json-file product.json\\n  outrank-cli billing portal-url\\n  outrank-cli products integrations list <UUID-1>\\n  outrank-cli products output-settings update <product-id> --json-file output-settings.json\\n  outrank-cli products target-audiences replace <product-id> --json-file target-audiences.json\\n  outrank-cli products gsc connect <product-id>\\n  outrank-cli products gsc performance <product-id>\\n  outrank-cli products linking sources get <product-id>\\n  outrank-cli products backlinks get <product-id>\\n  outrank-cli products backlinks earned <product-id> --limit 20 --include-article\\n  outrank-cli billing purchase-products quote --additional-products 2\\n  outrank-cli marketplace seller status <product-id>\\n  outrank-cli marketplace seller onboard <product-id> --country US\\n  outrank-cli marketplace seller placements list <product-id> --status needs_approval\"\n  },\n  \"agent_guidance\": \"Choose a command group, then run that group with --help for detailed usage.\"\n}\n",
+      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Outrank CLI\\n\\nAgent-first CLI for Outrank's public agent API.\\n\\nUsage:\\n  outrank-cli <group> <command> [options]\\n  outrank-cli <group> --help\\n\\nGroups:\\n  auth        Store or verify API-key authentication.\\n  products    List, create, inspect, and configure products, integrations, article settings, Google Search Console, linking, and backlinks.\\n  keywords    Inspect, check write status, add, reschedule, delete, suggest, generate, and export keyword plans.\\n  articles    Inspect article metadata and bodies, edit content, retry publish, precreate, and generate.\\n  improvements Discover, brief, schedule, run, review, and publish article improvements for existing posts.\\n  marketplace Seller onboarding, eligibility, placements, earnings, Stripe payouts, and buyer setup for the Outrank Marketplace.\\n  subscription Inspect plan, trial, quota, and add-on status.\\n  usage       Inspect current usage and quota consumption.\\n  billing     Product-slot purchase flows.\\n\\nMCP Server:\\n  outrank-cli mcp      Start the Outrank MCP server on stdio (see outrank-cli mcp --help).\\n\\nGlobal Auth Options:\\n  --api-key <key>      Override the API key for this command only.\\n  --base-url <url>     Override the Outrank base URL for this command only.\\n  --profile <name>     Use a stored profile for this command only (see auth --help).\\n\\nJSON Input Conventions:\\n  Complex write commands accept one of:\\n  --json '<object>'\\n  --json-file payload.json\\n  --json-stdin\\n\\nExamples:\\n  outrank-cli auth login outr_live_xxx\\n  outrank-cli auth whoami\\n  outrank-cli products list --limit 20\\n  outrank-cli keywords list --product <UUID-1> --scope all\\n  outrank-cli articles list --product <UUID-1> --status published\\n  outrank-cli improvements candidates list <UUID-1> --type ctr_gap\\n  outrank-cli improvements tasks execute <UUID-1>\\n  outrank-cli subscription status\\n  outrank-cli usage stats\\n  outrank-cli products create --json-file product.json\\n  outrank-cli billing portal-url\\n  outrank-cli products integrations list <UUID-1>\\n  outrank-cli products output-settings update <product-id> --json-file output-settings.json\\n  outrank-cli products target-audiences replace <product-id> --json-file target-audiences.json\\n  outrank-cli products gsc connect <product-id>\\n  outrank-cli products gsc performance <product-id>\\n  outrank-cli products linking sources get <product-id>\\n  outrank-cli products backlinks get <product-id>\\n  outrank-cli products backlinks earned <product-id> --limit 20 --include-article\\n  outrank-cli billing purchase-products quote --additional-products 2\\n  outrank-cli marketplace seller status <product-id>\\n  outrank-cli marketplace seller onboard <product-id> --country US\\n  outrank-cli marketplace seller placements list <product-id> --status needs_approval\"\n  },\n  \"agent_guidance\": \"Choose a command group, then run that group with --help for detailed usage.\"\n}\n",
       "stderr": "",
       "requests": []
     }
   },
   "root/help-flag": {
-    "reason": "Plan 2.2: root help documents the --profile global option",
+    "reason": "Phase 3 (3.12): root help lists the new mcp subcommand",
     "expected": {
       "argv": [
         "--help"
       ],
       "exitCode": 0,
-      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Outrank CLI\\n\\nAgent-first CLI for Outrank's public agent API.\\n\\nUsage:\\n  outrank-cli <group> <command> [options]\\n  outrank-cli <group> --help\\n\\nGroups:\\n  auth        Store or verify API-key authentication.\\n  products    List, create, inspect, and configure products, integrations, article settings, Google Search Console, linking, and backlinks.\\n  keywords    Inspect, check write status, add, reschedule, delete, suggest, generate, and export keyword plans.\\n  articles    Inspect article metadata and bodies, edit content, retry publish, precreate, and generate.\\n  improvements Discover, brief, schedule, run, review, and publish article improvements for existing posts.\\n  marketplace Seller onboarding, eligibility, placements, earnings, Stripe payouts, and buyer setup for the Outrank Marketplace.\\n  subscription Inspect plan, trial, quota, and add-on status.\\n  usage       Inspect current usage and quota consumption.\\n  billing     Product-slot purchase flows.\\n\\nGlobal Auth Options:\\n  --api-key <key>      Override the API key for this command only.\\n  --base-url <url>     Override the Outrank base URL for this command only.\\n  --profile <name>     Use a stored profile for this command only (see auth --help).\\n\\nJSON Input Conventions:\\n  Complex write commands accept one of:\\n  --json '<object>'\\n  --json-file payload.json\\n  --json-stdin\\n\\nExamples:\\n  outrank-cli auth login outr_live_xxx\\n  outrank-cli auth whoami\\n  outrank-cli products list --limit 20\\n  outrank-cli keywords list --product <UUID-1> --scope all\\n  outrank-cli articles list --product <UUID-1> --status published\\n  outrank-cli improvements candidates list <UUID-1> --type ctr_gap\\n  outrank-cli improvements tasks execute <UUID-1>\\n  outrank-cli subscription status\\n  outrank-cli usage stats\\n  outrank-cli products create --json-file product.json\\n  outrank-cli billing portal-url\\n  outrank-cli products integrations list <UUID-1>\\n  outrank-cli products output-settings update <product-id> --json-file output-settings.json\\n  outrank-cli products target-audiences replace <product-id> --json-file target-audiences.json\\n  outrank-cli products gsc connect <product-id>\\n  outrank-cli products gsc performance <product-id>\\n  outrank-cli products linking sources get <product-id>\\n  outrank-cli products backlinks get <product-id>\\n  outrank-cli products backlinks earned <product-id> --limit 20 --include-article\\n  outrank-cli billing purchase-products quote --additional-products 2\\n  outrank-cli marketplace seller status <product-id>\\n  outrank-cli marketplace seller onboard <product-id> --country US\\n  outrank-cli marketplace seller placements list <product-id> --status needs_approval\"\n  },\n  \"agent_guidance\": \"Choose a command group, then run that group with --help for detailed usage.\"\n}\n",
+      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Outrank CLI\\n\\nAgent-first CLI for Outrank's public agent API.\\n\\nUsage:\\n  outrank-cli <group> <command> [options]\\n  outrank-cli <group> --help\\n\\nGroups:\\n  auth        Store or verify API-key authentication.\\n  products    List, create, inspect, and configure products, integrations, article settings, Google Search Console, linking, and backlinks.\\n  keywords    Inspect, check write status, add, reschedule, delete, suggest, generate, and export keyword plans.\\n  articles    Inspect article metadata and bodies, edit content, retry publish, precreate, and generate.\\n  improvements Discover, brief, schedule, run, review, and publish article improvements for existing posts.\\n  marketplace Seller onboarding, eligibility, placements, earnings, Stripe payouts, and buyer setup for the Outrank Marketplace.\\n  subscription Inspect plan, trial, quota, and add-on status.\\n  usage       Inspect current usage and quota consumption.\\n  billing     Product-slot purchase flows.\\n\\nMCP Server:\\n  outrank-cli mcp      Start the Outrank MCP server on stdio (see outrank-cli mcp --help).\\n\\nGlobal Auth Options:\\n  --api-key <key>      Override the API key for this command only.\\n  --base-url <url>     Override the Outrank base URL for this command only.\\n  --profile <name>     Use a stored profile for this command only (see auth --help).\\n\\nJSON Input Conventions:\\n  Complex write commands accept one of:\\n  --json '<object>'\\n  --json-file payload.json\\n  --json-stdin\\n\\nExamples:\\n  outrank-cli auth login outr_live_xxx\\n  outrank-cli auth whoami\\n  outrank-cli products list --limit 20\\n  outrank-cli keywords list --product <UUID-1> --scope all\\n  outrank-cli articles list --product <UUID-1> --status published\\n  outrank-cli improvements candidates list <UUID-1> --type ctr_gap\\n  outrank-cli improvements tasks execute <UUID-1>\\n  outrank-cli subscription status\\n  outrank-cli usage stats\\n  outrank-cli products create --json-file product.json\\n  outrank-cli billing portal-url\\n  outrank-cli products integrations list <UUID-1>\\n  outrank-cli products output-settings update <product-id> --json-file output-settings.json\\n  outrank-cli products target-audiences replace <product-id> --json-file target-audiences.json\\n  outrank-cli products gsc connect <product-id>\\n  outrank-cli products gsc performance <product-id>\\n  outrank-cli products linking sources get <product-id>\\n  outrank-cli products backlinks get <product-id>\\n  outrank-cli products backlinks earned <product-id> --limit 20 --include-article\\n  outrank-cli billing purchase-products quote --additional-products 2\\n  outrank-cli marketplace seller status <product-id>\\n  outrank-cli marketplace seller onboard <product-id> --country US\\n  outrank-cli marketplace seller placements list <product-id> --status needs_approval\"\n  },\n  \"agent_guidance\": \"Choose a command group, then run that group with --help for detailed usage.\"\n}\n",
       "stderr": "",
       "requests": []
     }
@@ -1693,6 +1693,54 @@
       "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"cancel_subscription requires --confirm-subscription-id.\"\n  },\n  \"agent_guidance\": \"Cancel actions apply immediately. Read the current subscription id with outrank-cli marketplace buyer subscription aaaaaaaa-0000-4000-8000-000000000001 and pass it as --confirm-subscription-id to confirm the cancellation.\"\n}\n",
       "stderr": "",
       "requests": []
+    }
+  },
+  "productsLinking/network-error": {
+    "reason": "Phase 3 review (HIGH-1/2): a connection that fails after a write or long-running request may have been sent reports an unknown outcome instead of telling the caller to retry",
+    "expected": {
+      "argv": [
+        "products",
+        "linking",
+        "detect",
+        "aaaaaaaa-0000-4000-8000-000000000001"
+      ],
+      "exitCode": 1,
+      "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Request failed: fetch failed\",\n    \"details\": {\n      \"outcome_unknown\": true,\n      \"long_running\": true\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli products linking targets list until the work shows up, then continue from there.\"\n}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/linking/detect",
+          "headers": {
+            "Accept": "application/json",
+            "Authorization": "Bearer <API_KEY-1>"
+          }
+        }
+      ]
+    }
+  },
+  "productsLinking/detect-network-error": {
+    "reason": "Phase 3 review (HIGH-1/2): a connection that fails after a write or long-running request may have been sent reports an unknown outcome instead of telling the caller to retry",
+    "expected": {
+      "argv": [
+        "products",
+        "linking",
+        "detect",
+        "aaaaaaaa-0000-4000-8000-000000000001"
+      ],
+      "exitCode": 1,
+      "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Request failed: fetch failed\",\n    \"details\": {\n      \"outcome_unknown\": true,\n      \"long_running\": true\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli products linking targets list until the work shows up, then continue from there.\"\n}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/linking/detect",
+          "headers": {
+            "Accept": "application/json",
+            "Authorization": "Bearer <API_KEY-1>"
+          }
+        }
+      ]
     }
   }
 }

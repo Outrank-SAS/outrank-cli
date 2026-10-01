@@ -24,6 +24,7 @@ export const ListSerialize = Object.freeze({
 });
 
 export const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_MESSAGE = 'must be a UUID';
 const INTEGER_TEXT_PATTERN = /^-?\d+$/;
 const TRUE_TEXT = 'true';
 const FALSE_TEXT = 'false';
@@ -116,14 +117,14 @@ const parseScalar = (field, value, label) => {
   throw new Error(`Unknown field kind: ${field.kind}`);
 };
 
-const splitListValues = (field, value) => {
+const splitListValues = (field, value, splitLists) => {
   const rawItems = Array.isArray(value) ? value : [value];
-  if (!field.split) return rawItems;
+  if (!field.split || !splitLists) return rawItems;
   return rawItems.flatMap((item) => (typeof item === 'string' ? item.split(field.split) : [item]));
 };
 
-const parseList = (field, value, label) => {
-  const items = splitListValues(field, value)
+const parseList = (field, value, label, splitLists) => {
+  const items = splitListValues(field, value, splitLists)
     .map((item) => (typeof item === 'string' ? item.trim() : item))
     .filter((item) => item !== '');
   return items.map((item) => parseScalar(field.item, item, label));
@@ -140,10 +141,10 @@ const withFieldGuidance = (field, run) => {
   }
 };
 
-export const parseFieldValue = (field, value, label) =>
+export const parseFieldValue = (field, value, label, { splitLists = true } = {}) =>
   withFieldGuidance(field, () => {
     if (value === '') throw usageError(`${label} requires a value.`);
-    if (field.kind === FieldKind.LIST) return parseList(field, value, label);
+    if (field.kind === FieldKind.LIST) return parseList(field, value, label, splitLists);
     return parseScalar(field, value, label);
   });
 
@@ -154,7 +155,7 @@ const missingFieldError = (field, name, missingMessage) => {
 
 const cloneDefault = (value) => (value !== null && typeof value === 'object' ? structuredClone(value) : value);
 
-export const validateInput = (fields, raw, { labelOf = (name) => name, missingOf } = {}) => {
+export const validateInput = (fields, raw, { labelOf = (name) => name, missingOf, splitLists = true } = {}) => {
   const missingMessage = missingOf ?? ((name) => `Missing required input: ${labelOf(name)}.`);
   const result = {};
   for (const [name, field] of Object.entries(fields)) {
@@ -164,7 +165,7 @@ export const validateInput = (fields, raw, { labelOf = (name) => name, missingOf
       if (field.defaultValue !== undefined) result[name] = cloneDefault(field.defaultValue);
       continue;
     }
-    const parsed = parseFieldValue(field, value, labelOf(name));
+    const parsed = parseFieldValue(field, value, labelOf(name), { splitLists });
     if (field.kind === FieldKind.LIST && field.isRequired && parsed.length === 0) {
       throw missingFieldError(field, name, missingMessage);
     }
@@ -184,9 +185,9 @@ export const serializeList = (field, value) => {
   return value;
 };
 
-const zodScalar = (z, field) => {
+const zodScalar = (z, field, { jsonAsObject = false } = {}) => {
   if (field.kind === FieldKind.STRING) return z.string().min(1);
-  if (field.kind === FieldKind.UUID) return z.string().regex(UUID_PATTERN);
+  if (field.kind === FieldKind.UUID) return z.string().regex(UUID_PATTERN, UUID_MESSAGE);
   if (field.kind === FieldKind.INT) {
     let schema = z.number().int();
     if (field.min !== undefined) schema = schema.min(field.min);
@@ -196,17 +197,21 @@ const zodScalar = (z, field) => {
   if (field.kind === FieldKind.BOOL) return z.boolean();
   if (field.kind === FieldKind.ENUM) return z.enum(field.values);
   if (field.kind === FieldKind.OBJECT) return z.object({}).passthrough();
-  if (field.kind === FieldKind.JSON) return z.unknown();
+  if (field.kind === FieldKind.JSON) return jsonAsObject ? z.object({}).passthrough() : z.unknown();
   if (field.kind === FieldKind.IMAGE) {
     return z.object({ file_base64: z.string().min(1), file_name: z.string().min(1), file_type: z.string().min(1) });
   }
   throw new Error(`Unknown field kind: ${field.kind}`);
 };
 
-const zodField = (z, field) => {
+export const zodField = (z, field, { jsonAsObject = false, description = field.description } = {}) => {
   const minItems = field.isRequired ? 1 : 0;
-  let schema = field.kind === FieldKind.LIST ? z.array(zodScalar(z, field.item)).min(minItems) : zodScalar(z, field);
-  if (field.description) schema = schema.describe(field.description);
+  const options = { jsonAsObject };
+  let schema =
+    field.kind === FieldKind.LIST
+      ? z.array(zodScalar(z, field.item, options)).min(minItems)
+      : zodScalar(z, field, options);
+  if (description) schema = schema.describe(description);
   return field.isRequired ? schema : schema.optional();
 };
 

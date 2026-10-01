@@ -74,3 +74,32 @@ test('command specs never touch argv, stdio or the legacy request helpers', asyn
     }
   }
 });
+
+const SRC_DIR = path.resolve(HERE, '..', 'src');
+const MCP_ADAPTER_DIR = path.join(SRC_DIR, 'adapters', 'mcp');
+const MCP_ONLY_PACKAGES = [/from '@modelcontextprotocol\//, /from 'zod'/];
+const STATIC_MCP_IMPORT = /^import .* from '\.\/adapters\/mcp\/([a-zA-Z]+)\.js';$/gm;
+const DEPENDENCY_FREE_MCP_MODULES = ['constants', 'help'];
+
+test('the plain CLI path never loads the MCP SDK or zod', async () => {
+  const files = (await listFiles(SRC_DIR)).filter((file) => file.endsWith('.js'));
+  for (const file of files.filter((entry) => !entry.startsWith(MCP_ADAPTER_DIR))) {
+    const source = await fs.readFile(file, 'utf8');
+    for (const pattern of MCP_ONLY_PACKAGES) {
+      assert.doesNotMatch(source, pattern, `${path.relative(SRC_DIR, file)} imports an MCP-only package`);
+    }
+  }
+  const entry = await fs.readFile(path.join(SRC_DIR, 'index.js'), 'utf8');
+  const staticMcpModules = [...entry.matchAll(STATIC_MCP_IMPORT)].map((match) => match[1]);
+  assert.deepEqual(staticMcpModules.sort(), DEPENDENCY_FREE_MCP_MODULES);
+  for (const name of DEPENDENCY_FREE_MCP_MODULES) {
+    const source = await fs.readFile(path.join(MCP_ADAPTER_DIR, `${name}.js`), 'utf8');
+    assert.doesNotMatch(source, /^import /m, `${name}.js must stay import-free`);
+  }
+});
+
+test('the README tool list is generated from the registry and up to date', async () => {
+  const { replaceToolTable } = await import('../scripts/generateToolDocs.js');
+  const readme = await fs.readFile(path.resolve(HERE, '..', 'README.md'), 'utf8');
+  assert.equal(replaceToolTable(readme), readme, 'run `npm run docs:tools`');
+});

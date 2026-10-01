@@ -1,7 +1,7 @@
 {
   "name": "outrank-cli",
   "version": "0.5.0",
-  "description": "Agent-first CLI for the Outrank agent API",
+  "description": "Agent-first CLI and MCP server for the Outrank agent API",
   "type": "module",
   "files": [
     "bin",
@@ -11,7 +11,8 @@
     "LICENSE"
   ],
   "bin": {
-    "outrank-cli": "./bin/outrank-cli.js"
+    "outrank-cli": "./bin/outrank-cli.js",
+    "outrank-mcp": "./bin/outrank-mcp.js"
   },
   "scripts": {
     "start": "node ./src/index.js",
@@ -19,6 +20,7 @@
     "lint": "eslint .",
     "test": "node --test",
     "golden:capture": "node ./scripts/captureGolden.js",
+    "docs:tools": "node ./scripts/generateToolDocs.js",
     "link:local": "npm link",
     "unlink:local": "npm unlink -g outrank-cli"
   },
@@ -31,6 +33,8 @@
     "outrank",
     "cli",
     "agent",
+    "mcp",
+    "model-context-protocol",
     "seo",
     "content",
     "ai"
@@ -50,5 +54,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "zod": "4.6.5"
   }
 }

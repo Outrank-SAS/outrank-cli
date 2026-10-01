@@ -4,7 +4,8 @@ import {
   GSC_SEARCH_ANALYTICS_MAX_LIMIT,
   LIST_MIN_LIMIT,
 } from '../../core/constants.js';
-import { usageError } from '../../core/errors.js';
+import { Surface } from '../../core/constants.js';
+import { MCP_USAGE_GUIDANCE, usageError } from '../../core/errors.js';
 import { int, string } from '../../core/schema.js';
 import { CommandKind, Toolset, defineCommand, defineGroup } from '../registry.js';
 import { PRODUCT_CLI, productInput, productParams } from './shared.js';
@@ -135,10 +136,12 @@ const setProperty = defineCommand({
   toolsets: TOOLSETS,
   input: { ...productInput(), email: string(), siteUrl: string() },
   cli: PRODUCT_CLI,
-  refine: (input) => {
-    if (!input.email || !input.siteUrl) {
-      throw usageError('Missing required options: --email <email> and --site-url <url>.', SET_PROPERTY_GUIDANCE);
+  refine: (input, ctx) => {
+    if (input.email && input.siteUrl) return;
+    if (ctx.surface === Surface.MCP) {
+      throw usageError('Missing required arguments: email and site_url.', MCP_USAGE_GUIDANCE);
     }
+    throw usageError('Missing required options: --email <email> and --site-url <url>.', SET_PROPERTY_GUIDANCE);
   },
   run: (input, ctx) =>
     ctx.http({

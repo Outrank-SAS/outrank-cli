@@ -233,4 +233,9 @@ export default [
     argv: ['improvements', 'tasks', 'execute', THIRD_ID],
     responses: [NON_JSON_RESPONSE],
   },
+  {
+    name: 'executions-push-gateway-502',
+    argv: ['improvements', 'executions', 'push', SECOND_ID],
+    responses: [NON_JSON_RESPONSE],
+  },
 ];
