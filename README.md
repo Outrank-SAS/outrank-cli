@@ -112,16 +112,25 @@ outrank-cli auth logout --profile globex                          # clears only 
 
 `outrank-cli mcp` starts a [Model Context Protocol](https://modelcontextprotocol.io) server on stdio, so Claude Code, Cursor and other MCP clients can call Outrank directly. The server runs on the same command layer as the CLI: every command except `auth login`, `auth logout` and `auth profiles` is a tool, named after the command with underscores (`products integrations list` → `products_integrations_list`), and sends exactly the same request.
 
-Requirements: Node.js 18+, an Outrank API key from <https://www.outrank.so/dashboard/settings/api-keys>, and an organization on the current Outrank app version.
+Requirements: Node.js 18+ (check with `node --version`), an Outrank API key from <https://www.outrank.so/dashboard/settings/api-keys>, and an organization on the current Outrank app version. The same guide is on the web at <https://www.outrank.so/docs/mcp>.
 
 ### Claude Code
 
-```bash
-claude mcp add outrank --env OUTRANK_API_KEY=outr_live_xxx -- npx -y outrank-cli@0.6.0 mcp
+Run this in the project folder (macOS, Linux, WSL, or the Windows Command Prompt):
 
-# native Windows (not WSL)
-claude mcp add outrank --env OUTRANK_API_KEY=outr_live_xxx -- cmd /c npx -y outrank-cli@0.6.0 mcp
+```bash
+claude mcp add outrank --env OUTRANK_API_KEY=outr_live_xxx -- npx -y outrank-cli@0.6.1 mcp
 ```
+
+If the server does not start on native Windows, use the `cmd /c` form:
+
+```bash
+claude mcp add outrank --env OUTRANK_API_KEY=outr_live_xxx -- cmd /c npx -y outrank-cli@0.6.1 mcp
+```
+
+In PowerShell, call `claude.exe` instead of `claude` (`claude.cmd` when Claude Code was installed with npm), so that the `--` separator is kept.
+
+Check the connection with `claude mcp get outrank`, then start a new Claude Code session. That command prints the stored key, so do not paste its output anywhere.
 
 To share the server with a team, commit a `.mcp.json` that takes the key from each developer's environment, so no key lands in git:
 
@@ -130,30 +139,68 @@ To share the server with a team, commit a `.mcp.json` that takes the key from ea
   "mcpServers": {
     "outrank": {
       "command": "npx",
-      "args": ["-y", "outrank-cli@0.6.0", "mcp"],
+      "args": ["-y", "outrank-cli@0.6.1", "mcp"],
       "env": { "OUTRANK_API_KEY": "${OUTRANK_API_KEY}" }
     }
   }
 }
 ```
 
+Each developer then sets the variable once:
+
+```bash
+# macOS, Linux: add this line to ~/.zshrc or ~/.bashrc
+export OUTRANK_API_KEY=outr_live_xxx
+
+# Windows, from the Command Prompt or PowerShell
+setx OUTRANK_API_KEY outr_live_xxx
+```
+
+The variable reaches new terminals only, so open a new one before starting Claude Code.
+
 ### Cursor
 
-Add the server to `~/.cursor/mcp.json` (all projects) or `.cursor/mcp.json` (one project):
+Add the server to `~/.cursor/mcp.json`, the file for all projects (on Windows: `%USERPROFILE%\.cursor\mcp.json`). It is in your home folder, outside any repository, so the key in it cannot be committed by accident:
 
 ```json
 {
   "mcpServers": {
     "outrank": {
       "command": "npx",
-      "args": ["-y", "outrank-cli@0.6.0", "mcp"],
+      "args": ["-y", "outrank-cli@0.6.1", "mcp"],
       "env": { "OUTRANK_API_KEY": "outr_live_xxx" }
     }
   }
 }
 ```
 
-On native Windows use `"command": "cmd"` and `"args": ["/c", "npx", "-y", "outrank-cli@0.6.0", "mcp"]`.
+If the server does not start on native Windows, use `"command": "cmd"` and `"args": ["/c", "npx", "-y", "outrank-cli@0.6.1", "mcp"]`.
+
+For one project or a team, put the server in `.cursor/mcp.json` inside the project and take the key from the environment, so the file can be committed without it:
+
+```json
+{
+  "mcpServers": {
+    "outrank": {
+      "command": "npx",
+      "args": ["-y", "outrank-cli@0.6.1", "mcp"],
+      "env": { "OUTRANK_API_KEY": "${env:OUTRANK_API_KEY}" }
+    }
+  }
+}
+```
+
+Set `OUTRANK_API_KEY` as shown in the Claude Code section, then quit and reopen Cursor. A project server may first have to be switched on in the MCP section of the Cursor settings; a server in the all-projects file starts on its own.
+
+**Never commit a file that contains the key.** A key written into a project file can end up in git with the next commit: keep the key in the all-projects file or in the environment. If a key was committed, revoke it at <https://www.outrank.so/dashboard/settings/api-keys> and create a new one. If Cursor does not see the variable, which can happen on macOS when it is started from the Dock, every call returns `CLI_AUTH_REQUIRED`: use the all-projects file instead.
+
+### Other MCP clients
+
+Any client that can start a local MCP server (the stdio transport) works. Give it these three values; many clients read the same JSON as the Cursor example above.
+
+- Command: `npx`
+- Arguments: `-y outrank-cli@0.6.1 mcp`
+- Environment variable: `OUTRANK_API_KEY` set to your API key
 
 The examples pin the version on purpose: the server holds a live API key, so upgrade it deliberately. If you install the package globally (`npm install -g outrank-cli`), the command is `outrank-cli mcp`, or the `outrank-mcp` binary.
 
@@ -190,15 +237,15 @@ For several organizations, store one profile per organization with the CLI and r
 ```bash
 outrank-cli auth login outr_live_xxx --profile acme
 outrank-cli auth login outr_live_yyy --profile globex
-claude mcp add outrank-acme -- npx -y outrank-cli@0.6.0 mcp --profile acme
-claude mcp add outrank-globex -- npx -y outrank-cli@0.6.0 mcp --profile globex
+claude mcp add outrank-acme -- npx -y outrank-cli@0.6.1 mcp --profile acme
+claude mcp add outrank-globex -- npx -y outrank-cli@0.6.1 mcp --profile globex
 ```
 
-A selected profile ignores `OUTRANK_API_KEY`, so both servers stay on their own organization even when that variable is exported in your shell.
+A selected profile ignores `OUTRANK_API_KEY`, so both servers stay on their own organization even when that variable is exported in your shell. In PowerShell, call `claude.exe` in the last two commands, as described under [Claude Code](#claude-code).
 
 ### Security
 
-- **The key never passes through the assistant.** No tool takes a key, a base URL or a profile as an argument, `auth login` is not a tool, and `auth_status` shows neither the key nor the config path. Set the key in the client configuration or with `outrank-cli auth login` in a terminal; do not paste it into a chat.
+- **The key never passes through the assistant.** No tool takes a key, a base URL or a profile as an argument, `auth login` is not a tool, and `auth_status` shows neither the key nor the config path. Set the key in the client configuration, in the environment or with `outrank-cli auth login` in a terminal; do not paste it into a chat and do not put it in a file that is committed.
 - **The key is only sent to Outrank.** The server accepts `www.outrank.so` and `outrank.so`. Any other base URL is accepted only when the key and the URL come from the same stored profile, which you create yourself in a terminal (`outrank-cli auth login <key> --profile staging --base-url <url> --allow-custom-base-url`, then `mcp --profile staging`). Environment variables cannot unlock another host, so a `.mcp.json` from a repository you do not control cannot redirect your key by setting `OUTRANK_BASE_URL`. Redirects are never followed.
 - **Tools that cost money or cannot be undone are flagged** (`destructiveHint`), so the client asks before running them. A client set to approve tools automatically removes that safeguard.
 - **Purchases take two deliberate steps.** `billing_purchase_products_buy` charges the stored card: it requires the amount from a preceding `billing_purchase_products_quote` and an `idempotency_key`. If that call times out, it must be retried with the same key; a new key can charge twice. `marketplace_buyer_change_plan` cancels immediately for `cancel_subscription` and `cancel_scheduled`, and is refused without a `confirm_subscription_id`, which the assistant is told to read from `marketplace_buyer_subscription`. These fields stop a single careless call; they are values the assistant can obtain itself, so they do not replace the approval prompt of your client.
@@ -211,9 +258,10 @@ A selected profile ignores `OUTRANK_API_KEY`, so both servers stay on their own 
 
 ### Troubleshooting
 
-- **The server does not start.** Run the same command in a terminal: `npx -y outrank-cli@0.6.0 mcp --help` must print usage. On native Windows, clients need the `cmd /c npx …` form.
-- **PowerShell reports `unknown option '-y'` on `claude mcp add`.** PowerShell drops the `--` separator when `claude` is a script or a function instead of the program itself (an npm-installed Claude Code, or a wrapper in your profile). Call `claude.exe mcp add …` or run the command from the Command Prompt.
-- **The first start is slow, or the server fails to connect.** `npx` downloads the package the first time and contacts the npm registry on every start, so an empty cache or a slow registry can push startup past the client's limit. In Claude Code, run `/mcp reconnect all` to try again; `MCP_TIMEOUT` (milliseconds) raises the startup limit. To take the registry out of the startup path, install the package globally (`npm install -g outrank-cli@0.6.0`) and use `outrank-cli mcp` as the command.
+- **The server does not start.** Run the same command in a terminal: `npx -y outrank-cli@0.6.1 mcp --help` must print usage. Check that Node.js 18 or newer is installed (`node --version`). On native Windows, if the client cannot start `npx` directly, use the `cmd /c npx …` form.
+- **The command works in a terminal, but the client cannot find `npx` or `node` (macOS, Linux).** A client started from the Dock or a desktop menu does not always get the `PATH` of your shell, so a Node.js installed with nvm, fnm or volta can be invisible to it. Run `which npx` in a terminal, use that full path as the command, and add its folder to `PATH` in the `env` block of the server entry, for example `"PATH": "/home/you/.nvm/versions/node/v22.0.0/bin:/usr/bin:/bin"`. The full path alone is not enough: `npx` starts `node` through `PATH`.
+- **PowerShell reports `unknown option '-y'` on `claude mcp add`.** PowerShell drops the `--` separator when `claude` is a script or a function instead of the program itself (an npm-installed Claude Code, or a wrapper in your profile). Call `claude.exe mcp add …` (`claude.cmd` when Claude Code was installed with npm) or run the command from the Command Prompt.
+- **The first start is slow, or the server fails to connect.** `npx` downloads the package the first time and contacts the npm registry on every start, so an empty cache or a slow registry can push startup past the client's limit. In Claude Code, run `/mcp reconnect all` to try again; `MCP_TIMEOUT` (milliseconds) raises the startup limit. To take the registry out of the startup path, install the package globally (`npm install -g outrank-cli@0.6.1`) and use `outrank-cli mcp` as the command.
 - **Every call returns `CLI_AUTH_REQUIRED`.** The server has no key. Add `OUTRANK_API_KEY` to the server entry, or select a stored profile with `--profile`.
 - **Only a few tools are listed.** Read the server instructions in the client: they name the toolsets that are off and why. See [Toolsets](#toolsets).
 - **A long call times out.** `improvements_analyze`, `improvements_candidates_brief`, `improvements_tasks_execute`, `improvements_executions_push`, `articles_generate`, `articles_precreate`, `articles_retry_publish` and `keywords_generate` can run for minutes. When the call does not finish, the result is `CLI_OPERATION_MAY_STILL_BE_RUNNING` and names the tool to poll: the work continues on the server, so poll instead of repeating the call. The server sends progress notifications while such a call runs, but clients do not have to extend their own limit because of them. Claude Code does not cut a tool call off by default: `MCP_TOOL_TIMEOUT` (milliseconds) is about 28 hours when unset, and a `timeout` field on the server's `.mcp.json` entry sets a hard limit for that server which progress notifications do not extend. Cursor (measured on 3.22) stops a call after 120 seconds without a progress notification and keeps waiting while they arrive, so long calls get through there. Other clients may stop after a fixed time whatever the server does; the poll tools are the way through.
