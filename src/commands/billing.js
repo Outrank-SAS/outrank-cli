@@ -5,6 +5,7 @@ import {
   BILLING_MIN_ADDITIONAL_PRODUCTS,
   BILLING_MIN_CONFIRM_CHARGE_CENTS,
   HTTP_STATUS_CONFLICT,
+  Surface,
 } from '../core/constants.js';
 import { cliSuccess } from '../core/errors.js';
 import { int, string } from '../core/schema.js';
@@ -32,6 +33,16 @@ const PURCHASE_PRODUCTS_PATH = '/billing/purchase-products';
 const QUOTE_GUIDANCE =
   'Quote received. Review the recurring total and, if the human approves, run the matching `buy` command with ' +
   '--confirm-charge-cents set to the quoted amount.';
+const BUY_COMMAND_ID = 'billing.purchase-products.buy';
+const quoteGuidance = (ctx, input, quotedTotalCents, idempotencyKey) => {
+  if (ctx.surface !== Surface.MCP) return QUOTE_GUIDANCE;
+  const buyReference = ctx.ref(BUY_COMMAND_ID, {
+    additionalProducts: input.additionalProducts,
+    confirmChargeCents: quotedTotalCents,
+    idempotencyKey,
+  });
+  return `Quote received. Review the recurring total and, if the human approves, call ${buyReference}.`;
+};
 const buyKeyGuidance = () =>
   `Generate a stable unique key for this purchase, for example ${randomUUID()}, then retry with ` +
   '--idempotency-key <value>.';
@@ -71,7 +82,7 @@ const quote = defineCommand({
     if (isQuote(status, result)) {
       return cliSuccess(
         { quote: result.error.details, api_response: result, idempotency_key: idempotencyKey },
-        QUOTE_GUIDANCE,
+        quoteGuidance(ctx, input, result.error.details.expected_recurring_total_cents, idempotencyKey),
       );
     }
     if (result.ok && result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {

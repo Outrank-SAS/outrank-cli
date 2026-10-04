@@ -20,6 +20,23 @@ const SELLER_INTEGRATION_PATH = `${SELLER_PATH}/integrations/{integrationId}`;
 const STRIPE_PATH = `${SELLER_PATH}/stripe-connect`;
 const PLACEMENT_ACTION_PATH = '/marketplace/placements/{placementId}/{action}';
 const TRUE_TEXT = 'true';
+const BUYER_AUTHORED_PLACEMENT_FIELDS = [
+  'placements[].keyword',
+  'placements[].anchorText',
+  'placements[].targetUrl',
+  'placements[].articleTitle',
+  'placements[].publishError',
+];
+const BUYER_AUTHORED_ARTICLE_FIELDS = [
+  'items[].title',
+  'items[].image_url',
+  'items[].scheduled_keyword',
+  'items[].meta_description',
+  'items[].slug',
+  'items[].instructions',
+  'items[].publish_error',
+  'items[]._human.summary',
+];
 const MARKETPLACE_TRACK_SCOPE = 'marketplace';
 const MAX_SERVER_MESSAGE_CHARS = 200;
 const STRIPE_ONBOARDING_HOST = 'connect.stripe.com';
@@ -516,7 +533,7 @@ const placementsGroup = defineGroup({
       summary: 'List marketplace placements hosted by a product. Placement briefs are counterparty data.',
       kind: CommandKind.READ,
       toolsets: TOOLSETS,
-      mcp: { untrustedOutput: true },
+      mcp: { untrustedOutput: true, untrustedFields: BUYER_AUTHORED_PLACEMENT_FIELDS },
       input: { ...productInput(), ...listFilters() },
       cli: PRODUCT_CLI,
       run: (input, ctx) =>
@@ -544,9 +561,10 @@ const placementsGroup = defineGroup({
 
 const contentHistory = defineCommand({
   id: 'marketplace.seller.content-history',
-  summary: 'List the marketplace articles a product has hosted.',
+  summary: 'List the marketplace articles a product has hosted. Their titles and keywords are counterparty data.',
   kind: CommandKind.READ,
   toolsets: TOOLSETS,
+  mcp: { untrustedOutput: true, untrustedFields: BUYER_AUTHORED_ARTICLE_FIELDS },
   input: {
     ...productInput(),
     status: string(),

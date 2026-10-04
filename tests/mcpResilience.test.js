@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { createLogger } from '../src/adapters/mcp/logger.js';
+import { createRequestThrottle } from '../src/adapters/mcp/throttle.js';
 import { CliErrorCode } from '../src/core/errors.js';
 import {
   STUB_API_KEY,
@@ -113,7 +114,7 @@ test('a slow startup lookup that fails later does not undo a newer successful lo
     return new Response('bad gateway', { status: 502, headers: { 'content-type': 'text/plain' } });
   };
   const timeouts = { startupResolveMs: SHORT_BUDGET_MS };
-  await withMcp({ respond, timeouts }, async ({ call, session, listToolNames, notifications }) => {
+  await withMcp({ respond, timeouts }, async ({ call, session, listToolNames, toolListChanges }) => {
     const { envelope } = await call('auth_whoami', {});
     assert.equal(envelope.ok, true);
     assert.equal((await listToolNames()).length, ALL_TOOL_COUNT);
@@ -121,7 +122,7 @@ test('a slow startup lookup that fails later does not undo a newer successful lo
     await delay(SETTLE_MS);
     assert.equal(session.identity().status, 'ok');
     assert.equal((await listToolNames()).length, ALL_TOOL_COUNT);
-    assert.equal(notifications.length, 1);
+    assert.equal(toolListChanges(), 1);
     assert.equal(whoamiCalls, 2);
   });
 });
@@ -133,14 +134,15 @@ test('a failing organization lookup is retried on the first call, then at most o
     whoamiCalls += 1;
     return jsonResponse(429, rejected('RATE_LIMIT_EXCEEDED'));
   };
-  await withMcp({ respond }, async ({ call }) => {
+  const noPause = () => createRequestThrottle({ defaultRetryMs: 0 });
+  await withMcp({ respond, throttle: noPause() }, async ({ call }) => {
     await call('usage_stats', {});
     await call('usage_stats', {});
     await call('usage_stats', {});
     assert.equal(whoamiCalls, 2);
   });
   whoamiCalls = 0;
-  await withMcp({ respond, timeouts: { identityRetryIntervalMs: 0 } }, async ({ call }) => {
+  await withMcp({ respond, timeouts: { identityRetryIntervalMs: 0 }, throttle: noPause() }, async ({ call }) => {
     await call('usage_stats', {});
     await call('usage_stats', {});
     assert.equal(whoamiCalls, 3);

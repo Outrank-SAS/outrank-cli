@@ -1,6 +1,16 @@
 import { IMPROVEMENTS_CANDIDATES_MAX_LIMIT, LIST_MAX_LIMIT, LIST_MIN_LIMIT, MIN_OFFSET } from '../core/constants.js';
-import { BoolSerialize, bool, int, string, uuid } from '../core/schema.js';
+import { BoolSerialize, bool, int, list, object, oneOf, string, uuid } from '../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from './registry.js';
+
+const WEEKDAY_CODES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const ENABLED_HINT = 'true starts the unattended improvement loop.';
+const AUTO_PUSH_HINT = 'true publishes each rewrite to the CMS without review.';
+const PUBLISHING_DAYS_HINT = 'At most 2 weekday codes.';
+const IMPROVEMENT_SETTINGS_BODY = object().shape({
+  enabled: bool().describe(ENABLED_HINT),
+  auto_push: bool().describe(AUTO_PUSH_HINT),
+  publishing_days: list({ item: oneOf(WEEKDAY_CODES) }).describe(PUBLISHING_DAYS_HINT),
+});
 
 export const IMPROVEMENTS_HELP = `Usage:
   outrank-cli improvements settings get <product-id>
@@ -109,6 +119,7 @@ const settingsUpdate = defineCommand({
   input: productInput(),
   cli: PRODUCT_CLI,
   body: BodyMode.JSON,
+  bodyField: IMPROVEMENT_SETTINGS_BODY,
   run: (input, ctx) =>
     ctx.http({ method: 'PATCH', path: PRODUCT_SETTINGS_PATH, pathParams: productParams(input), body: input.body }),
 });

@@ -36,7 +36,8 @@ export const TOOL_NOTES = Object.freeze({
   'billing.purchase-products.buy': {
     note:
       'Charges the stored card with no browser step. If the call times out or fails in transit, retry with exactly ' +
-      'the same idempotency_key: a new key can charge the user twice.',
+      'the same idempotency_key and arguments: Outrank returns the recorded outcome of that key (data.replayed is ' +
+      'true), while a new key can charge the user twice.',
     fields: {
       additionalProducts: 'Same number that was quoted.',
       confirmChargeCents: 'The recurring total in cents from the quote. Never guess it.',

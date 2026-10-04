@@ -21,6 +21,7 @@ const FORBIDDEN_PATH_SEGMENTS = new Set(['.', '..', '']);
 const TIMEOUT_ERROR_NAME = 'TimeoutError';
 const TIMEOUT_ABORT_MESSAGE = 'The request timed out.';
 const READ_METHOD = 'GET';
+export const RECEIVED_RESPONSE_PROPERTY = 'receivedResponse';
 const RESPONSE_TIMEOUT_CODES = new Set(['UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT']);
 const NEVER_SENT_CODES = new Set([
   'ENOTFOUND',
@@ -376,18 +377,15 @@ export const requestAgentApi = async (
     throw failure(error);
   }
 
+  const received = { status: response.status, headers: Object.fromEntries(response.headers.entries()) };
   let rawBody;
   try {
     rawBody = await response.text();
   } catch (error) {
-    throw failure(error);
+    throw Object.assign(failure(error), { [RECEIVED_RESPONSE_PROPERTY]: received });
   } finally {
     abort.release();
   }
 
-  return {
-    result: interpretResponse({ response, url, baseUrl: ctx.baseUrl, rawBody }),
-    status: response.status,
-    headers: Object.fromEntries(response.headers.entries()),
-  };
+  return { result: interpretResponse({ response, url, baseUrl: ctx.baseUrl, rawBody }), ...received };
 };

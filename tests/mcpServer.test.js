@@ -243,16 +243,13 @@ test('a slow organization lookup does not delay startup, and the tool list refre
     return respondWith()(request);
   };
   const timeouts = { startupResolveMs: SHORT_BUDGET_MS };
-  await withMcp({ respond, timeouts }, async ({ listToolNames, client, session, notifications }) => {
+  await withMcp({ respond, timeouts }, async ({ listToolNames, client, session, toolListChanges }) => {
     assert.equal((await listToolNames()).length, FALLBACK_TOOL_COUNT);
     assert.match(client.getInstructions(), /had not finished when the server started/);
     await session.whenIdle();
     await delay(SHORT_BUDGET_MS);
     assert.equal((await listToolNames()).length, ALL_TOOL_COUNT);
-    assert.deepEqual(
-      notifications.map((notification) => notification.method),
-      ['notifications/tools/list_changed'],
-    );
+    assert.equal(toolListChanges(), 1);
   });
 });
 
@@ -433,7 +430,7 @@ test('invalid arguments are refused with a usage envelope before any request is 
 });
 
 test('the purchase tool needs the quoted amount and an idempotency key, and sends the key it was given', async () => {
-  await withMcp({}, async ({ call, calls }) => {
+  await withMcp({}, async ({ call, calls, nonWhoamiRequests }) => {
     const requestsBefore = calls.length;
     const buy = 'billing_purchase_products_buy';
     const withoutKey = await call(buy, { additional_products: 1, confirm_charge_cents: QUOTED_CENTS });
@@ -447,13 +444,14 @@ test('the purchase tool needs the quoted amount and an idempotency key, and send
       idempotency_key: IDEMPOTENCY_KEY,
     });
     assert.equal(bought.envelope.ok, true);
-    assert.equal(calls.at(-1).headers['Idempotency-Key'], IDEMPOTENCY_KEY);
-    assert.deepEqual(calls.at(-1).body, { additional_products: 1, confirm_charge_cents: QUOTED_CENTS });
+    const purchase = nonWhoamiRequests().at(-1);
+    assert.equal(purchase.headers['Idempotency-Key'], IDEMPOTENCY_KEY);
+    assert.deepEqual(purchase.body, { additional_products: 1, confirm_charge_cents: QUOTED_CENTS });
   });
 });
 
 test('cancelling a subscription is refused without the subscription id read beforehand', async () => {
-  await withMcp({}, async ({ call, calls }) => {
+  await withMcp({}, async ({ call, calls, nonWhoamiRequests }) => {
     const requestsBefore = calls.length;
     for (const action of ['cancel_subscription', 'cancel_scheduled']) {
       const { envelope } = await call('marketplace_buyer_change_plan', { product_id: PRODUCT_ID, action });
@@ -468,7 +466,10 @@ test('cancelling a subscription is refused without the subscription id read befo
       confirm_subscription_id: 'sub_123',
     });
     assert.equal(confirmed.envelope.ok, true);
-    assert.deepEqual(calls.at(-1).body, { action: 'cancel_subscription', confirm_subscription_id: 'sub_123' });
+    assert.deepEqual(nonWhoamiRequests().at(-1).body, {
+      action: 'cancel_subscription',
+      confirm_subscription_id: 'sub_123',
+    });
   });
 });
 
@@ -487,14 +488,14 @@ test('calling auth_whoami refreshes the tool list when the entitlements changed'
   let whoami = readWhoamiFixture('brand-new');
   const respond = (request) =>
     request.pathname === WHOAMI_PATHNAME ? jsonResponse(200, whoami) : jsonResponse(200, STUB_ENVELOPE);
-  await withMcp({ respond }, async ({ listToolNames, call, notifications }) => {
+  await withMcp({ respond }, async ({ listToolNames, call, toolListChanges }) => {
     assert.equal((await listToolNames()).length, FALLBACK_TOOL_COUNT);
     whoami = readWhoamiFixture('mixed');
     const { envelope } = await call('auth_whoami', {});
     assert.equal(envelope.ok, true);
     await delay(SHORT_BUDGET_MS);
     assert.equal((await listToolNames()).length, ALL_TOOL_COUNT);
-    assert.equal(notifications.length, 1);
+    assert.equal(toolListChanges(), 1);
   });
 });
 

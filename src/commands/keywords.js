@@ -11,8 +11,17 @@ import {
   Surface,
 } from '../core/constants.js';
 import { MCP_USAGE_GUIDANCE, usageError } from '../core/errors.js';
-import { int, list, oneOf, string, uuid } from '../core/schema.js';
+import { int, json, list, object, oneOf, string, uuid } from '../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from './registry.js';
+
+const KEYWORD_ITEMS_HINT =
+  'Keyword texts, or objects { keyword, scheduled_for?, search_volume?, difficulty?, article_type?, ' +
+  'article_subtype?, quality_questions? }.';
+const STORED_KEYWORD_IDS_HINT = 'Stored keyword ids to promote onto the plan.';
+const KEYWORDS_ADD_BODY = object().shape({
+  items: list({ item: json() }).describe(KEYWORD_ITEMS_HINT),
+  stored_keyword_ids: list({ item: uuid() }).describe(STORED_KEYWORD_IDS_HINT),
+});
 
 export const KEYWORDS_HELP = `Usage:
   outrank-cli keywords list --product <product-id> [--scope scheduled|stored|all] [--status published|scheduled|generating_article|pregenerated|disabled] [--q <text>] [--article-type <value>] [--article-subtype <value>] [--scheduled-from <date>] [--scheduled-to <date>] [--search-volume-min <n>] [--search-volume-max <n>] [--difficulty-min <n>] [--difficulty-max <n>] [--limit <n>] [--offset <n>]
@@ -167,6 +176,7 @@ const addCommand = defineCommand({
   input: { productId: productOption() },
   cli: productCli,
   body: BodyMode.JSON,
+  bodyField: KEYWORDS_ADD_BODY,
   bodyMerge: { product_id: 'productId' },
   run: (input, ctx) => ctx.http({ method: 'POST', path: '/keywords', body: input.body }),
 });

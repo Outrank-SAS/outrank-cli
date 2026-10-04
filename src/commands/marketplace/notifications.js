@@ -9,13 +9,14 @@ const NOTIFICATIONS_USAGE = `Usage:
 const TOOLSETS = [Toolset.MARKETPLACE_SELLER, Toolset.MARKETPLACE_BUYER];
 const NOTIFICATIONS_PATH = '/products/{productId}/marketplace/notifications';
 const ROLE_PLACEHOLDER = 'seller|buyer';
+const COUNTERPARTY_FIELDS = ['notifications[].title', 'notifications[].body'];
 
 const listCommand = defineCommand({
   id: 'marketplace.notifications.list',
   summary: 'List marketplace notifications for a product as seller or buyer. Notification text is counterparty data.',
   kind: CommandKind.READ,
   toolsets: TOOLSETS,
-  mcp: { untrustedOutput: true },
+  mcp: { untrustedOutput: true, untrustedFields: COUNTERPARTY_FIELDS },
   input: {
     ...productInput(),
     role: string().required(REQUIRED_OPTION),

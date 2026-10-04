@@ -1,0 +1,1957 @@
+{
+  "apiBasePath": "/api/agent/v1",
+  "sourceCommit": "12b212058f83cb1d79cd6c90385dfb5d901f5136",
+  "sourceDirty": false,
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/articles/{id}/content"
+    },
+    {
+      "method": "PUT",
+      "path": "/articles/{id}/content"
+    },
+    {
+      "method": "POST",
+      "path": "/articles/{id}/featured-image/upload"
+    },
+    {
+      "method": "POST",
+      "path": "/articles/{id}/replace"
+    },
+    {
+      "method": "POST",
+      "path": "/articles/{id}/retry-publish"
+    },
+    {
+      "method": "GET",
+      "path": "/articles/{id}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/articles/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/articles/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/articles/bulk-replace"
+    },
+    {
+      "method": "POST",
+      "path": "/articles/generate"
+    },
+    {
+      "method": "POST",
+      "path": "/articles/images/upload"
+    },
+    {
+      "method": "POST",
+      "path": "/articles/precreate"
+    },
+    {
+      "method": "GET",
+      "path": "/articles"
+    },
+    {
+      "method": "GET",
+      "path": "/auth/whoami"
+    },
+    {
+      "method": "GET",
+      "path": "/billing/portal-url"
+    },
+    {
+      "method": "POST",
+      "path": "/billing/purchase-products"
+    },
+    {
+      "method": "POST",
+      "path": "/improvements/candidates/{candidateId}/brief"
+    },
+    {
+      "method": "PATCH",
+      "path": "/improvements/candidates/{candidateId}/brief"
+    },
+    {
+      "method": "POST",
+      "path": "/improvements/candidates/{candidateId}/schedule"
+    },
+    {
+      "method": "PATCH",
+      "path": "/improvements/executions/{executionId}/decisions"
+    },
+    {
+      "method": "POST",
+      "path": "/improvements/executions/{executionId}/push"
+    },
+    {
+      "method": "GET",
+      "path": "/improvements/executions/{executionId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/improvements/tasks/{taskId}/brief"
+    },
+    {
+      "method": "POST",
+      "path": "/improvements/tasks/{taskId}/execute"
+    },
+    {
+      "method": "PATCH",
+      "path": "/improvements/tasks/{taskId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/improvements/tasks/{taskId}"
+    },
+    {
+      "method": "POST",
+      "path": "/integration-providers/{provider}/discover/{resource}"
+    },
+    {
+      "method": "POST",
+      "path": "/integration-providers/{provider}/validate"
+    },
+    {
+      "method": "GET",
+      "path": "/integration-providers"
+    },
+    {
+      "method": "GET",
+      "path": "/keywords/{id}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/keywords/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/keywords/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/keywords/bulk-delete"
+    },
+    {
+      "method": "POST",
+      "path": "/keywords/bulk-process"
+    },
+    {
+      "method": "POST",
+      "path": "/keywords/bulk-reschedule"
+    },
+    {
+      "method": "GET",
+      "path": "/keywords/export"
+    },
+    {
+      "method": "POST",
+      "path": "/keywords/generate"
+    },
+    {
+      "method": "GET",
+      "path": "/keywords/generation-status"
+    },
+    {
+      "method": "GET",
+      "path": "/keywords"
+    },
+    {
+      "method": "POST",
+      "path": "/keywords"
+    },
+    {
+      "method": "POST",
+      "path": "/keywords/suggest"
+    },
+    {
+      "method": "GET",
+      "path": "/marketplace/buyer-placements/{placementId}/article"
+    },
+    {
+      "method": "PATCH",
+      "path": "/marketplace/buyer-placements/{placementId}/article"
+    },
+    {
+      "method": "POST",
+      "path": "/marketplace/buyer-placements/{placementId}/regenerate"
+    },
+    {
+      "method": "POST",
+      "path": "/marketplace/buyer-placements/{placementId}/revalidate"
+    },
+    {
+      "method": "POST",
+      "path": "/marketplace/placements/{placementId}/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/marketplace/placements/{placementId}/decline"
+    },
+    {
+      "method": "POST",
+      "path": "/marketplace/placements/{placementId}/publish"
+    },
+    {
+      "method": "POST",
+      "path": "/marketplace/placements/{placementId}/regenerate"
+    },
+    {
+      "method": "PATCH",
+      "path": "/marketplace/target-pages/{targetPageId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/marketplace/target-pages/{targetPageId}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/backlinks/{backlinkId}/check-removal"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/backlinks/{backlinkId}/reverify"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/backlinks/credits"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/backlinks/earned"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/backlinks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/backlinks"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/backlinks/subscribe-quote"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/backlinks/subscription"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/backlinks/unverified"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/competitors"
+    },
+    {
+      "method": "PUT",
+      "path": "/products/{id}/competitors"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/gsc/accounts"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/gsc/cannibalization"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/gsc/connect"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/gsc/connect"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/gsc/performance"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/gsc/properties"
+    },
+    {
+      "method": "PUT",
+      "path": "/products/{id}/gsc/property"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/gsc/reconnect"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/gsc"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/gsc"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/gsc/search-analytics"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/gsc/url-inspection"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/improvements/analyze"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/improvements/candidates"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/improvements/executions"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/improvements/settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/improvements/settings"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/improvements/tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/integrations/{integrationId}/notion/databases/{databaseId}/schema"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/integrations/{integrationId}/notion/databases"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/integrations/{integrationId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/integrations/{integrationId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/integrations/{integrationId}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/integrations/{integrationId}/test"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/integrations/connect/{provider}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/integrations/connect/{provider}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/integrations/prepare/{provider}"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/integrations"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/integrations"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/linking/detect"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/linking/sources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/linking/sources"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/linking/target-config"
+    },
+    {
+      "method": "PUT",
+      "path": "/products/{id}/linking/target-config"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/linking/targets/{targetId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/linking/targets/{targetId}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/linking/targets/manual"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/linking/targets"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/linking/targets/upsert"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/buyer/billing-status"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/buyer/change-plan"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/buyer/checkout"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/buyer/credits/history"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/buyer/participation"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/buyer/placements"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/buyer/subscription"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/buyer/target-pages/discover"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/buyer/target-pages"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/buyer/target-pages"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/notifications"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/marketplace/notifications"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/seller/complete-onboarding"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/seller/earnings"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/seller/eligibility/recheck"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/seller/eligibility"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/marketplace/seller/integrations/{integrationId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/marketplace/seller/integrations/{integrationId}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/seller/integrations/adopt"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/seller/integrations/claim"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/seller/integrations"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/seller/placements"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/seller/settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/marketplace/seller/settings"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/seller/stripe-connect/manage"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/seller/stripe-connect/onboard"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/seller/stripe-connect/reset"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/output-settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/output-settings"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/pause"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/resume"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/target-audiences"
+    },
+    {
+      "method": "PUT",
+      "path": "/products/{id}/target-audiences"
+    },
+    {
+      "method": "GET",
+      "path": "/products"
+    },
+    {
+      "method": "POST",
+      "path": "/products"
+    },
+    {
+      "method": "GET",
+      "path": "/subscription/status"
+    },
+    {
+      "method": "GET",
+      "path": "/usage/stats"
+    }
+  ],
+  "guidanceMentions": [
+    {
+      "text": "PUT /api/agent/v1/articles/<interpolated>/content",
+      "route": "/articles/{id}/content"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<interpolated>/replace",
+      "route": "/articles/{id}/content"
+    },
+    {
+      "text": "GET /api/agent/v1/articles/<interpolated>/content",
+      "route": "/articles/{id}/content"
+    },
+    {
+      "text": "GET /api/agent/v1/articles/<interpolated>",
+      "route": "/articles/{id}/content"
+    },
+    {
+      "text": "GET /api/agent/v1/articles/<interpolated>",
+      "route": "/articles/{id}/retry-publish"
+    },
+    {
+      "text": "GET /api/agent/v1/articles",
+      "route": "/articles/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/articles/<interpolated>/content",
+      "route": "/articles/{id}"
+    },
+    {
+      "text": "PATCH /api/agent/v1/articles/<interpolated>",
+      "route": "/articles/{id}"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<interpolated>/retry-publish",
+      "route": "/articles/{id}"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/generate",
+      "route": "/articles/{id}"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/precreate",
+      "route": "/articles/{id}"
+    },
+    {
+      "text": "DELETE /api/agent/v1/articles/<interpolated>",
+      "route": "/articles/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/articles/<interpolated>",
+      "route": "/articles/{id}"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/generate",
+      "route": "/articles/generate"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/precreate",
+      "route": "/articles/generate"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/<id>",
+      "route": "/articles/precreate"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/<keywordId>",
+      "route": "/articles/precreate"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/articles"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/generate",
+      "route": "/articles"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/precreate",
+      "route": "/articles"
+    },
+    {
+      "text": "GET /api/agent/v1/articles/<id>",
+      "route": "/articles"
+    },
+    {
+      "text": "GET /api/agent/v1/articles/<id>/content",
+      "route": "/articles"
+    },
+    {
+      "text": "PATCH /api/agent/v1/articles/<id>",
+      "route": "/articles"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<id>/replace",
+      "route": "/articles"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/bulk-replace",
+      "route": "/articles"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<product_id>/improvements/candidates",
+      "route": "/improvements/candidates/{candidateId}/brief"
+    },
+    {
+      "text": "POST /api/agent/v1/improvements/candidates/<candidate_id>/schedule",
+      "route": "/improvements/candidates/{candidateId}/brief"
+    },
+    {
+      "text": "POST /api/agent/v1/improvements/tasks/<task_id>/execute",
+      "route": "/improvements/candidates/{candidateId}/schedule"
+    },
+    {
+      "text": "POST .../push",
+      "route": "/improvements/executions/{executionId}/decisions"
+    },
+    {
+      "text": ".../decisions",
+      "route": "/improvements/executions/{executionId}/push"
+    },
+    {
+      "text": "POST /api/agent/v1/improvements/executions/<id>/push",
+      "route": "/improvements/executions/{executionId}"
+    },
+    {
+      "text": "PATCH .../decisions",
+      "route": "/improvements/executions/{executionId}"
+    },
+    {
+      "text": "GET /api/agent/v1/improvements/executions/<execution_id>",
+      "route": "/improvements/tasks/{taskId}/execute"
+    },
+    {
+      "text": "GET /api/agent/v1/integration-providers",
+      "route": "/integration-providers/{provider}/discover/{resource}"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/webflow/discover/sites",
+      "route": "/integration-providers/{provider}/discover/{resource}"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/webflow/discover/collections",
+      "route": "/integration-providers/{provider}/discover/{resource}"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/webflow/discover/fields",
+      "route": "/integration-providers/{provider}/discover/{resource}"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/webflow/discover/items",
+      "route": "/integration-providers/{provider}/discover/{resource}"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/framer/discover/collections",
+      "route": "/integration-providers/{provider}/discover/{resource}"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/framer/discover/fields",
+      "route": "/integration-providers/{provider}/discover/{resource}"
+    },
+    {
+      "text": "GET /api/agent/v1/integration-providers",
+      "route": "/integration-providers/{provider}/validate"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/webhook/validate",
+      "route": "/integration-providers/{provider}/validate"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/ghost/validate",
+      "route": "/integration-providers/{provider}/validate"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/framer/validate",
+      "route": "/integration-providers/{provider}/validate"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/shopify/validate",
+      "route": "/integration-providers/{provider}/validate"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/wix/validate",
+      "route": "/integration-providers/{provider}/validate"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/wordpress-plugin/validate",
+      "route": "/integration-providers/{provider}/validate"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/webflow/validate",
+      "route": "/integration-providers/{provider}/validate"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords",
+      "route": "/keywords/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/subscription/status",
+      "route": "/keywords/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/generation-status?product_id=<productId>",
+      "route": "/keywords/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<productId>",
+      "route": "/keywords/{id}"
+    },
+    {
+      "text": "POST /api/agent/v1/keywords",
+      "route": "/keywords/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/generation-status?product_id=<interpolated>",
+      "route": "/keywords/{id}"
+    },
+    {
+      "text": "PATCH /api/agent/v1/keywords/<interpolated>",
+      "route": "/keywords/{id}"
+    },
+    {
+      "text": "DELETE /api/agent/v1/keywords/<interpolated>",
+      "route": "/keywords/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<interpolated>",
+      "route": "/keywords/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/subscription/status",
+      "route": "/keywords/bulk-delete"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/generation-status?product_id=<productId>",
+      "route": "/keywords/bulk-delete"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords",
+      "route": "/keywords/bulk-delete"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/keywords/bulk-process"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/output-settings",
+      "route": "/keywords/bulk-process"
+    },
+    {
+      "text": "GET /api/agent/v1/subscription/status",
+      "route": "/keywords/bulk-reschedule"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/generation-status?product_id=<productId>",
+      "route": "/keywords/bulk-reschedule"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<interpolated>",
+      "route": "/keywords/bulk-reschedule"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/keywords/export"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/keywords/generate"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/generation-status?product_id=<interpolated>",
+      "route": "/keywords/generate"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<interpolated>",
+      "route": "/keywords/generate"
+    },
+    {
+      "text": "GET /api/agent/v1/subscription/status",
+      "route": "/keywords/generate"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/keywords/generation-status"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/subscription/status",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/generation-status?product_id=<productId>",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<interpolated>&scope=all&q=<keyword>",
+      "route": "/keywords"
+    },
+    {
+      "text": "POST /api/agent/v1/keywords",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/generation-status?product_id=<interpolated>",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/export?product_id=<interpolated>",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<interpolated>&scope=stored&q=<keyword>",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/<id>?kind=stored",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<interpolated>&scope=scheduled&q=<keyword>",
+      "route": "/keywords"
+    },
+    {
+      "text": "PATCH /api/agent/v1/keywords/<id>",
+      "route": "/keywords"
+    },
+    {
+      "text": "POST /api/agent/v1/keywords/bulk-reschedule",
+      "route": "/keywords"
+    },
+    {
+      "text": "DELETE /api/agent/v1/keywords/<id>",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<interpolated>",
+      "route": "/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/keywords/suggest"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/output-settings",
+      "route": "/keywords/suggest"
+    },
+    {
+      "text": "POST /api/agent/v1/keywords",
+      "route": "/keywords/suggest"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<productId>/marketplace/buyer/placements",
+      "route": "/marketplace/buyer-placements/{placementId}/regenerate"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<productId>/marketplace/seller/placements",
+      "route": "/marketplace/placements/{placementId}/approve"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<productId>/marketplace/seller/placements",
+      "route": "/marketplace/placements/{placementId}/decline"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<productId>/marketplace/seller/placements",
+      "route": "/marketplace/placements/{placementId}/regenerate"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/backlinks"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/backlinks",
+      "route": "/products/{id}/backlinks"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/backlinks/<backlinkId>/reverify",
+      "route": "/products/{id}/backlinks/unverified"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/competitors"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/competitors",
+      "route": "/products/{id}/competitors"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/competitors",
+      "route": "/products/{id}/competitors"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/competitors",
+      "route": "/products/{id}/competitors"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/gsc/accounts"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/connect",
+      "route": "/products/{id}/gsc/accounts"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/properties?email=<email>",
+      "route": "/products/{id}/gsc/accounts"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/gsc/property",
+      "route": "/products/{id}/gsc/accounts"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/connect",
+      "route": "/products/{id}/gsc/cannibalization"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/gsc/property",
+      "route": "/products/{id}/gsc/cannibalization"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/reconnect",
+      "route": "/products/{id}/gsc/cannibalization"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/gsc/cannibalization"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/connect?attempt_id=<interpolated>",
+      "route": "/products/{id}/gsc/connect"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/<interpolated>",
+      "route": "/products/{id}/gsc/connect"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/properties?email=<interpolated>",
+      "route": "/products/{id}/gsc/connect"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/gsc/property",
+      "route": "/products/{id}/gsc/connect"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc",
+      "route": "/products/{id}/gsc/connect"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/gsc/connect"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/properties?email=<email>",
+      "route": "/products/{id}/gsc/connect"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/connect",
+      "route": "/products/{id}/gsc/performance"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/properties?email=<email>",
+      "route": "/products/{id}/gsc/performance"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/gsc/property",
+      "route": "/products/{id}/gsc/performance"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/reconnect",
+      "route": "/products/{id}/gsc/performance"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/connect?attempt_id=<attempt_id>",
+      "route": "/products/{id}/gsc/performance"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/gsc/performance"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/search-analytics",
+      "route": "/products/{id}/gsc/performance"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/url-inspection",
+      "route": "/products/{id}/gsc/performance"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/cannibalization",
+      "route": "/products/{id}/gsc/performance"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/gsc/properties"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/connect",
+      "route": "/products/{id}/gsc/properties"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/reconnect",
+      "route": "/products/{id}/gsc/properties"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/connect?attempt_id=<attempt_id>",
+      "route": "/products/{id}/gsc/properties"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/gsc/property",
+      "route": "/products/{id}/gsc/properties"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/gsc/property"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/accounts",
+      "route": "/products/{id}/gsc/property"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/connect",
+      "route": "/products/{id}/gsc/property"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/reconnect",
+      "route": "/products/{id}/gsc/property"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc",
+      "route": "/products/{id}/gsc/property"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/gsc/reconnect"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/connect",
+      "route": "/products/{id}/gsc/reconnect"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/connect?attempt_id=<interpolated>",
+      "route": "/products/{id}/gsc/reconnect"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/connect",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/connect?attempt_id=<attempt_id>",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/reconnect",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/accounts",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/properties?email=<email>",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/gsc/property",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/properties?email=<interpolated>",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/performance",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/gsc/search-analytics",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/url-inspection",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "DELETE /api/agent/v1/products/<interpolated>/gsc",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/gsc"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/connect",
+      "route": "/products/{id}/gsc/search-analytics"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/gsc/property",
+      "route": "/products/{id}/gsc/search-analytics"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/reconnect",
+      "route": "/products/{id}/gsc/search-analytics"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/gsc/search-analytics"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/connect",
+      "route": "/products/{id}/gsc/url-inspection"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/gsc/property",
+      "route": "/products/{id}/gsc/url-inspection"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/reconnect",
+      "route": "/products/{id}/gsc/url-inspection"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/gsc/url-inspection"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/improvements/candidates",
+      "route": "/products/{id}/improvements/analyze"
+    },
+    {
+      "text": "POST /api/agent/v1/improvements/candidates/<candidate_id>/brief",
+      "route": "/products/{id}/improvements/candidates"
+    },
+    {
+      "text": "POST /api/agent/v1/improvements/candidates/<candidate_id>/schedule",
+      "route": "/products/{id}/improvements/candidates"
+    },
+    {
+      "text": "/api/agent/v1/products/<id>/improvements/settings",
+      "route": "/products/{id}/improvements/candidates"
+    },
+    {
+      "text": "GET /api/agent/v1/improvements/executions/<execution_id>",
+      "route": "/products/{id}/improvements/executions"
+    },
+    {
+      "text": "PATCH .../decisions",
+      "route": "/products/{id}/improvements/executions"
+    },
+    {
+      "text": "POST .../push",
+      "route": "/products/{id}/improvements/executions"
+    },
+    {
+      "text": "PATCH /api/agent/v1/improvements/tasks/<task_id>",
+      "route": "/products/{id}/improvements/tasks"
+    },
+    {
+      "text": "PATCH /api/agent/v1/improvements/tasks/<task_id>/brief",
+      "route": "/products/{id}/improvements/tasks"
+    },
+    {
+      "text": "POST /api/agent/v1/improvements/tasks/<task_id>/execute",
+      "route": "/products/{id}/improvements/tasks"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/integrations/{integrationId}/notion/databases/{databaseId}/schema"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations",
+      "route": "/products/{id}/integrations/{integrationId}/notion/databases/{databaseId}/schema"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/integrations/<interpolated>",
+      "route": "/products/{id}/integrations/{integrationId}/notion/databases/{databaseId}/schema"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/integrations/{integrationId}/notion/databases"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations",
+      "route": "/products/{id}/integrations/{integrationId}/notion/databases"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations/<interpolated>/notion/databases/<databaseId>/schema",
+      "route": "/products/{id}/integrations/{integrationId}/notion/databases"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations",
+      "route": "/products/{id}/integrations/{integrationId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/integrations/{integrationId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<productId>/integrations",
+      "route": "/products/{id}/integrations/{integrationId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<productId>/integrations/<integrationId>",
+      "route": "/products/{id}/integrations/{integrationId}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/<interpolated>/test",
+      "route": "/products/{id}/integrations/{integrationId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/integrations/{integrationId}/test"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations",
+      "route": "/products/{id}/integrations/{integrationId}/test"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/<interpolated>/test",
+      "route": "/products/{id}/integrations/{integrationId}/test"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations/connect/wordpress-com?attempt_id=<interpolated>",
+      "route": "/products/{id}/integrations/connect/{provider}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/connect/wordpress-com",
+      "route": "/products/{id}/integrations/connect/{provider}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations",
+      "route": "/products/{id}/integrations/connect/{provider}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations/connect/notion?attempt_id=<interpolated>",
+      "route": "/products/{id}/integrations/connect/{provider}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/connect/notion",
+      "route": "/products/{id}/integrations/connect/{provider}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations/<integrationId>/notion/databases",
+      "route": "/products/{id}/integrations/connect/{provider}"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/integrations/connect/{provider}"
+    },
+    {
+      "text": "GET /api/agent/v1/integration-providers",
+      "route": "/products/{id}/integrations/prepare/{provider}"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/integrations/prepare/{provider}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/prepare/wordpress-plugin",
+      "route": "/products/{id}/integrations/prepare/{provider}"
+    },
+    {
+      "text": "POST /api/agent/v1/integration-providers/wordpress-plugin/validate",
+      "route": "/products/{id}/integrations/prepare/{provider}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations",
+      "route": "/products/{id}/integrations/prepare/{provider}"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/integrations"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations",
+      "route": "/products/{id}/integrations"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<productId>",
+      "route": "/products/{id}/integrations"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/<interpolated>/test",
+      "route": "/products/{id}/integrations"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/linking/sources",
+      "route": "/products/{id}/linking/detect"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/detect",
+      "route": "/products/{id}/linking/detect"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/linking/detect"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/linking/sources"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/linking/sources",
+      "route": "/products/{id}/linking/sources"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/linking/sources",
+      "route": "/products/{id}/linking/sources"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/detect",
+      "route": "/products/{id}/linking/sources"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/linking/target-config"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/linking/target-config",
+      "route": "/products/{id}/linking/target-config"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/linking/target-config",
+      "route": "/products/{id}/linking/target-config"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/targets/manual",
+      "route": "/products/{id}/linking/target-config"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/targets/upsert",
+      "route": "/products/{id}/linking/target-config"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/linking/targets",
+      "route": "/products/{id}/linking/targets/{targetId}"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/linking/targets/<interpolated>",
+      "route": "/products/{id}/linking/targets/{targetId}"
+    },
+    {
+      "text": "DELETE /api/agent/v1/products/<interpolated>/linking/targets/<interpolated>",
+      "route": "/products/{id}/linking/targets/{targetId}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/targets/upsert",
+      "route": "/products/{id}/linking/targets/{targetId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/linking/targets/manual"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/targets/manual",
+      "route": "/products/{id}/linking/targets/manual"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/targets/upsert",
+      "route": "/products/{id}/linking/targets/manual"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/linking/target-config",
+      "route": "/products/{id}/linking/targets/manual"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/linking/targets"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/linking/targets",
+      "route": "/products/{id}/linking/targets"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/linking/targets/upsert"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/targets/upsert",
+      "route": "/products/{id}/linking/targets/upsert"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/linking/target-config",
+      "route": "/products/{id}/linking/targets/upsert"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/linking/targets",
+      "route": "/products/{id}/linking/targets/upsert"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/backlinks/subscribe-quote?plan=<interpolated>",
+      "route": "/products/{id}/marketplace/buyer/billing-status"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/buyer/status",
+      "route": "/products/{id}/marketplace/buyer/billing-status"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/buyer/billing-status",
+      "route": "/products/{id}/marketplace/buyer/change-plan"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/buyer/billing-status",
+      "route": "/products/{id}/marketplace/buyer/checkout"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/marketplace/buyer/subscription",
+      "route": "/products/{id}/marketplace/buyer/checkout"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/buyer/status",
+      "route": "/products/{id}/marketplace/buyer/participation"
+    },
+    {
+      "text": "GET/PATCH /api/agent/v1/marketplace/buyer-placements/<placementId>/article",
+      "route": "/products/{id}/marketplace/buyer/placements"
+    },
+    {
+      "text": "POST .../regenerate",
+      "route": "/products/{id}/marketplace/buyer/placements"
+    },
+    {
+      "text": "POST .../revalidate",
+      "route": "/products/{id}/marketplace/buyer/placements"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/backlinks/subscribe-quote?plan=<interpolated>",
+      "route": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/buyer/target-pages/discover",
+      "route": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/buyer/target-pages",
+      "route": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "text": "/api/agent/v1/products/<interpolated>/marketplace/buyer/participation",
+      "route": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "text": "GET .../marketplace/buyer/placements",
+      "route": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "text": "POST /api/agent/v1/marketplace/buyer-placements/<placementId>/regenerate|revalidate",
+      "route": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "text": "GET/PATCH .../buyer-placements/<placementId>/article",
+      "route": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "text": "GET .../marketplace/buyer/credits/history",
+      "route": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "text": "GET .../marketplace/notifications?role=buyer",
+      "route": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "text": "POST .../marketplace/buyer/participation",
+      "route": "/products/{id}/marketplace/buyer/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/buyer/change-plan",
+      "route": "/products/{id}/marketplace/buyer/subscription"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/buyer/billing-status",
+      "route": "/products/{id}/marketplace/buyer/subscription"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/buyer/target-pages",
+      "route": "/products/{id}/marketplace/buyer/target-pages/discover"
+    },
+    {
+      "text": "PATCH /api/agent/v1/marketplace/target-pages/<targetPageId>",
+      "route": "/products/{id}/marketplace/buyer/target-pages"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/seller/status",
+      "route": "/products/{id}/marketplace/seller/complete-onboarding"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/seller/eligibility",
+      "route": "/products/{id}/marketplace/seller/complete-onboarding"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/marketplace/seller/integrations",
+      "route": "/products/{id}/marketplace/seller/integrations/{integrationId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/seller/integrations",
+      "route": "/products/{id}/marketplace/seller/integrations/{integrationId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/seller/integrations",
+      "route": "/products/{id}/marketplace/seller/integrations/adopt"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/seller/eligibility",
+      "route": "/products/{id}/marketplace/seller/integrations/adopt"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/marketplace/seller/integrations",
+      "route": "/products/{id}/marketplace/seller/integrations/claim"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/seller/eligibility",
+      "route": "/products/{id}/marketplace/seller/integrations/claim"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/marketplace/seller/integrations/<integrationId>",
+      "route": "/products/{id}/marketplace/seller/integrations"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/seller/integrations/adopt",
+      "route": "/products/{id}/marketplace/seller/integrations"
+    },
+    {
+      "text": "GET /api/agent/v1/integration-providers",
+      "route": "/products/{id}/marketplace/seller/integrations"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/seller/integrations/claim",
+      "route": "/products/{id}/marketplace/seller/integrations"
+    },
+    {
+      "text": "POST /api/agent/v1/marketplace/placements/<placementId>/approve",
+      "route": "/products/{id}/marketplace/seller/placements"
+    },
+    {
+      "text": "POST .../decline",
+      "route": "/products/{id}/marketplace/seller/placements"
+    },
+    {
+      "text": "POST .../publish",
+      "route": "/products/{id}/marketplace/seller/placements"
+    },
+    {
+      "text": "POST .../regenerate",
+      "route": "/products/{id}/marketplace/seller/placements"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/gsc/connect",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "GET/PATCH /api/agent/v1/products/<interpolated>/output-settings",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/marketplace/seller/settings",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/seller/integrations/adopt",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/seller/integrations",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/seller/complete-onboarding",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/seller/eligibility",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/seller/eligibility/recheck",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "GET .../marketplace/seller/placements",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "POST /api/agent/v1/marketplace/placements/<placementId>/<action>",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "GET .../marketplace/seller/earnings",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "GET/PATCH .../marketplace/seller/settings",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "GET .../marketplace/notifications?role=seller",
+      "route": "/products/{id}/marketplace/seller/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/seller/stripe-connect/onboard",
+      "route": "/products/{id}/marketplace/seller/stripe-connect/manage"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/seller/status?refresh_stripe=true",
+      "route": "/products/{id}/marketplace/seller/stripe-connect/onboard"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/seller/stripe-connect/onboard",
+      "route": "/products/{id}/marketplace/seller/stripe-connect/reset"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/output-settings"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/output-settings",
+      "route": "/products/{id}/output-settings"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<interpolated>",
+      "route": "/products/{id}/pause"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/resume",
+      "route": "/products/{id}/pause"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<interpolated>",
+      "route": "/products/{id}/resume"
+    },
+    {
+      "text": "GET /api/agent/v1/products/",
+      "route": "/products/{id}/resume"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<id>",
+      "route": "/products/{id}"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<id>/backlinks",
+      "route": "/products/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>",
+      "route": "/products/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}"
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": "/products/{id}/target-audiences"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/target-audiences",
+      "route": "/products/{id}/target-audiences"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/target-audiences",
+      "route": "/products/{id}/target-audiences"
+    },
+    {
+      "text": "POST /api/agent/v1/products",
+      "route": "/products"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>",
+      "route": "/products"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<id>",
+      "route": "/products"
+    },
+    {
+      "text": "GET /api/agent/v1/products?cursor=<interpolated>",
+      "route": "/products"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/pause",
+      "route": "/products"
+    },
+    {
+      "text": "POST /api/agent/v1/billing/purchase-products",
+      "route": "/products"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/competitors",
+      "route": "/products"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/generation-status?product_id=<interpolated>",
+      "route": "/products"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<interpolated>",
+      "route": "/products"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/output-settings",
+      "route": "/products"
+    },
+    {
+      "text": "/api/agent/v1/products/<interpolated>",
+      "route": "/products"
+    },
+    {
+      "text": "GET /api/agent/v1/billing/portal-url",
+      "route": "/subscription/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/marketplace/buyer/status",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/marketplace/seller/status",
+      "route": null
+    },
+    {
+      "text": "GET/PATCH /api/agent/v1/products/<id>",
+      "route": null
+    },
+    {
+      "text": "GET/PATCH /api/agent/v1/products/<id>/output-settings",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/keywords?product_id=<id>",
+      "route": null
+    },
+    {
+      "text": "/api/agent/v1/keywords/suggest",
+      "route": null
+    },
+    {
+      "text": "/api/agent/v1/keywords/generate",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<product_id>/improvements/candidates",
+      "route": null
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<id>/improvements/settings",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<product_id>/improvements/tasks",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<product_id>/improvements/executions",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/connect/wordpress-com",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/connect/notion",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations/<integrationId>",
+      "route": null
+    },
+    {
+      "text": "DELETE /api/agent/v1/products/<interpolated>/integrations/<integrationId>",
+      "route": null
+    },
+    {
+      "text": "DELETE /api/agent/v1/products/<interpolated>/integrations/<interpolated>",
+      "route": null
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/linking/sources",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/detect",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/linking/targets",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/targets/manual",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/linking/targets/upsert",
+      "route": null
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/linking/target-config",
+      "route": null
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/linking/targets/<targetId>",
+      "route": null
+    },
+    {
+      "text": "DELETE /api/agent/v1/products/<interpolated>/linking/targets/<targetId>",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/linking/sources",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/backlinks/subscribe-quote?plan=<interpolated>",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<productId>/marketplace/seller/placements",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<productId>/marketplace/buyer/placements",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<productId>/marketplace/buyer/target-pages",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/seller/eligibility/recheck",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>",
+      "route": null
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>",
+      "route": null
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/target-audiences",
+      "route": null
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/output-settings",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/pause",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/billing/purchase-products",
+      "route": null
+    }
+  ]
+}

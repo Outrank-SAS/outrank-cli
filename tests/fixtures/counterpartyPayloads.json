@@ -1,0 +1,1289 @@
+{
+  "marketplace.notifications.list": {
+    "notifications": [
+      {
+        "id": "n1",
+        "type": "placement_created",
+        "title": "New placement",
+        "body": "A buyer booked a placement.",
+        "readAt": null
+      }
+    ],
+    "unreadCount": 1
+  },
+  "marketplace.seller.placements.list": {
+    "placements": [
+      {
+        "id": "bbbbbbbb-0000-4000-8000-000000000002",
+        "status": "awaiting_approval",
+        "sellerArticleId": "cccccccc-0000-4000-8000-000000000003",
+        "articleTitle": "Ten ways to plan a kitchen",
+        "articleImageUrl": "https://imagedelivery.example/seller-article.png",
+        "keyword": "kitchen planning",
+        "scheduledDate": "2026-10-10T00:00:00.000Z",
+        "targetUrl": "https://buyer.example/kitchens",
+        "anchorText": "kitchen planner",
+        "createdAt": "2026-10-01T00:00:00.000Z",
+        "publishedAt": null,
+        "verifiedAt": null,
+        "publishError": "The CMS answered 401 Unauthorized.",
+        "generationFailedAt": null,
+        "backlinkMissingSince": null,
+        "earningsCents": 4000,
+        "rematchBlocked": false
+      }
+    ],
+    "totalCount": 1,
+    "page": 1,
+    "pageCount": 1
+  },
+  "marketplace.seller.content-history": {
+    "items": [
+      {
+        "id": "cccccccc-0000-4000-8000-000000000003",
+        "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+        "title": "Ten ways to plan a kitchen",
+        "image_url": "https://imagedelivery.example/seller-article.png",
+        "slug": "ten-ways-to-plan-a-kitchen",
+        "meta_description": "A practical guide to kitchen planning.",
+        "status": "generated",
+        "display_status": "failed",
+        "status_label": "Publish failed",
+        "mode": "ideas",
+        "created_at": "2026-10-01T08:00:00.000Z",
+        "scheduled_for": "2026-10-10T00:00:00.000Z",
+        "scheduled_keyword_id": "dddddddd-0000-4000-8000-000000000004",
+        "scheduled_keyword": "kitchen planning",
+        "scheduled_keyword_status": "generated",
+        "is_marketplace_placement": true,
+        "article_type": "guide",
+        "article_type_label": "Guide",
+        "article_subtype": "howTo",
+        "article_subtype_label": "How-to",
+        "expected_length": "auto",
+        "expected_length_label": "Auto",
+        "article_type_info": {
+          "type": "guide",
+          "type_label": "Guide",
+          "subtype": "howTo",
+          "subtype_label": "How-to",
+          "expected_length": "auto",
+          "expected_length_label": "Auto",
+          "confidence": null
+        },
+        "article_type_options": {
+          "article_types": [
+            {
+              "value": "guide",
+              "label": "Guide"
+            },
+            {
+              "value": "listicle",
+              "label": "Listicle"
+            }
+          ],
+          "article_subtypes_by_type": {
+            "guide": [
+              {
+                "value": "howTo",
+                "label": "How-to"
+              },
+              {
+                "value": "explainer",
+                "label": "Explainer"
+              },
+              {
+                "value": "comparison",
+                "label": "Comparison"
+              },
+              {
+                "value": "reference",
+                "label": "Reference"
+              }
+            ],
+            "listicle": [
+              {
+                "value": "roundup",
+                "label": "Round-up"
+              },
+              {
+                "value": "resources",
+                "label": "Resources"
+              },
+              {
+                "value": "examples",
+                "label": "Examples"
+              }
+            ]
+          },
+          "available_subtypes": [
+            {
+              "value": "howTo",
+              "label": "How-to"
+            },
+            {
+              "value": "explainer",
+              "label": "Explainer"
+            },
+            {
+              "value": "comparison",
+              "label": "Comparison"
+            },
+            {
+              "value": "reference",
+              "label": "Reference"
+            }
+          ],
+          "expected_lengths": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "short",
+              "label": "Short (1,200-1,600 words)"
+            },
+            {
+              "value": "medium",
+              "label": "Medium (1,600-2,400 words)"
+            },
+            {
+              "value": "long",
+              "label": "Long (2,400-3,200 words)"
+            },
+            {
+              "value": "comprehensive",
+              "label": "Comprehensive (3,200-4,200 words)"
+            }
+          ]
+        },
+        "instructions": "Mention the buyer brand once in the second section.",
+        "publish_error": "WordPress rejected the post: the slug ten-ways-to-plan-a-kitchen already exists.",
+        "editor_url": "https://outrank.so/dashboard/articles/cccccccc-0000-4000-8000-000000000003/edit",
+        "integration": {
+          "type": "wordpress-plugin",
+          "id": "ffffffff-0000-4000-8000-000000000007"
+        },
+        "_human": {
+          "summary": "Ten ways to plan a kitchen — Publish failed for keyword \"kitchen planning\"."
+        }
+      }
+    ],
+    "count": 1,
+    "offset": 0,
+    "limit": 20,
+    "next_offset": null,
+    "filters": {
+      "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+      "status": null,
+      "track_scope": "marketplace",
+      "title": null,
+      "keyword": null,
+      "content": null,
+      "slug": null,
+      "created_from": null,
+      "created_to": null,
+      "scheduled_from": null,
+      "scheduled_to": null,
+      "sort_by": "created_at",
+      "sort_order": "desc"
+    }
+  },
+  "marketplace.buyer.placements.list": {
+    "placements": [
+      {
+        "id": "bbbbbbbb-0000-4000-8000-000000000002",
+        "status": "published",
+        "tier": "premium",
+        "sellerArticleId": "cccccccc-0000-4000-8000-000000000003",
+        "articleTitle": "Ten ways to plan a kitchen",
+        "articleUrl": "https://seller.example/blog/ten-ways-to-plan-a-kitchen",
+        "articleImageUrl": "https://imagedelivery.example/seller-article.png",
+        "articleStatus": "published",
+        "scheduledPublishDate": "2026-10-10T00:00:00.000Z",
+        "sellerSite": "seller.example",
+        "hostDomainRating": 54,
+        "targetUrl": "https://buyer.example/kitchens",
+        "anchorText": "kitchen planner",
+        "creditsSpent": 40,
+        "creditsRefunded": false,
+        "createdAt": "2026-10-01T00:00:00.000Z",
+        "publishedAt": "2026-10-10T00:00:00.000Z",
+        "verifiedAt": null,
+        "generationFailedAt": null
+      }
+    ],
+    "totalCount": 1,
+    "page": 1,
+    "pageCount": 1
+  },
+  "marketplace.buyer.article.get": {
+    "article": {
+      "placementId": "bbbbbbbb-0000-4000-8000-000000000002",
+      "articleId": "cccccccc-0000-4000-8000-000000000003",
+      "title": "Ten ways to plan a kitchen",
+      "content": "## Start with the layout\n\nUse a [kitchen planner](https://buyer.example/kitchens).",
+      "imageUrl": "https://imagedelivery.example/seller-article.png",
+      "metaDescription": "A practical guide to kitchen planning.",
+      "slug": "ten-ways-to-plan-a-kitchen",
+      "scheduledKeyword": "kitchen planning",
+      "placementStatus": "awaiting_approval",
+      "articleStatus": "generated",
+      "isEditable": true,
+      "isLinkMissing": false,
+      "editableSectionHeading": "Start with the layout",
+      "sellerSite": "seller.example",
+      "anchorText": "kitchen planner",
+      "targetUrl": "https://buyer.example/kitchens",
+      "publishDate": "2026-10-10T00:00:00.000Z",
+      "verifiedAt": null,
+      "visibleAfter": "2026-10-10T00:00:00.000Z"
+    }
+  },
+  "marketplace.buyer.credits.history": {
+    "balance": 360,
+    "totalSpent": 40,
+    "totalRefunded": 0,
+    "transactions": [
+      {
+        "id": "eeeeeeee-0000-4000-8000-000000000005",
+        "kind": "charge",
+        "amount": 40,
+        "createdAt": "2026-10-01T00:00:00.000Z",
+        "placementId": "bbbbbbbb-0000-4000-8000-000000000002",
+        "sellerSite": "seller.example",
+        "articleTitle": "Ten ways to plan a kitchen",
+        "placementArticleId": "cccccccc-0000-4000-8000-000000000003",
+        "tier": "premium"
+      }
+    ],
+    "totalCount": 1,
+    "page": 1,
+    "pageCount": 1
+  },
+  "articles.list": {
+    "items": [
+      {
+        "id": "cccccccc-0000-4000-8000-000000000003",
+        "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+        "title": "Ten ways to plan a kitchen",
+        "image_url": "https://imagedelivery.example/seller-article.png",
+        "slug": "ten-ways-to-plan-a-kitchen",
+        "meta_description": "A practical guide to kitchen planning.",
+        "status": "generated",
+        "display_status": "failed",
+        "status_label": "Publish failed",
+        "mode": "ideas",
+        "created_at": "2026-10-01T08:00:00.000Z",
+        "scheduled_for": "2026-10-10T00:00:00.000Z",
+        "scheduled_keyword_id": "dddddddd-0000-4000-8000-000000000004",
+        "scheduled_keyword": "kitchen planning",
+        "scheduled_keyword_status": "generated",
+        "is_marketplace_placement": true,
+        "article_type": "guide",
+        "article_type_label": "Guide",
+        "article_subtype": "howTo",
+        "article_subtype_label": "How-to",
+        "expected_length": "auto",
+        "expected_length_label": "Auto",
+        "article_type_info": {
+          "type": "guide",
+          "type_label": "Guide",
+          "subtype": "howTo",
+          "subtype_label": "How-to",
+          "expected_length": "auto",
+          "expected_length_label": "Auto",
+          "confidence": null
+        },
+        "article_type_options": {
+          "article_types": [
+            {
+              "value": "guide",
+              "label": "Guide"
+            },
+            {
+              "value": "listicle",
+              "label": "Listicle"
+            }
+          ],
+          "article_subtypes_by_type": {
+            "guide": [
+              {
+                "value": "howTo",
+                "label": "How-to"
+              },
+              {
+                "value": "explainer",
+                "label": "Explainer"
+              },
+              {
+                "value": "comparison",
+                "label": "Comparison"
+              },
+              {
+                "value": "reference",
+                "label": "Reference"
+              }
+            ],
+            "listicle": [
+              {
+                "value": "roundup",
+                "label": "Round-up"
+              },
+              {
+                "value": "resources",
+                "label": "Resources"
+              },
+              {
+                "value": "examples",
+                "label": "Examples"
+              }
+            ]
+          },
+          "available_subtypes": [
+            {
+              "value": "howTo",
+              "label": "How-to"
+            },
+            {
+              "value": "explainer",
+              "label": "Explainer"
+            },
+            {
+              "value": "comparison",
+              "label": "Comparison"
+            },
+            {
+              "value": "reference",
+              "label": "Reference"
+            }
+          ],
+          "expected_lengths": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "short",
+              "label": "Short (1,200-1,600 words)"
+            },
+            {
+              "value": "medium",
+              "label": "Medium (1,600-2,400 words)"
+            },
+            {
+              "value": "long",
+              "label": "Long (2,400-3,200 words)"
+            },
+            {
+              "value": "comprehensive",
+              "label": "Comprehensive (3,200-4,200 words)"
+            }
+          ]
+        },
+        "instructions": "Mention the buyer brand once in the second section.",
+        "publish_error": "WordPress rejected the post: the slug ten-ways-to-plan-a-kitchen already exists.",
+        "editor_url": "https://outrank.so/dashboard/articles/cccccccc-0000-4000-8000-000000000003/edit",
+        "integration": {
+          "type": "wordpress-plugin",
+          "id": "ffffffff-0000-4000-8000-000000000007"
+        },
+        "_human": {
+          "summary": "Ten ways to plan a kitchen — Publish failed for keyword \"kitchen planning\"."
+        }
+      },
+      {
+        "id": "eeeeeeee-0000-4000-8000-000000000005",
+        "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+        "title": "How we test recipes",
+        "image_url": "https://imagedelivery.example/seller-article.png",
+        "slug": "how-we-test-recipes",
+        "meta_description": "Our own testing process.",
+        "status": "published",
+        "display_status": "published",
+        "status_label": "Published",
+        "mode": "ideas",
+        "created_at": "2026-10-01T08:00:00.000Z",
+        "scheduled_for": "2026-10-10T00:00:00.000Z",
+        "scheduled_keyword_id": "dddddddd-0000-4000-8000-000000000006",
+        "scheduled_keyword": "recipe testing",
+        "scheduled_keyword_status": "generated",
+        "is_marketplace_placement": false,
+        "article_type": "guide",
+        "article_type_label": "Guide",
+        "article_subtype": "howTo",
+        "article_subtype_label": "How-to",
+        "expected_length": "auto",
+        "expected_length_label": "Auto",
+        "article_type_info": {
+          "type": "guide",
+          "type_label": "Guide",
+          "subtype": "howTo",
+          "subtype_label": "How-to",
+          "expected_length": "auto",
+          "expected_length_label": "Auto",
+          "confidence": null
+        },
+        "article_type_options": {
+          "article_types": [
+            {
+              "value": "guide",
+              "label": "Guide"
+            },
+            {
+              "value": "listicle",
+              "label": "Listicle"
+            }
+          ],
+          "article_subtypes_by_type": {
+            "guide": [
+              {
+                "value": "howTo",
+                "label": "How-to"
+              },
+              {
+                "value": "explainer",
+                "label": "Explainer"
+              },
+              {
+                "value": "comparison",
+                "label": "Comparison"
+              },
+              {
+                "value": "reference",
+                "label": "Reference"
+              }
+            ],
+            "listicle": [
+              {
+                "value": "roundup",
+                "label": "Round-up"
+              },
+              {
+                "value": "resources",
+                "label": "Resources"
+              },
+              {
+                "value": "examples",
+                "label": "Examples"
+              }
+            ]
+          },
+          "available_subtypes": [
+            {
+              "value": "howTo",
+              "label": "How-to"
+            },
+            {
+              "value": "explainer",
+              "label": "Explainer"
+            },
+            {
+              "value": "comparison",
+              "label": "Comparison"
+            },
+            {
+              "value": "reference",
+              "label": "Reference"
+            }
+          ],
+          "expected_lengths": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "short",
+              "label": "Short (1,200-1,600 words)"
+            },
+            {
+              "value": "medium",
+              "label": "Medium (1,600-2,400 words)"
+            },
+            {
+              "value": "long",
+              "label": "Long (2,400-3,200 words)"
+            },
+            {
+              "value": "comprehensive",
+              "label": "Comprehensive (3,200-4,200 words)"
+            }
+          ]
+        },
+        "instructions": "Keep it short.",
+        "publish_error": null,
+        "editor_url": "https://outrank.so/dashboard/articles/eeeeeeee-0000-4000-8000-000000000005/edit",
+        "integration": {
+          "type": "wordpress-plugin",
+          "id": "ffffffff-0000-4000-8000-000000000007"
+        },
+        "_human": {
+          "summary": "How we test recipes — Published for keyword \"recipe testing\"."
+        }
+      }
+    ],
+    "count": 2,
+    "offset": 0,
+    "limit": 20,
+    "next_offset": null,
+    "filters": {
+      "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+      "status": null,
+      "track_scope": "all",
+      "title": null,
+      "keyword": null,
+      "content": null,
+      "slug": null,
+      "created_from": null,
+      "created_to": null,
+      "scheduled_from": null,
+      "scheduled_to": null,
+      "sort_by": "created_at",
+      "sort_order": "desc"
+    }
+  },
+  "articles.get": {
+    "id": "cccccccc-0000-4000-8000-000000000003",
+    "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+    "title": "Ten ways to plan a kitchen",
+    "image_url": "https://imagedelivery.example/seller-article.png",
+    "slug": "ten-ways-to-plan-a-kitchen",
+    "meta_description": "A practical guide to kitchen planning.",
+    "status": "generated",
+    "display_status": "failed",
+    "status_label": "Publish failed",
+    "mode": "ideas",
+    "created_at": "2026-10-01T08:00:00.000Z",
+    "scheduled_for": "2026-10-10T00:00:00.000Z",
+    "scheduled_keyword_id": "dddddddd-0000-4000-8000-000000000004",
+    "scheduled_keyword": "kitchen planning",
+    "scheduled_keyword_status": "generated",
+    "is_marketplace_placement": true,
+    "article_type": "guide",
+    "article_type_label": "Guide",
+    "article_subtype": "howTo",
+    "article_subtype_label": "How-to",
+    "expected_length": "auto",
+    "expected_length_label": "Auto",
+    "article_type_info": {
+      "type": "guide",
+      "type_label": "Guide",
+      "subtype": "howTo",
+      "subtype_label": "How-to",
+      "expected_length": "auto",
+      "expected_length_label": "Auto",
+      "confidence": null
+    },
+    "article_type_options": {
+      "article_types": [
+        {
+          "value": "guide",
+          "label": "Guide"
+        },
+        {
+          "value": "listicle",
+          "label": "Listicle"
+        }
+      ],
+      "article_subtypes_by_type": {
+        "guide": [
+          {
+            "value": "howTo",
+            "label": "How-to"
+          },
+          {
+            "value": "explainer",
+            "label": "Explainer"
+          },
+          {
+            "value": "comparison",
+            "label": "Comparison"
+          },
+          {
+            "value": "reference",
+            "label": "Reference"
+          }
+        ],
+        "listicle": [
+          {
+            "value": "roundup",
+            "label": "Round-up"
+          },
+          {
+            "value": "resources",
+            "label": "Resources"
+          },
+          {
+            "value": "examples",
+            "label": "Examples"
+          }
+        ]
+      },
+      "available_subtypes": [
+        {
+          "value": "howTo",
+          "label": "How-to"
+        },
+        {
+          "value": "explainer",
+          "label": "Explainer"
+        },
+        {
+          "value": "comparison",
+          "label": "Comparison"
+        },
+        {
+          "value": "reference",
+          "label": "Reference"
+        }
+      ],
+      "expected_lengths": [
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "short",
+          "label": "Short (1,200-1,600 words)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium (1,600-2,400 words)"
+        },
+        {
+          "value": "long",
+          "label": "Long (2,400-3,200 words)"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Comprehensive (3,200-4,200 words)"
+        }
+      ]
+    },
+    "instructions": "Mention the buyer brand once in the second section.",
+    "publish_error": "WordPress rejected the post: the slug ten-ways-to-plan-a-kitchen already exists.",
+    "editor_url": "https://outrank.so/dashboard/articles/cccccccc-0000-4000-8000-000000000003/edit",
+    "integration": {
+      "type": "wordpress-plugin",
+      "id": "ffffffff-0000-4000-8000-000000000007"
+    },
+    "_human": {
+      "summary": "Ten ways to plan a kitchen — Publish failed for keyword \"kitchen planning\"."
+    }
+  },
+  "articles.get-content": {
+    "article_id": "cccccccc-0000-4000-8000-000000000003",
+    "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+    "format": "markdown",
+    "title": "Ten ways to plan a kitchen",
+    "content": "# Ten ways to plan a kitchen\n\nStart with the work triangle.",
+    "is_marketplace_placement": true
+  },
+  "articles.update": {
+    "id": "cccccccc-0000-4000-8000-000000000003",
+    "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+    "title": "Ten ways to plan a kitchen",
+    "image_url": "https://imagedelivery.example/seller-article.png",
+    "slug": "ten-ways-to-plan-a-kitchen",
+    "meta_description": "A practical guide to kitchen planning.",
+    "status": "generated",
+    "display_status": "failed",
+    "status_label": "Publish failed",
+    "mode": "ideas",
+    "created_at": "2026-10-01T08:00:00.000Z",
+    "scheduled_for": "2026-10-10T00:00:00.000Z",
+    "scheduled_keyword_id": "dddddddd-0000-4000-8000-000000000004",
+    "scheduled_keyword": "kitchen planning",
+    "scheduled_keyword_status": "generated",
+    "is_marketplace_placement": true,
+    "article_type": "guide",
+    "article_type_label": "Guide",
+    "article_subtype": "howTo",
+    "article_subtype_label": "How-to",
+    "expected_length": "auto",
+    "expected_length_label": "Auto",
+    "article_type_info": {
+      "type": "guide",
+      "type_label": "Guide",
+      "subtype": "howTo",
+      "subtype_label": "How-to",
+      "expected_length": "auto",
+      "expected_length_label": "Auto",
+      "confidence": null
+    },
+    "article_type_options": {
+      "article_types": [
+        {
+          "value": "guide",
+          "label": "Guide"
+        },
+        {
+          "value": "listicle",
+          "label": "Listicle"
+        }
+      ],
+      "article_subtypes_by_type": {
+        "guide": [
+          {
+            "value": "howTo",
+            "label": "How-to"
+          },
+          {
+            "value": "explainer",
+            "label": "Explainer"
+          },
+          {
+            "value": "comparison",
+            "label": "Comparison"
+          },
+          {
+            "value": "reference",
+            "label": "Reference"
+          }
+        ],
+        "listicle": [
+          {
+            "value": "roundup",
+            "label": "Round-up"
+          },
+          {
+            "value": "resources",
+            "label": "Resources"
+          },
+          {
+            "value": "examples",
+            "label": "Examples"
+          }
+        ]
+      },
+      "available_subtypes": [
+        {
+          "value": "howTo",
+          "label": "How-to"
+        },
+        {
+          "value": "explainer",
+          "label": "Explainer"
+        },
+        {
+          "value": "comparison",
+          "label": "Comparison"
+        },
+        {
+          "value": "reference",
+          "label": "Reference"
+        }
+      ],
+      "expected_lengths": [
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "short",
+          "label": "Short (1,200-1,600 words)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium (1,600-2,400 words)"
+        },
+        {
+          "value": "long",
+          "label": "Long (2,400-3,200 words)"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Comprehensive (3,200-4,200 words)"
+        }
+      ]
+    },
+    "instructions": "Mention the buyer brand once in the second section.",
+    "publish_error": "WordPress rejected the post: the slug ten-ways-to-plan-a-kitchen already exists.",
+    "editor_url": "https://outrank.so/dashboard/articles/cccccccc-0000-4000-8000-000000000003/edit",
+    "integration": {
+      "type": "wordpress-plugin",
+      "id": "ffffffff-0000-4000-8000-000000000007"
+    },
+    "_human": {
+      "summary": "Ten ways to plan a kitchen — Publish failed for keyword \"kitchen planning\"."
+    },
+    "updated_fields": [
+      "meta_description"
+    ]
+  },
+  "articles.update-content": {
+    "article_id": "cccccccc-0000-4000-8000-000000000003",
+    "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+    "format": "markdown",
+    "title": "Ten ways to plan a kitchen",
+    "content": "# Ten ways to plan a kitchen\n\nStart with the work triangle.",
+    "is_marketplace_placement": true
+  },
+  "articles.replace": {
+    "article_id": "cccccccc-0000-4000-8000-000000000003",
+    "title": "Ten ways to plan a kitchen",
+    "is_marketplace_placement": true,
+    "preview_only": true,
+    "changed": true,
+    "occurrence_count": 1,
+    "before_excerpt": "Start with the work triangle.",
+    "after_excerpt": "Begin with the work triangle."
+  },
+  "articles.bulk-replace": {
+    "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+    "confirm": false,
+    "matched_count": 2,
+    "truncated": false,
+    "article_limit": 200,
+    "items": [
+      {
+        "article_id": "cccccccc-0000-4000-8000-000000000003",
+        "title": "Ten ways to plan a kitchen",
+        "is_marketplace_placement": true,
+        "occurrence_count": 1,
+        "before_excerpt": "Start with the work triangle.",
+        "after_excerpt": "Begin with the work triangle."
+      },
+      {
+        "article_id": "eeeeeeee-0000-4000-8000-000000000005",
+        "title": "How we test recipes",
+        "is_marketplace_placement": false,
+        "occurrence_count": 2,
+        "before_excerpt": "We start with the work triangle of the test kitchen.",
+        "after_excerpt": "We begin with the work triangle of the test kitchen."
+      }
+    ]
+  },
+  "articles.retry-publish": {
+    "article_id": "cccccccc-0000-4000-8000-000000000003",
+    "success": true,
+    "article": {
+      "id": "cccccccc-0000-4000-8000-000000000003",
+      "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+      "title": "Ten ways to plan a kitchen",
+      "image_url": "https://imagedelivery.example/seller-article.png",
+      "slug": "ten-ways-to-plan-a-kitchen",
+      "meta_description": "A practical guide to kitchen planning.",
+      "status": "published",
+      "display_status": "published",
+      "status_label": "Published",
+      "mode": "ideas",
+      "created_at": "2026-10-01T08:00:00.000Z",
+      "scheduled_for": "2026-10-10T00:00:00.000Z",
+      "scheduled_keyword_id": "dddddddd-0000-4000-8000-000000000004",
+      "scheduled_keyword": "kitchen planning",
+      "scheduled_keyword_status": "generated",
+      "is_marketplace_placement": true,
+      "article_type": "guide",
+      "article_type_label": "Guide",
+      "article_subtype": "howTo",
+      "article_subtype_label": "How-to",
+      "expected_length": "auto",
+      "expected_length_label": "Auto",
+      "article_type_info": {
+        "type": "guide",
+        "type_label": "Guide",
+        "subtype": "howTo",
+        "subtype_label": "How-to",
+        "expected_length": "auto",
+        "expected_length_label": "Auto",
+        "confidence": null
+      },
+      "article_type_options": {
+        "article_types": [
+          {
+            "value": "guide",
+            "label": "Guide"
+          },
+          {
+            "value": "listicle",
+            "label": "Listicle"
+          }
+        ],
+        "article_subtypes_by_type": {
+          "guide": [
+            {
+              "value": "howTo",
+              "label": "How-to"
+            },
+            {
+              "value": "explainer",
+              "label": "Explainer"
+            },
+            {
+              "value": "comparison",
+              "label": "Comparison"
+            },
+            {
+              "value": "reference",
+              "label": "Reference"
+            }
+          ],
+          "listicle": [
+            {
+              "value": "roundup",
+              "label": "Round-up"
+            },
+            {
+              "value": "resources",
+              "label": "Resources"
+            },
+            {
+              "value": "examples",
+              "label": "Examples"
+            }
+          ]
+        },
+        "available_subtypes": [
+          {
+            "value": "howTo",
+            "label": "How-to"
+          },
+          {
+            "value": "explainer",
+            "label": "Explainer"
+          },
+          {
+            "value": "comparison",
+            "label": "Comparison"
+          },
+          {
+            "value": "reference",
+            "label": "Reference"
+          }
+        ],
+        "expected_lengths": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          },
+          {
+            "value": "short",
+            "label": "Short (1,200-1,600 words)"
+          },
+          {
+            "value": "medium",
+            "label": "Medium (1,600-2,400 words)"
+          },
+          {
+            "value": "long",
+            "label": "Long (2,400-3,200 words)"
+          },
+          {
+            "value": "comprehensive",
+            "label": "Comprehensive (3,200-4,200 words)"
+          }
+        ]
+      },
+      "instructions": "Mention the buyer brand once in the second section.",
+      "publish_error": null,
+      "editor_url": "https://outrank.so/dashboard/articles/cccccccc-0000-4000-8000-000000000003/edit",
+      "integration": {
+        "type": "wordpress-plugin",
+        "id": "ffffffff-0000-4000-8000-000000000007"
+      },
+      "_human": {
+        "summary": "Ten ways to plan a kitchen — Published for keyword \"kitchen planning\"."
+      }
+    },
+    "article_read_back_failed": false,
+    "is_marketplace_placement": true
+  },
+  "articles.retry-publish#failure": {
+    "article_id": "cccccccc-0000-4000-8000-000000000003",
+    "success": false,
+    "error": "WordPress rejected the post: the slug ten-ways-to-plan-a-kitchen already exists.",
+    "is_marketplace_placement": true
+  },
+  "articles.generate": {
+    "keyword_id": "dddddddd-0000-4000-8000-000000000004",
+    "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+    "article_id": "cccccccc-0000-4000-8000-000000000003",
+    "keyword_status": "generated",
+    "article": {
+      "id": "cccccccc-0000-4000-8000-000000000003",
+      "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+      "title": "Ten ways to plan a kitchen",
+      "image_url": "https://imagedelivery.example/seller-article.png",
+      "slug": "ten-ways-to-plan-a-kitchen",
+      "meta_description": "A practical guide to kitchen planning.",
+      "status": "generated",
+      "display_status": "failed",
+      "status_label": "Publish failed",
+      "mode": "ideas",
+      "created_at": "2026-10-01T08:00:00.000Z",
+      "scheduled_for": "2026-10-10T00:00:00.000Z",
+      "scheduled_keyword_id": "dddddddd-0000-4000-8000-000000000004",
+      "scheduled_keyword": "kitchen planning",
+      "scheduled_keyword_status": "generated",
+      "is_marketplace_placement": true,
+      "article_type": "guide",
+      "article_type_label": "Guide",
+      "article_subtype": "howTo",
+      "article_subtype_label": "How-to",
+      "expected_length": "auto",
+      "expected_length_label": "Auto",
+      "article_type_info": {
+        "type": "guide",
+        "type_label": "Guide",
+        "subtype": "howTo",
+        "subtype_label": "How-to",
+        "expected_length": "auto",
+        "expected_length_label": "Auto",
+        "confidence": null
+      },
+      "article_type_options": {
+        "article_types": [
+          {
+            "value": "guide",
+            "label": "Guide"
+          },
+          {
+            "value": "listicle",
+            "label": "Listicle"
+          }
+        ],
+        "article_subtypes_by_type": {
+          "guide": [
+            {
+              "value": "howTo",
+              "label": "How-to"
+            },
+            {
+              "value": "explainer",
+              "label": "Explainer"
+            },
+            {
+              "value": "comparison",
+              "label": "Comparison"
+            },
+            {
+              "value": "reference",
+              "label": "Reference"
+            }
+          ],
+          "listicle": [
+            {
+              "value": "roundup",
+              "label": "Round-up"
+            },
+            {
+              "value": "resources",
+              "label": "Resources"
+            },
+            {
+              "value": "examples",
+              "label": "Examples"
+            }
+          ]
+        },
+        "available_subtypes": [
+          {
+            "value": "howTo",
+            "label": "How-to"
+          },
+          {
+            "value": "explainer",
+            "label": "Explainer"
+          },
+          {
+            "value": "comparison",
+            "label": "Comparison"
+          },
+          {
+            "value": "reference",
+            "label": "Reference"
+          }
+        ],
+        "expected_lengths": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          },
+          {
+            "value": "short",
+            "label": "Short (1,200-1,600 words)"
+          },
+          {
+            "value": "medium",
+            "label": "Medium (1,600-2,400 words)"
+          },
+          {
+            "value": "long",
+            "label": "Long (2,400-3,200 words)"
+          },
+          {
+            "value": "comprehensive",
+            "label": "Comprehensive (3,200-4,200 words)"
+          }
+        ]
+      },
+      "instructions": "Mention the buyer brand once in the second section.",
+      "publish_error": "WordPress rejected the post: the slug ten-ways-to-plan-a-kitchen already exists.",
+      "editor_url": "https://outrank.so/dashboard/articles/cccccccc-0000-4000-8000-000000000003/edit",
+      "integration": {
+        "type": "wordpress-plugin",
+        "id": "ffffffff-0000-4000-8000-000000000007"
+      },
+      "_human": {
+        "summary": "Ten ways to plan a kitchen — Publish failed for keyword \"kitchen planning\"."
+      }
+    },
+    "article_read_back_failed": false,
+    "message": "Article generated successfully.",
+    "is_marketplace_placement": true
+  },
+  "articles.delete": {
+    "id": "cccccccc-0000-4000-8000-000000000003",
+    "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+    "title": "Ten ways to plan a kitchen",
+    "image_url": "https://imagedelivery.example/seller-article.png",
+    "slug": "ten-ways-to-plan-a-kitchen",
+    "meta_description": "A practical guide to kitchen planning.",
+    "status": "deleted",
+    "display_status": "deleted",
+    "status_label": "Deleted",
+    "mode": "ideas",
+    "created_at": "2026-10-01T08:00:00.000Z",
+    "scheduled_for": "2026-10-10T00:00:00.000Z",
+    "scheduled_keyword_id": "dddddddd-0000-4000-8000-000000000004",
+    "scheduled_keyword": "kitchen planning",
+    "scheduled_keyword_status": "generated",
+    "is_marketplace_placement": true,
+    "article_type": "guide",
+    "article_type_label": "Guide",
+    "article_subtype": "howTo",
+    "article_subtype_label": "How-to",
+    "expected_length": "auto",
+    "expected_length_label": "Auto",
+    "article_type_info": {
+      "type": "guide",
+      "type_label": "Guide",
+      "subtype": "howTo",
+      "subtype_label": "How-to",
+      "expected_length": "auto",
+      "expected_length_label": "Auto",
+      "confidence": null
+    },
+    "article_type_options": {
+      "article_types": [
+        {
+          "value": "guide",
+          "label": "Guide"
+        },
+        {
+          "value": "listicle",
+          "label": "Listicle"
+        }
+      ],
+      "article_subtypes_by_type": {
+        "guide": [
+          {
+            "value": "howTo",
+            "label": "How-to"
+          },
+          {
+            "value": "explainer",
+            "label": "Explainer"
+          },
+          {
+            "value": "comparison",
+            "label": "Comparison"
+          },
+          {
+            "value": "reference",
+            "label": "Reference"
+          }
+        ],
+        "listicle": [
+          {
+            "value": "roundup",
+            "label": "Round-up"
+          },
+          {
+            "value": "resources",
+            "label": "Resources"
+          },
+          {
+            "value": "examples",
+            "label": "Examples"
+          }
+        ]
+      },
+      "available_subtypes": [
+        {
+          "value": "howTo",
+          "label": "How-to"
+        },
+        {
+          "value": "explainer",
+          "label": "Explainer"
+        },
+        {
+          "value": "comparison",
+          "label": "Comparison"
+        },
+        {
+          "value": "reference",
+          "label": "Reference"
+        }
+      ],
+      "expected_lengths": [
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "short",
+          "label": "Short (1,200-1,600 words)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium (1,600-2,400 words)"
+        },
+        {
+          "value": "long",
+          "label": "Long (2,400-3,200 words)"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Comprehensive (3,200-4,200 words)"
+        }
+      ]
+    },
+    "instructions": "Mention the buyer brand once in the second section.",
+    "publish_error": "WordPress rejected the post: the slug ten-ways-to-plan-a-kitchen already exists.",
+    "editor_url": "https://outrank.so/dashboard/articles/cccccccc-0000-4000-8000-000000000003/edit",
+    "integration": {
+      "type": "wordpress-plugin",
+      "id": "ffffffff-0000-4000-8000-000000000007"
+    },
+    "_human": {
+      "summary": "Ten ways to plan a kitchen — Publish failed for keyword \"kitchen planning\"."
+    }
+  },
+  "articles.precreate": {
+    "keyword_id": "dddddddd-0000-4000-8000-000000000004",
+    "keyword": "kitchen planning",
+    "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+    "status": "generating_article",
+    "message": "Article pre-generation started.",
+    "is_marketplace_placement": true
+  },
+  "articles.upload-image": {
+    "article_id": "cccccccc-0000-4000-8000-000000000003",
+    "keyword": "kitchen planning",
+    "url": "https://images.example/articles/org/1/kitchen-planning-work-triangle.png",
+    "alt_text": "A kitchen laid out around the work triangle",
+    "filename": "kitchen-planning-work-triangle",
+    "success": true,
+    "is_marketplace_placement": true
+  },
+  "articles.upload-featured-image": {
+    "article_id": "cccccccc-0000-4000-8000-000000000003",
+    "image_url": "https://images.example/org/featured-images/1/kitchen-planning-work-triangle.png",
+    "filename": "kitchen-planning-work-triangle",
+    "success": true,
+    "is_marketplace_placement": true
+  }
+}

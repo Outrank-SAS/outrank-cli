@@ -2,6 +2,7 @@ import { loadConfig } from '../../core/config.js';
 import { MCP_STARTUP_RESOLVE_TIMEOUT_MS, Surface } from '../../core/constants.js';
 import { createCommandContext, resolveContext } from '../../core/context.js';
 import { MCP_USAGE_GUIDANCE, cliError, toErrorEnvelope } from '../../core/errors.js';
+import { RECEIVED_RESPONSE_PROPERTY } from '../../core/http.js';
 import { UUID_PATTERN } from '../../core/schema.js';
 import {
   FallbackReason,
@@ -10,6 +11,7 @@ import {
   MCP_IDENTITY_RETRY_INTERVAL_MS,
   SelectionSource,
 } from './constants.js';
+import { createRequestThrottle } from './throttle.js';
 import { selectTools } from './toolsets.js';
 
 const WHOAMI_PATH = '/auth/whoami';
@@ -81,6 +83,7 @@ export const createSession = ({
   timeouts = {},
   now = Date.now,
   onToolsChanged = () => {},
+  throttle = createRequestThrottle(),
 }) => {
   const startupBudgetMs = timeouts.startupResolveMs ?? MCP_STARTUP_RESOLVE_TIMEOUT_MS;
   const retryIntervalMs = timeouts.identityRetryIntervalMs ?? MCP_IDENTITY_RETRY_INTERVAL_MS;
@@ -166,6 +169,20 @@ export const createSession = ({
           : {}),
       },
     });
+    const unthrottledRequest = ctx.request;
+    ctx.request = async (request) => {
+      await throttle.acquire(controller.signal);
+      let response;
+      try {
+        response = await unthrottledRequest(request);
+      } catch (error) {
+        if (error?.[RECEIVED_RESPONSE_PROPERTY]) throttle.observe(error[RECEIVED_RESPONSE_PROPERTY]);
+        throw error;
+      }
+      throttle.observe(response);
+      return response;
+    };
+    ctx.http = async (request) => (await ctx.request(request)).result;
     const release = () => {
       activeRequests.delete(controller);
       if (signal) signal.removeEventListener('abort', forward);
@@ -176,7 +193,8 @@ export const createSession = ({
   const applyWhoami = (envelope) => {
     if (envelope?.ok !== true) {
       if (isKeyRejection(envelope)) state.keyRejected = true;
-      setIdentity({ status: IdentityStatus.FAILED, error: envelope?.error ?? {} });
+      const keepKnownIdentity = state.identity.status === IdentityStatus.OK && !isKeyRejection(envelope);
+      if (!keepKnownIdentity) setIdentity({ status: IdentityStatus.FAILED, error: envelope?.error ?? {} });
       return;
     }
     const data = envelope.data && typeof envelope.data === 'object' ? envelope.data : {};
@@ -208,6 +226,15 @@ export const createSession = ({
   };
 
   const canIdentify = () => failure() === null && Boolean(state.resolved?.apiKey);
+
+  const refreshIdentity = () => {
+    if (!canIdentify() || state.closed) return;
+    if (state.pending === null) {
+      requestIdentity();
+      return;
+    }
+    state.pending.then(refreshIdentity).catch(() => {});
+  };
 
   const identityIsFinal = () => {
     if (state.identity.status === IdentityStatus.OK) return true;
@@ -253,8 +280,9 @@ export const createSession = ({
       if (envelope?.ok === true) applyWhoami(envelope);
     },
     noteResult: (envelope) => {
-      if (isKeyRejection(envelope)) state.keyRejected = true;
+      if (isKeyRejection(envelope)) applyWhoami(envelope);
     },
+    refreshIdentity,
     shutdown: () => {
       state.closed = true;
       for (const controller of activeRequests) controller.abort();
