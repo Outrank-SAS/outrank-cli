@@ -4,6 +4,7 @@ export const FieldKind = Object.freeze({
   STRING: 'string',
   UUID: 'uuid',
   INT: 'int',
+  NUMBER: 'number',
   BOOL: 'bool',
   ENUM: 'enum',
   LIST: 'list',
@@ -46,17 +47,20 @@ const createField = (kind, options = {}) => {
   field.describe = (description) => derive({ description });
   field.default = (defaultValue) => derive({ defaultValue });
   field.guidance = (invalidGuidance) => derive({ invalidGuidance });
+  field.nullable = () => derive({ isNullable: true });
+  if (kind === FieldKind.OBJECT) field.shape = (properties) => derive({ properties: Object.freeze({ ...properties }) });
   return field;
 };
 
 export const string = () => createField(FieldKind.STRING);
 export const uuid = () => createField(FieldKind.UUID);
 export const int = ({ min, max } = {}) => createField(FieldKind.INT, { min, max });
+export const number = ({ min, max } = {}) => createField(FieldKind.NUMBER, { min, max });
 export const bool = ({ serialize = BoolSerialize.OMIT_FALSE } = {}) => createField(FieldKind.BOOL, { serialize });
 export const oneOf = (values) => createField(FieldKind.ENUM, { values: Object.freeze([...values]) });
 export const list = ({ split = DEFAULT_LIST_SEPARATOR, serialize = ListSerialize.ARRAY, item = string() } = {}) =>
   createField(FieldKind.LIST, { split, serialize, item });
-export const object = () => createField(FieldKind.OBJECT);
+export const object = () => createField(FieldKind.OBJECT, { properties: undefined });
 export const json = () => createField(FieldKind.JSON);
 export const image = () => createField(FieldKind.IMAGE);
 
@@ -92,6 +96,12 @@ const parseScalar = (field, value, label) => {
     if (field.max !== undefined && number > field.max) throw usageError(`${label} must be <= ${field.max}.`);
     return number;
   }
+  if (field.kind === FieldKind.NUMBER) {
+    if (typeof value !== 'number' || !Number.isFinite(value)) throw usageError(`${label} must be a number.`);
+    if (field.min !== undefined && value < field.min) throw usageError(`${label} must be >= ${field.min}.`);
+    if (field.max !== undefined && value > field.max) throw usageError(`${label} must be <= ${field.max}.`);
+    return value;
+  }
   if (field.kind === FieldKind.BOOL) {
     if (typeof value === 'boolean') return value;
     if (value === TRUE_TEXT) return true;
@@ -104,7 +114,7 @@ const parseScalar = (field, value, label) => {
   }
   if (field.kind === FieldKind.OBJECT) {
     if (!isPlainObject(value)) throw usageError(`${label} must be a JSON object.`);
-    return value;
+    return field.properties ? parseShapedObject(field, value, label) : value;
   }
   if (field.kind === FieldKind.JSON) {
     return value;
@@ -148,6 +158,37 @@ export const parseFieldValue = (field, value, label, { splitLists = true } = {})
     return parseScalar(field, value, label);
   });
 
+const missingPropertyError = (property, label) => {
+  const guidance = property.requiredError?.guidance ?? property.invalidGuidance;
+  return usageError(property.requiredError?.message ?? `Missing required field: ${label}.`, guidance);
+};
+
+const parsePropertyValue = (property, value, label) =>
+  withFieldGuidance(property, () => {
+    if (property.kind !== FieldKind.LIST) return parseScalar(property, value, label);
+    if (!Array.isArray(value)) throw usageError(`${label} must be an array.`);
+    const items = parseList(property, value, label, false);
+    if (property.isRequired && items.length === 0) throw missingPropertyError(property, label);
+    return items;
+  });
+
+const parseShapedObject = (field, value, label) => {
+  const parsed = { ...value };
+  for (const [key, property] of Object.entries(field.properties)) {
+    const propertyLabel = `${label}.${key}`;
+    if (value[key] === undefined || (value[key] === null && property.isNullable)) {
+      if (property.isRequired && value[key] === undefined) throw missingPropertyError(property, propertyLabel);
+      continue;
+    }
+    if (value[key] === null) {
+      if (property.isRequired) throw missingPropertyError(property, propertyLabel);
+      throw usageError(`${propertyLabel} must not be null.`);
+    }
+    parsed[key] = parsePropertyValue(property, value[key], propertyLabel);
+  }
+  return parsed;
+};
+
 const missingFieldError = (field, name, missingMessage) => {
   const message = field.requiredError?.message ?? missingMessage(name);
   return usageError(message, field.requiredError?.guidance);
@@ -185,18 +226,30 @@ export const serializeList = (field, value) => {
   return value;
 };
 
-const zodScalar = (z, field, { jsonAsObject = false } = {}) => {
-  if (field.kind === FieldKind.STRING) return z.string().min(1);
+const boundedNumber = (schema, field) => {
+  let bounded = schema;
+  if (field.min !== undefined) bounded = bounded.min(field.min);
+  if (field.max !== undefined) bounded = bounded.max(field.max);
+  return bounded;
+};
+
+const zodScalar = (z, field, options = {}) => {
+  const { jsonAsObject = false, inBody = false } = options;
+  if (field.kind === FieldKind.STRING) return inBody ? z.string() : z.string().min(1);
   if (field.kind === FieldKind.UUID) return z.string().regex(UUID_PATTERN, UUID_MESSAGE);
-  if (field.kind === FieldKind.INT) {
-    let schema = z.number().int();
-    if (field.min !== undefined) schema = schema.min(field.min);
-    if (field.max !== undefined) schema = schema.max(field.max);
-    return schema;
-  }
+  if (field.kind === FieldKind.INT) return boundedNumber(z.number().int(), field);
+  if (field.kind === FieldKind.NUMBER) return boundedNumber(z.number(), field);
   if (field.kind === FieldKind.BOOL) return z.boolean();
   if (field.kind === FieldKind.ENUM) return z.enum(field.values);
-  if (field.kind === FieldKind.OBJECT) return z.object({}).passthrough();
+  if (field.kind === FieldKind.OBJECT) {
+    if (!field.properties) return z.object({}).passthrough();
+    const propertyOptions = { ...options, inBody: true, jsonAsObject: false };
+    const entries = Object.entries(field.properties).map(([key, property]) => [
+      key,
+      zodField(z, property, propertyOptions),
+    ]);
+    return z.object(Object.fromEntries(entries)).passthrough();
+  }
   if (field.kind === FieldKind.JSON) return jsonAsObject ? z.object({}).passthrough() : z.unknown();
   if (field.kind === FieldKind.IMAGE) {
     return z.object({ file_base64: z.string().min(1), file_name: z.string().min(1), file_type: z.string().min(1) });
@@ -204,13 +257,19 @@ const zodScalar = (z, field, { jsonAsObject = false } = {}) => {
   throw new Error(`Unknown field kind: ${field.kind}`);
 };
 
-export const zodField = (z, field, { jsonAsObject = false, description = field.description } = {}) => {
+const zodListItem = (z, item, options) =>
+  item.kind === FieldKind.STRING
+    ? z.string().trim().min(1)
+    : zodScalar(z, item, { ...options, inBody: false, jsonAsObject: false });
+
+export const zodField = (z, field, { jsonAsObject = false, inBody = false, description = field.description } = {}) => {
   const minItems = field.isRequired ? 1 : 0;
-  const options = { jsonAsObject };
+  const options = { jsonAsObject, inBody };
   let schema =
     field.kind === FieldKind.LIST
-      ? z.array(zodScalar(z, field.item, options)).min(minItems)
+      ? z.array(zodListItem(z, field.item, options)).min(minItems)
       : zodScalar(z, field, options);
+  if (field.isNullable) schema = schema.nullable();
   if (description) schema = schema.describe(description);
   return field.isRequired ? schema : schema.optional();
 };

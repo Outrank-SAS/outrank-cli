@@ -1,7 +1,29 @@
 import { LIST_MAX_LIMIT, LIST_MIN_LIMIT, MIN_OFFSET, Surface } from '../core/constants.js';
 import { MCP_USAGE_GUIDANCE, usageError } from '../core/errors.js';
-import { image, int, string, uuid } from '../core/schema.js';
+import { image, int, object, oneOf, string, uuid } from '../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from './registry.js';
+
+const ARTICLE_UPDATE_STATUSES = ['generated', 'approved', 'published'];
+const ARTICLE_TYPES = ['guide', 'listicle'];
+const ARTICLE_SUBTYPES = ['howTo', 'explainer', 'comparison', 'reference', 'roundup', 'resources', 'examples'];
+const ARTICLE_EXPECTED_LENGTHS = ['auto', 'short', 'medium', 'long', 'comprehensive'];
+const ARTICLE_TITLE_HINT = 'At most 300 characters.';
+const META_DESCRIPTION_HINT = 'Trimmed to 160 characters.';
+const IMAGE_URL_HINT = 'Absolute http(s) URL.';
+const ARTICLE_STATUS_HINT = 'published publishes through the product integration for real.';
+const ARTICLE_INSTRUCTIONS_HINT = 'Per-article instructions of the linked scheduled keyword.';
+const ARTICLE_SUBTYPE_HINT =
+  'guide: howTo | explainer | comparison | reference; listicle: roundup | resources | examples.';
+const ARTICLE_UPDATE_BODY = object().shape({
+  title: string().describe(ARTICLE_TITLE_HINT),
+  meta_description: string().describe(META_DESCRIPTION_HINT),
+  image_url: string().describe(IMAGE_URL_HINT),
+  status: oneOf(ARTICLE_UPDATE_STATUSES).describe(ARTICLE_STATUS_HINT),
+  instructions: string().nullable().describe(ARTICLE_INSTRUCTIONS_HINT),
+  article_type: oneOf(ARTICLE_TYPES),
+  article_subtype: oneOf(ARTICLE_SUBTYPES).describe(ARTICLE_SUBTYPE_HINT),
+  expected_length: oneOf(ARTICLE_EXPECTED_LENGTHS),
+});
 
 export const ARTICLES_HELP = `Usage:
   outrank-cli articles list [--product <product-id>] [--status generated|approved|published|failed|deleted] [--title <text>] [--keyword <text>] [--content <text>] [--slug <text>] [--created-from <date>] [--created-to <date>] [--scheduled-from <date>] [--scheduled-to <date>] [--sort-by created_at|status|title] [--sort-order asc|desc] [--limit <n>] [--offset <n>]
@@ -47,6 +69,35 @@ const UPLOAD_TARGET_GUIDANCE =
   'Pass `--article <article-id>` for an existing article editor-style upload, or `--keyword <text>` when you ' +
   'want keyword-driven image metadata without an existing article.';
 
+const MARKETPLACE_PLACEMENT_FLAG = 'is_marketplace_placement';
+const HOSTED_ARTICLE_TEXT_FIELDS = Object.freeze([
+  'title',
+  'scheduled_keyword',
+  'meta_description',
+  'slug',
+  'instructions',
+  'publish_error',
+  'image_url',
+  '_human.summary',
+]);
+const HOSTED_ARTICLE_BODY_FIELDS = Object.freeze(['title', 'content']);
+const HOSTED_ARTICLE_REPLACE_FIELDS = Object.freeze(['title', 'before_excerpt', 'after_excerpt']);
+const LIST_RECORD = 'items[]';
+const ROOT_RECORD = '';
+const NESTED_ARTICLE_FIELDS = Object.freeze(HOSTED_ARTICLE_TEXT_FIELDS.map((field) => `article.${field}`));
+const RETRY_PUBLISH_FIELDS = Object.freeze(['error', ...NESTED_ARTICLE_FIELDS]);
+const UPLOADED_IMAGE_FIELDS = Object.freeze(['keyword', 'alt_text', 'filename', 'url']);
+const UPLOADED_FEATURED_IMAGE_FIELDS = Object.freeze(['filename', 'image_url']);
+const PRECREATED_KEYWORD_FIELDS = Object.freeze(['keyword']);
+const ARTICLE_CONTENT_HINT = 'Required. The full article body as markdown.';
+const ARTICLE_CONTENT_BODY = object().shape({ content: string().describe(ARTICLE_CONTENT_HINT) });
+
+const hostedArticleMcp = (record, fields) => ({
+  untrustedOutput: true,
+  untrustedFields: fields.map((field) => (record ? `${record}.${field}` : field)),
+  untrustedWhen: { record, flag: MARKETPLACE_PLACEMENT_FLAG },
+});
+
 const articleIdInput = () => ({ articleId: uuid().required() });
 const articleIdParams = (input) => ({ articleId: input.articleId });
 
@@ -55,6 +106,7 @@ const listCommand = defineCommand({
   summary: 'List articles with optional filters, sorting and pagination.',
   kind: CommandKind.READ,
   toolsets: TOOLSETS,
+  mcp: hostedArticleMcp(LIST_RECORD, HOSTED_ARTICLE_TEXT_FIELDS),
   input: {
     productId: uuid(),
     status: string(),
@@ -100,6 +152,7 @@ const getCommand = defineCommand({
   summary: 'Get article metadata by id.',
   kind: CommandKind.READ,
   toolsets: TOOLSETS,
+  mcp: hostedArticleMcp(ROOT_RECORD, HOSTED_ARTICLE_TEXT_FIELDS),
   input: articleIdInput(),
   cli: ARTICLE_ID_CLI,
   run: (input, ctx) => ctx.http({ method: 'GET', path: ARTICLE_PATH, pathParams: articleIdParams(input) }),
@@ -110,6 +163,7 @@ const getContentCommand = defineCommand({
   summary: 'Get the article body as markdown or HTML.',
   kind: CommandKind.READ,
   toolsets: TOOLSETS,
+  mcp: hostedArticleMcp(ROOT_RECORD, HOSTED_ARTICLE_BODY_FIELDS),
   input: { ...articleIdInput(), format: string() },
   cli: ARTICLE_ID_CLI,
   run: (input, ctx) =>
@@ -121,15 +175,17 @@ const getContentCommand = defineCommand({
     }),
 });
 
-const bodyCommand = ({ id, summary, kind, method, pathSuffix }) =>
+const bodyCommand = ({ id, summary, kind, method, pathSuffix, bodyField, mcp }) =>
   defineCommand({
     id,
     summary,
     kind,
     toolsets: TOOLSETS,
+    mcp,
     input: articleIdInput(),
     cli: ARTICLE_ID_CLI,
     body: BodyMode.JSON,
+    ...(bodyField ? { bodyField } : {}),
     run: (input, ctx) =>
       ctx.http({ method, path: `${ARTICLE_PATH}${pathSuffix}`, pathParams: articleIdParams(input), body: input.body }),
   });
@@ -140,6 +196,8 @@ const updateCommand = bodyCommand({
   kind: CommandKind.WRITE,
   method: 'PATCH',
   pathSuffix: '',
+  bodyField: ARTICLE_UPDATE_BODY,
+  mcp: hostedArticleMcp(ROOT_RECORD, HOSTED_ARTICLE_TEXT_FIELDS),
 });
 
 const updateContentCommand = bodyCommand({
@@ -148,6 +206,8 @@ const updateContentCommand = bodyCommand({
   kind: CommandKind.WRITE,
   method: 'PUT',
   pathSuffix: '/content',
+  bodyField: ARTICLE_CONTENT_BODY,
+  mcp: hostedArticleMcp(ROOT_RECORD, HOSTED_ARTICLE_BODY_FIELDS),
 });
 
 const replaceCommand = bodyCommand({
@@ -156,6 +216,7 @@ const replaceCommand = bodyCommand({
   kind: CommandKind.WRITE,
   method: 'POST',
   pathSuffix: '/replace',
+  mcp: hostedArticleMcp(ROOT_RECORD, HOSTED_ARTICLE_REPLACE_FIELDS),
 });
 
 const bulkReplaceCommand = defineCommand({
@@ -163,6 +224,7 @@ const bulkReplaceCommand = defineCommand({
   summary: 'Find and replace text across several articles from a JSON body.',
   kind: CommandKind.WRITE,
   toolsets: TOOLSETS,
+  mcp: hostedArticleMcp(LIST_RECORD, HOSTED_ARTICLE_REPLACE_FIELDS),
   body: BodyMode.JSON,
   run: (input, ctx) => ctx.http({ method: 'POST', path: '/articles/bulk-replace', body: input.body }),
 });
@@ -172,6 +234,7 @@ const uploadImageCommand = defineCommand({
   summary: 'Upload an image for an article or a keyword.',
   kind: CommandKind.WRITE,
   toolsets: TOOLSETS,
+  mcp: hostedArticleMcp(ROOT_RECORD, UPLOADED_IMAGE_FIELDS),
   input: { file: image().required(FILE_REQUIRED), articleId: uuid(), keyword: string() },
   cli: { options: { article: 'articleId' }, placeholders: FILE_PLACEHOLDERS },
   refine: (input, ctx) => {
@@ -198,6 +261,7 @@ const uploadFeaturedImageCommand = defineCommand({
   summary: 'Upload the featured image of an article.',
   kind: CommandKind.WRITE,
   toolsets: TOOLSETS,
+  mcp: hostedArticleMcp(ROOT_RECORD, UPLOADED_FEATURED_IMAGE_FIELDS),
   input: { ...articleIdInput(), file: image().required(FILE_REQUIRED) },
   cli: { ...ARTICLE_ID_CLI, placeholders: FILE_PLACEHOLDERS },
   run: (input, ctx) =>
@@ -214,6 +278,7 @@ const retryPublishCommand = defineCommand({
   summary: 'Retry publishing an article to its integration.',
   kind: CommandKind.WRITE,
   toolsets: TOOLSETS,
+  mcp: hostedArticleMcp(ROOT_RECORD, RETRY_PUBLISH_FIELDS),
   input: articleIdInput(),
   cli: ARTICLE_ID_CLI,
   longRunning: { pollTool: 'articles.get' },
@@ -226,17 +291,19 @@ const deleteCommand = defineCommand({
   summary: 'Delete an article.',
   kind: CommandKind.DESTRUCTIVE,
   toolsets: TOOLSETS,
+  mcp: hostedArticleMcp(ROOT_RECORD, HOSTED_ARTICLE_TEXT_FIELDS),
   input: articleIdInput(),
   cli: ARTICLE_ID_CLI,
   run: (input, ctx) => ctx.http({ method: 'DELETE', path: ARTICLE_PATH, pathParams: articleIdParams(input) }),
 });
 
-const keywordActionCommand = ({ id, summary, actionPath }) =>
+const keywordActionCommand = ({ id, summary, actionPath, mcp }) =>
   defineCommand({
     id,
     summary,
     kind: CommandKind.WRITE,
     toolsets: TOOLSETS,
+    mcp,
     input: { keywordId: uuid().required() },
     cli: KEYWORD_ID_CLI,
     longRunning: { pollTool: 'articles.list' },
@@ -247,12 +314,14 @@ const precreateCommand = keywordActionCommand({
   id: 'articles.precreate',
   summary: 'Pre-create the article for an eligible future scheduled keyword.',
   actionPath: '/articles/precreate',
+  mcp: hostedArticleMcp(ROOT_RECORD, PRECREATED_KEYWORD_FIELDS),
 });
 
 const generateCommand = keywordActionCommand({
   id: 'articles.generate',
   summary: 'Generate the article for a keyword scheduled for today.',
   actionPath: '/articles/generate',
+  mcp: hostedArticleMcp(ROOT_RECORD, NESTED_ARTICLE_FIELDS),
 });
 
 export const articlesGroup = defineGroup({

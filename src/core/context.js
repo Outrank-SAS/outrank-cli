@@ -268,7 +268,7 @@ const renderCliReference = (spec, args) => {
 
 const toSnakeCase = (name) => name.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 
-const renderMcpReference = (spec, args) => {
+export const renderMcpReference = (spec, args) => {
   const toolName = spec.id.replaceAll('.', '_').replaceAll('-', '_');
   const entries = Object.entries(args).filter(([, value]) => value !== undefined);
   if (entries.length === 0) return toolName;

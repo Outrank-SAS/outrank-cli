@@ -15,6 +15,7 @@ export const STUB_API_KEY = 'outr_live_mcp_test_key';
 export const STUB_VERSION = '0.0.0-test';
 export const WHOAMI_PATHNAME = '/api/agent/v1/auth/whoami';
 const JSON_HEADERS = { 'content-type': 'application/json' };
+export const TOOL_LIST_CHANGED_METHOD = 'notifications/tools/list_changed';
 const CLIENT_INFO = { name: 'outrank-cli-tests', version: '0.0.0' };
 const STUB_ENVELOPE = { ok: true, data: { stub: true }, agent_guidance: 'stub' };
 
@@ -43,6 +44,7 @@ export const startMcp = async ({
   respond = respondWith(),
   timeouts,
   logger,
+  throttle,
   cwd = REPO_ROOT,
 } = {}) => {
   const calls = [];
@@ -74,6 +76,7 @@ export const startMcp = async ({
       readConfig: async () => (typeof config === 'function' ? config() : config),
       timeouts,
       logger,
+      throttle,
     });
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
     client = new Client(CLIENT_INFO);
@@ -88,6 +91,8 @@ export const startMcp = async ({
       notifications,
       options,
       listToolNames: async () => (await client.listTools()).tools.map((tool) => tool.name),
+      nonWhoamiRequests: () => calls.filter((request) => request.pathname !== WHOAMI_PATHNAME),
+      toolListChanges: () => notifications.filter((item) => item.method === TOOL_LIST_CHANGED_METHOD).length,
       call: async (name, args = {}, callOptions) => {
         const result = await client.callTool({ name, arguments: args }, undefined, callOptions);
         return { result, envelope: result.structuredContent };

@@ -15,6 +15,10 @@ export const MAX_LOGGED_STRING_CHARS = 200;
 export const MAX_LOGGED_DEPTH = 8;
 export const MAX_IDENTITY_TEXT_CHARS = 100;
 export const MCP_IDENTITY_RETRY_INTERVAL_MS = 30_000;
+export const MCP_RATE_LIMIT_PER_MINUTE = 120;
+export const MCP_RATE_LIMIT_WINDOW_MS = 60_000;
+export const MCP_RATE_LIMIT_DEFAULT_RETRY_MS = 1_000;
+export const MCP_RATE_LIMIT_MAX_WAIT_MS = 5 * 60_000;
 
 export const TOOLSETS_AUTO = 'auto';
 export const TOOLSETS_ALL = 'all';
@@ -46,4 +50,17 @@ export const FallbackReason = Object.freeze({
 
 export const PROGRESS_NOTIFICATION_METHOD = 'notifications/progress';
 export const WHOAMI_COMMAND_ID = 'auth.whoami';
+export const ENTITLEMENT_CHANGING_COMMAND_IDS = Object.freeze([
+  'products.create',
+  'products.pause',
+  'products.resume',
+  'billing.purchase-products.buy',
+  'marketplace.buyer.checkout',
+  'marketplace.buyer.change-plan',
+  'marketplace.seller.onboard',
+  'marketplace.seller.eligibility',
+  'marketplace.seller.eligibility.recheck',
+  'marketplace.seller.settings.update',
+  'marketplace.seller.complete-onboarding',
+]);
 export const DASHBOARD_SUBSCRIPTION_PATH = '/dashboard/subscription';

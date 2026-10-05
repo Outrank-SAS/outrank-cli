@@ -63,7 +63,7 @@ const FRAMER_GUIDANCE =
 const TOOLSETS = [Toolset.INTEGRATIONS];
 const NOTION_ID_PATTERN = /^[A-Za-z0-9-]{1,64}$/;
 const NOTION_ID_GUIDANCE = 'Use a database id returned by the Notion databases command.';
-const PROVIDERS = Object.freeze([
+export const PROVIDERS = Object.freeze([
   'wordpress-plugin',
   'wordpress-com',
   'notion',
@@ -72,7 +72,19 @@ const PROVIDERS = Object.freeze([
   'shopify',
   'wix',
   'webhook',
+  'ghost',
   'nextjs-blog',
+]);
+export const PREPARE_PROVIDERS = Object.freeze(['wordpress-plugin']);
+export const CONNECT_PROVIDERS = Object.freeze(['wordpress-com', 'notion']);
+export const VALIDATE_PROVIDERS = Object.freeze([
+  'webhook',
+  'ghost',
+  'shopify',
+  'wix',
+  'framer',
+  'wordpress-plugin',
+  'webflow',
 ]);
 const WEBFLOW_RESOURCES = Object.freeze(['sites', 'collections', 'fields', 'items']);
 const FRAMER_RESOURCES = Object.freeze(['collections', 'fields']);
@@ -88,7 +100,7 @@ const ATTEMPT_ID_REQUIRED = {
 };
 const SENSITIVE_BODY = { sensitiveBody: true };
 
-const providerInput = () => ({ provider: oneOf(PROVIDERS).required(), ...productInput() });
+const providerInput = (providers) => ({ provider: oneOf(providers).required(), ...productInput() });
 const providerParams = (input) => ({ productId: input.productId, provider: input.provider });
 const integrationInput = () => ({ ...productInput(), integrationId: uuid().required() });
 const integrationParams = (input) => ({ productId: input.productId, integrationId: input.integrationId });
@@ -106,7 +118,7 @@ const prepare = defineCommand({
   summary: 'Prepare a provider integration for a product (e.g. generate the WordPress plugin token).',
   kind: CommandKind.WRITE,
   toolsets: TOOLSETS,
-  input: providerInput(),
+  input: providerInput(PREPARE_PROVIDERS),
   cli: PROVIDER_PRODUCT_CLI,
   body: BodyMode.OPTIONAL_JSON,
   run: (input, ctx) =>
@@ -123,7 +135,7 @@ const connect = defineCommand({
   summary: 'Start an OAuth connect flow for a provider and return the connect URL.',
   kind: CommandKind.WRITE,
   toolsets: TOOLSETS,
-  input: providerInput(),
+  input: providerInput(CONNECT_PROVIDERS),
   cli: PROVIDER_PRODUCT_CLI,
   body: BodyMode.OPTIONAL_JSON,
   run: (input, ctx) =>
@@ -135,7 +147,7 @@ const poll = defineCommand({
   summary: 'Poll an OAuth connect attempt until the handoff completes.',
   kind: CommandKind.READ,
   toolsets: TOOLSETS,
-  input: { ...providerInput(), attemptId: string().required(ATTEMPT_ID_REQUIRED) },
+  input: { ...providerInput(CONNECT_PROVIDERS), attemptId: string().required(ATTEMPT_ID_REQUIRED) },
   cli: { ...PROVIDER_PRODUCT_CLI, placeholders: ATTEMPT_ID_PLACEHOLDERS },
   run: (input, ctx) =>
     ctx.http({
@@ -210,7 +222,7 @@ const validate = defineCommand({
   summary: 'Validate provider credentials from a JSON body without saving them.',
   kind: CommandKind.READ,
   toolsets: TOOLSETS,
-  input: { provider: oneOf(PROVIDERS).required() },
+  input: { provider: oneOf(VALIDATE_PROVIDERS).required() },
   cli: { positionals: ['provider'] },
   mcp: SENSITIVE_BODY,
   body: BodyMode.JSON,

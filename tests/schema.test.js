@@ -9,6 +9,7 @@ import {
   int,
   json,
   list,
+  number,
   object,
   oneOf,
   serializeBool,
@@ -114,6 +115,73 @@ test('object fields require a JSON object and json fields accept any JSON value'
   throwsUsage(() => validateInput({ body: object() }, { body: 'text' }, CLI_LABELS), /must be a JSON object/);
   assert.deepEqual(validateInput({ body: object() }, { body: { a: 1 } }), { body: { a: 1 } });
   assert.deepEqual(validateInput({ body: json() }, { body: [1, 2] }), { body: [1, 2] });
+});
+
+const SHAPED_BODY = object().shape({
+  name: string().required({ guidance: 'Name it.' }),
+  count: int({ min: 1, max: 3 }),
+  score: number({ min: 0, max: 1 }),
+  tags: list(),
+  status: oneOf(['draft', 'live']),
+  note: string().nullable(),
+  owner: object().shape({ email: string().required() }),
+});
+
+const shaped = (body, labels) => validateInput({ body: SHAPED_BODY }, { body }, labels);
+
+test('a shaped object checks the declared properties, keeps unknown ones and accepts empty or null text', () => {
+  const body = { name: 'A', count: 3, score: 0.5, tags: ['x', ' y '], status: 'live', note: null, extra: { k: 1 } };
+  assert.deepEqual(shaped(body, CLI_LABELS).body, { ...body, tags: ['x', 'y'] });
+  assert.deepEqual(shaped({ name: '' }).body, { name: '' });
+  throwsUsage(() => shaped({}, CLI_LABELS), /Missing required field: --body\.name\./);
+  assert.throws(
+    () => shaped({}),
+    (error) => error.guidance === 'Name it.',
+  );
+  throwsUsage(() => shaped({ name: 'A', count: 4 }), /body\.count must be <= 3\./);
+  throwsUsage(() => shaped({ name: 'A', score: '1' }), /body\.score must be a number\./);
+  throwsUsage(() => shaped({ name: 'A', tags: 'x' }), /body\.tags must be an array\./);
+  throwsUsage(() => shaped({ name: 'A', status: 'gone' }), /one of: draft, live/);
+  throwsUsage(() => shaped({ name: 'A', owner: {} }), /body\.owner\.email/);
+  throwsUsage(() => shaped({ name: 'A', note: 5 }), /body\.note must be a string/);
+  throwsUsage(() => shaped({ name: 'A', count: null }), /body\.count must not be null\./);
+  throwsUsage(() => shaped({ name: null }), /Missing required field: body\.name\./);
+  const requiredList = { body: object().shape({ tags: list().required() }) };
+  const missingTags = /Missing required field: body\.tags\./;
+  throwsUsage(() => validateInput(requiredList, { body: { tags: [] } }), missingTags);
+  throwsUsage(() => validateInput(requiredList, { body: { tags: [' '] } }), missingTags);
+  assert.deepEqual(validateInput(requiredList, { body: { tags: ['a'] } }).body, { tags: ['a'] });
+});
+
+test('the zod schema of a shaped object declares its properties and allows extra keys and nulls', async (t) => {
+  let schema;
+  try {
+    schema = await toZodSchema({ body: SHAPED_BODY });
+  } catch (error) {
+    if (error.code === 'ERR_MODULE_NOT_FOUND') {
+      t.skip('zod is not installed');
+      return;
+    }
+    throw error;
+  }
+  const accepted = [
+    { name: 'A' },
+    { name: '', note: null, extra: 1 },
+    { name: 'A', owner: { email: 'a@b.c' }, tags: [], score: 1 },
+  ];
+  const rejected = [
+    {},
+    { name: 'A', count: 0 },
+    { name: 'A', tags: 'x' },
+    { name: 'A', tags: [' '] },
+    { name: 'A', owner: {} },
+    { name: 'A', status: 'gone' },
+  ];
+  const requiredList = await toZodSchema({ body: object().shape({ tags: list().required() }) });
+  assert.equal(requiredList.safeParse({ body: { tags: [''] } }).success, false);
+  assert.equal(requiredList.safeParse({ body: { tags: ['a'] } }).success, true);
+  for (const body of accepted) assert.equal(schema.safeParse({ body }).success, true, JSON.stringify(body));
+  for (const body of rejected) assert.equal(schema.safeParse({ body }).success, false, JSON.stringify(body));
 });
 
 test('the zod schema mirrors the validator for accept and reject cases', async (t) => {

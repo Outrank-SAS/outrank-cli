@@ -16,13 +16,26 @@ const UPDATE_JSON_FILE = 'tests/golden/fixtures/payloads/products-update.json';
 const OUTPUT_SETTINGS_JSON_FILE = 'tests/golden/fixtures/payloads/products-output-settings-update.json';
 const TARGET_AUDIENCES_JSON_FILE = 'tests/golden/fixtures/payloads/products-target-audiences-replace.json';
 const COMPETITORS_JSON_FILE = 'tests/golden/fixtures/payloads/products-competitors-replace.json';
-const CREATE_JSON_INLINE = '{"name":"Acme Blog","url":"https://acme.example.com","daily_article_count":1}';
+const CREATE_COMPETITORS =
+  '[{"name":"Alpha","link":"https://alpha.example.com"},{"name":"Beta","link":"https://beta.example.com"},' +
+  '{"name":"Gamma","link":"https://gamma.example.com"}]';
+const CREATE_DESCRIPTION = 'Acme sells project management software for small teams that plan work together.';
+const CREATE_AUDIENCES = '["Small business owners","Project managers","Team leads"]';
+const createBody = (name, url) =>
+  `{"name":"${name}","url":"${url}","description":"${CREATE_DESCRIPTION}","target_audiences":${CREATE_AUDIENCES},` +
+  `"language":"en","keyword_region":"us","competitors":${CREATE_COMPETITORS}}`;
+const CREATE_JSON_INLINE = createBody('Acme Blog', 'https://acme.example.com');
+const CREATE_JSON_MISSING_FIELD = '{"name":"Acme Blog","url":"https://acme.example.com","daily_article_count":1}';
+const CREATE_JSON_WRONG_TYPE = createBody('Acme Blog', 'https://acme.example.com').replace(
+  CREATE_AUDIENCES,
+  '"Small business owners"',
+);
 const UPDATE_JSON_INLINE = '{"daily_article_count":2}';
 const OUTPUT_SETTINGS_JSON_INLINE = '{"tone":"professional"}';
 const TARGET_AUDIENCES_JSON_INLINE = '{"target_audiences":[{"name":"Small business owners"}]}';
 const COMPETITORS_JSON_INLINE =
   '{"competitors":[{"url":"https://a.example.com"},{"url":"https://b.example.com"},{"url":"https://c.example.com"}]}';
-const CREATE_STDIN = '{"name":"Stdin Product","url":"https://stdin.example.com","daily_article_count":1}';
+const CREATE_STDIN = createBody('Stdin Product', 'https://stdin.example.com');
 const UPDATE_STDIN = '{"daily_article_count":3}';
 
 export default [
@@ -51,6 +64,8 @@ export default [
   { name: 'create-json-inline', argv: ['products', 'create', '--json', CREATE_JSON_INLINE] },
   { name: 'create-json-file', argv: ['products', 'create', '--json-file', CREATE_JSON_FILE] },
   { name: 'create-json-stdin', argv: ['products', 'create', '--json-stdin'], stdin: CREATE_STDIN },
+  { name: 'create-missing-required-field', argv: ['products', 'create', '--json', CREATE_JSON_MISSING_FIELD] },
+  { name: 'create-field-wrong-type', argv: ['products', 'create', '--json', CREATE_JSON_WRONG_TYPE] },
   { name: 'create-no-json-source', argv: ['products', 'create'] },
   {
     name: 'create-two-json-sources',

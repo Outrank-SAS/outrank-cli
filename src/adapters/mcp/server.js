@@ -1,5 +1,14 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ErrorCode,
+  GetPromptRequestSchema,
+  ListPromptsRequestSchema,
+  ListResourcesRequestSchema,
+  ListToolsRequestSchema,
+  McpError,
+  ReadResourceRequestSchema,
+} from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
 
 import { toolName } from '../../commands/registry.js';
@@ -7,6 +16,7 @@ import { describeUntrustedValue } from '../../core/config.js';
 import { CliErrorCode, MCP_USAGE_GUIDANCE, cliError, toErrorEnvelope } from '../../core/errors.js';
 import { executeCommand } from '../../core/execute.js';
 import {
+  ENTITLEMENT_CHANGING_COMMAND_IDS,
   MCP_PROGRESS_INTERVAL_MS,
   MCP_SERVER_NAME,
   MILLISECONDS_PER_SECOND,
@@ -14,9 +24,13 @@ import {
   WHOAMI_COMMAND_ID,
 } from './constants.js';
 import { describeField, describeTool, toolAnnotations } from './descriptions.js';
+import { createGuidanceRewriter } from './guidance.js';
 import { MCP_LABELS, buildToolInput, parseToolArguments, toRawInput } from './input.js';
 import { buildInstructions } from './instructions.js';
 import { createLogger, redactToolArguments } from './logger.js';
+import { getPrompt, listPrompts } from './prompts.js';
+import { unexpectedProbeFailures } from './routes.js';
+import { listResources, readResource } from './resources.js';
 import { toToolResult } from './result.js';
 import { createSession } from './session.js';
 import { isBlockedByOperator, isReadKind } from './toolsets.js';
@@ -59,6 +73,7 @@ export const createMcpServer = async ({
   readConfig,
   timeouts = {},
   logger = createLogger(),
+  throttle,
 }) => {
   const progressIntervalMs = timeouts.progressIntervalMs ?? MCP_PROGRESS_INTERVAL_MS;
   const definitions = new Map();
@@ -75,9 +90,24 @@ export const createMcpServer = async ({
     server.sendToolListChanged().catch((error) => {
       logger.debug('tool_list_changed_not_sent', { reason: String(error?.message ?? error) });
     });
+    server.sendPromptListChanged().catch((error) => {
+      logger.debug('prompt_list_changed_not_sent', { reason: String(error?.message ?? error) });
+    });
   };
 
-  const session = createSession({ registry, options, env, readConfig, timeouts, onToolsChanged: notifyToolsChanged });
+  const guidance = await createGuidanceRewriter(registry);
+  for (const { id, reason } of unexpectedProbeFailures(guidance.index)) {
+    logger.always('route_probe_failed', { command: id, reason });
+  }
+  const session = createSession({
+    registry,
+    options,
+    env,
+    readConfig,
+    timeouts,
+    onToolsChanged: notifyToolsChanged,
+    ...(throttle ? { throttle } : {}),
+  });
   await session.start();
 
   const withProgress = async (spec, extra, run) => {
@@ -122,6 +152,7 @@ export const createMcpServer = async ({
         );
         if (spec.id === WHOAMI_COMMAND_ID) session.noteWhoami(envelope);
         session.noteResult(envelope);
+        if (envelope.ok === true && ENTITLEMENT_CHANGING_COMMAND_IDS.includes(spec.id)) session.refreshIdentity();
         return envelope;
       } finally {
         release();
@@ -152,12 +183,24 @@ export const createMcpServer = async ({
     const spec = found && found.mcp !== false ? found : undefined;
     const envelope = await runTool(spec, params.name, params.arguments, extra);
     logToolCall({ spec, params, envelope, startedAt });
-    return toToolResult(envelope, { spec, organization: session.organization() });
+    return toToolResult(guidance.rewrite(envelope, spec), { spec, organization: session.organization() });
+  };
+
+  const asProtocolError = (run) => {
+    try {
+      return run();
+    } catch (error) {
+      if (error?.cliCode === CliErrorCode.INVALID_USAGE) throw new McpError(ErrorCode.InvalidParams, error.message);
+      throw error;
+    }
   };
 
   server = new Server(
     { name: MCP_SERVER_NAME, version },
-    { capabilities: { tools: { listChanged: true } }, instructions: buildInstructions({ session, version }) },
+    {
+      capabilities: { tools: { listChanged: true }, prompts: { listChanged: true }, resources: {} },
+      instructions: buildInstructions({ session, version }),
+    },
   );
   server.onerror = (error) => {
     logger.debug('protocol_error', { reason: String(error?.message ?? error) });
@@ -169,6 +212,14 @@ export const createMcpServer = async ({
     tools: session.selection().tools.map((spec) => definitionFor(spec).tool),
   }));
   server.setRequestHandler(CallToolRequestSchema, async (request, extra) => callTool(request.params, extra));
+  server.setRequestHandler(ListPromptsRequestSchema, async () => ({ prompts: listPrompts(session.selection()) }));
+  server.setRequestHandler(GetPromptRequestSchema, async (request) =>
+    asProtocolError(() => getPrompt(session.selection(), request.params.name, request.params.arguments)),
+  );
+  server.setRequestHandler(ListResourcesRequestSchema, async () => ({ resources: listResources() }));
+  server.setRequestHandler(ReadResourceRequestSchema, async (request) =>
+    asProtocolError(() => readResource(session, request.params.uri)),
+  );
 
   return { server, session };
 };

@@ -1742,5 +1742,206 @@
         }
       ]
     }
+  },
+  "products/create-json-inline": {
+    "reason": "6.1: products create now checks the required body fields before sending; the fixture sends a complete body so the input mode stays frozen as a successful request",
+    "expected": {
+      "argv": [
+        "products",
+        "create",
+        "--json",
+        "{\"name\":\"Acme Blog\",\"url\":\"https://acme.example.com\",\"description\":\"Acme sells project management software for small teams that plan work together.\",\"target_audiences\":[\"Small business owners\",\"Project managers\",\"Team leads\"],\"language\":\"en\",\"keyword_region\":\"us\",\"competitors\":[{\"name\":\"Alpha\",\"link\":\"https://alpha.example.com\"},{\"name\":\"Beta\",\"link\":\"https://beta.example.com\"},{\"name\":\"Gamma\",\"link\":\"https://gamma.example.com\"}]}"
+      ],
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.outrank.so/api/agent/v1/products",
+          "headers": {
+            "Accept": "application/json",
+            "Authorization": "Bearer <API_KEY-1>",
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "name": "Acme Blog",
+            "url": "https://acme.example.com",
+            "description": "Acme sells project management software for small teams that plan work together.",
+            "target_audiences": [
+              "Small business owners",
+              "Project managers",
+              "Team leads"
+            ],
+            "language": "en",
+            "keyword_region": "us",
+            "competitors": [
+              {
+                "name": "Alpha",
+                "link": "https://alpha.example.com"
+              },
+              {
+                "name": "Beta",
+                "link": "https://beta.example.com"
+              },
+              {
+                "name": "Gamma",
+                "link": "https://gamma.example.com"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "products/create-json-file": {
+    "reason": "6.1: products create now checks the required body fields before sending; the fixture sends a complete body so the input mode stays frozen as a successful request",
+    "expected": {
+      "argv": [
+        "products",
+        "create",
+        "--json-file",
+        "tests/golden/fixtures/payloads/products-create.json"
+      ],
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.outrank.so/api/agent/v1/products",
+          "headers": {
+            "Accept": "application/json",
+            "Authorization": "Bearer <API_KEY-1>",
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "name": "Acme Blog",
+            "url": "https://acme.example.com",
+            "description": "Acme sells project management software for small teams that plan work together.",
+            "target_audiences": [
+              "Small business owners",
+              "Project managers",
+              "Team leads"
+            ],
+            "language": "en",
+            "keyword_region": "us",
+            "competitors": [
+              {
+                "name": "Alpha",
+                "link": "https://alpha.example.com"
+              },
+              {
+                "name": "Beta",
+                "link": "https://beta.example.com"
+              },
+              {
+                "name": "Gamma",
+                "link": "https://gamma.example.com"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "products/create-json-stdin": {
+    "reason": "6.1: products create now checks the required body fields before sending; the fixture sends a complete body so the input mode stays frozen as a successful request",
+    "expected": {
+      "argv": [
+        "products",
+        "create",
+        "--json-stdin"
+      ],
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.outrank.so/api/agent/v1/products",
+          "headers": {
+            "Accept": "application/json",
+            "Authorization": "Bearer <API_KEY-1>",
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "name": "Stdin Product",
+            "url": "https://stdin.example.com",
+            "description": "Acme sells project management software for small teams that plan work together.",
+            "target_audiences": [
+              "Small business owners",
+              "Project managers",
+              "Team leads"
+            ],
+            "language": "en",
+            "keyword_region": "us",
+            "competitors": [
+              {
+                "name": "Alpha",
+                "link": "https://alpha.example.com"
+              },
+              {
+                "name": "Beta",
+                "link": "https://beta.example.com"
+              },
+              {
+                "name": "Gamma",
+                "link": "https://gamma.example.com"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "products/create-two-json-sources": {
+    "reason": "6.1: the shared inline create body became complete; the frozen behaviour (two JSON sources rejected) is unchanged",
+    "expected": {
+      "argv": [
+        "products",
+        "create",
+        "--json",
+        "{\"name\":\"Acme Blog\",\"url\":\"https://acme.example.com\",\"description\":\"Acme sells project management software for small teams that plan work together.\",\"target_audiences\":[\"Small business owners\",\"Project managers\",\"Team leads\"],\"language\":\"en\",\"keyword_region\":\"us\",\"competitors\":[{\"name\":\"Alpha\",\"link\":\"https://alpha.example.com\"},{\"name\":\"Beta\",\"link\":\"https://beta.example.com\"},{\"name\":\"Gamma\",\"link\":\"https://gamma.example.com\"}]}",
+        "--json-file",
+        "tests/golden/fixtures/payloads/products-create.json"
+      ],
+      "exitCode": 1,
+      "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Use only one JSON input source: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+      "stderr": "",
+      "requests": []
+    }
+  },
+  "productsIntegrations/prepare-invalid-provider": {
+    "reason": "Review 2026-10-04 M4: the provider list of prepare is what the server route accepts (wordpress-plugin only), no longer one list shared by every provider command",
+    "expected": {
+      "argv": [
+        "products",
+        "integrations",
+        "prepare",
+        "bogus",
+        "aaaaaaaa-0000-4000-8000-000000000001"
+      ],
+      "exitCode": 1,
+      "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"<provider> must be one of: wordpress-plugin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+      "stderr": "",
+      "requests": []
+    }
+  },
+  "productsIntegrations/connect-invalid-provider": {
+    "reason": "Review 2026-10-04 M4: the provider list of connect is what the server route accepts (wordpress-com, notion), no longer one list shared by every provider command",
+    "expected": {
+      "argv": [
+        "products",
+        "integrations",
+        "connect",
+        "bogus",
+        "aaaaaaaa-0000-4000-8000-000000000001"
+      ],
+      "exitCode": 1,
+      "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"<provider> must be one of: wordpress-com, notion.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+      "stderr": "",
+      "requests": []
+    }
   }
 }

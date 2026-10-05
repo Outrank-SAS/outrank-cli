@@ -342,6 +342,30 @@
       }
     ]
   },
+  "create-missing-required-field": {
+    "argv": [
+      "products",
+      "create",
+      "--json",
+      "{\"name\":\"Acme Blog\",\"url\":\"https://acme.example.com\",\"daily_article_count\":1}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required field: --json.description.\"\n  },\n  \"agent_guidance\": \"Creating a product needs every field: name, url, description, target_audiences (3-7), language, keyword_region and competitors (3-7 of { name, link }). Agree them with the user, then call again.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-field-wrong-type": {
+    "argv": [
+      "products",
+      "create",
+      "--json",
+      "{\"name\":\"Acme Blog\",\"url\":\"https://acme.example.com\",\"description\":\"Acme sells project management software for small teams that plan work together.\",\"target_audiences\":\"Small business owners\",\"language\":\"en\",\"keyword_region\":\"us\",\"competitors\":[{\"name\":\"Alpha\",\"link\":\"https://alpha.example.com\"},{\"name\":\"Beta\",\"link\":\"https://beta.example.com\"},{\"name\":\"Gamma\",\"link\":\"https://gamma.example.com\"}]}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--json.target_audiences must be an array.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
   "create-no-json-source": {
     "argv": [
       "products",

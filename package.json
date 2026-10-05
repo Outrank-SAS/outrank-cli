@@ -21,6 +21,7 @@
     "test": "node --test",
     "golden:capture": "node ./scripts/captureGolden.js",
     "docs:tools": "node ./scripts/generateToolDocs.js",
+    "surface:extract": "node ./scripts/extractAgentApiSurface.js",
     "link:local": "npm link",
     "unlink:local": "npm unlink -g outrank-cli"
   },

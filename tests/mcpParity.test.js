@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { REPO_ROOT, STUB_API_KEY, withMcp } from './helpers/mcpHarness.js';
+import { ENTITLEMENT_CHANGING_COMMAND_IDS } from '../src/adapters/mcp/constants.js';
+import { registry } from '../src/commands/index.js';
+import { REPO_ROOT, STUB_API_KEY, WHOAMI_PATHNAME, withMcp } from './helpers/mcpHarness.js';
 
 const SNAPSHOT_DIR = path.join(REPO_ROOT, 'tests', 'golden', 'snapshots');
 const API_KEY_PLACEHOLDER = '<API_KEY-1>';
@@ -164,7 +166,10 @@ test('an MCP tool call sends the same HTTP request as the equivalent CLI command
       const before = calls.length;
       const { envelope } = await call(tool, args);
       assert.equal(envelope.ok, true, `${tool}: ${JSON.stringify(envelope.error)}`);
-      assert.deepEqual(calls.slice(before).map(toRecordedShape), readSnapshotRequests(fixture), fixture);
+      const recorded = calls.slice(before);
+      const refreshesEntitlements = ENTITLEMENT_CHANGING_COMMAND_IDS.includes(registry.byToolName.get(tool).id);
+      if (refreshesEntitlements) assert.equal(recorded.pop().pathname, WHOAMI_PATHNAME, `${tool} refresh`);
+      assert.deepEqual(recorded.map(toRecordedShape), readSnapshotRequests(fixture), fixture);
     }
   });
 });

@@ -44,7 +44,9 @@ export const NodeType = Object.freeze({
 });
 
 export const BODY_INPUT_NAME = 'body';
-const MCP_FLAG_NAMES = Object.freeze(['sensitiveBody', 'untrustedOutput', 'redact']);
+const MCP_FLAG_NAMES = Object.freeze(['sensitiveBody', 'untrustedOutput', 'untrustedFields', 'untrustedWhen', 'redact']);
+const FIELD_NAME_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+const FIELD_PATH_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_]*(?:\[\])?(?:\.[a-zA-Z_][a-zA-Z0-9_]*(?:\[\])?)*$/;
 const ID_PATTERN = /^[a-z][a-z0-9-]*(\.[a-z][a-z0-9-]*)*$/;
 const NO_RESULT_GUIDANCE = 'This is a CLI bug: the command finished without producing a result. Report the command.';
 
@@ -124,6 +126,25 @@ export const defineGroup = ({ id, help, unknown, children, description, command 
   ...(command ? { ...normalizeCommand({ ...command, id }), type: NodeType.GROUP, help, children } : {}),
 });
 
+const assertUntrustedWhen = (node, paths) => {
+  const when = node.mcp.untrustedWhen;
+  if (when === undefined) return;
+  const shapeOk =
+    Boolean(when) &&
+    typeof when === 'object' &&
+    typeof when.record === 'string' &&
+    (when.record === '' || FIELD_PATH_PATTERN.test(when.record)) &&
+    typeof when.flag === 'string' &&
+    FIELD_NAME_PATTERN.test(when.flag);
+  if (!shapeOk) {
+    throw registryError(`${node.id}: mcp.untrustedWhen must be { record: '<path or empty>', flag: '<field name>' }`);
+  }
+  const prefix = when.record ? `${when.record}.` : '';
+  if (!paths.every((entry) => entry.startsWith(prefix) && entry.length > prefix.length)) {
+    throw registryError(`${node.id}: every mcp.untrustedFields path must sit inside the untrustedWhen record`);
+  }
+};
+
 const assertMcpShape = (node) => {
   if (node.mcp === true || node.mcp === false) return;
   if (!node.mcp || typeof node.mcp !== 'object') throw registryError(`${node.id}: mcp must be a boolean or an object`);
@@ -133,6 +154,20 @@ const assertMcpShape = (node) => {
   if (node.mcp.redact !== undefined && !Array.isArray(node.mcp.redact)) {
     throw registryError(`${node.id}: mcp.redact must be an array of field names`);
   }
+  if (node.mcp.untrustedFields === undefined) {
+    if (node.mcp.untrustedWhen !== undefined) {
+      throw registryError(`${node.id}: mcp.untrustedWhen requires mcp.untrustedFields`);
+    }
+    return;
+  }
+  const paths = node.mcp.untrustedFields;
+  if (!Array.isArray(paths) || paths.length === 0 || !paths.every((entry) => FIELD_PATH_PATTERN.test(entry))) {
+    throw registryError(`${node.id}: mcp.untrustedFields must be a non-empty array of field paths`);
+  }
+  if (node.mcp.untrustedOutput !== true) {
+    throw registryError(`${node.id}: mcp.untrustedFields requires untrustedOutput: true`);
+  }
+  assertUntrustedWhen(node, paths);
 };
 
 const assertCliShape = (node) => {
