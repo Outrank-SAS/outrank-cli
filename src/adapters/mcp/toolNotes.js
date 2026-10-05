@@ -262,7 +262,8 @@ export const TOOL_NOTES = Object.freeze({
   'products.integrations.create': {
     note:
       'A product keeps one publishing integration. Validate the credentials first. nextjs-blog returns a one-time ' +
-      'secrets.api_key: show it to the user at once. Use connect for notion and wordpress-com.',
+      'secrets.api_key: show it to the user at once (no secrets when it reuses the key of the marketplace ' +
+      'integration). Use connect for notion and wordpress-com.',
     body:
       'provider (required) plus: webhook { name, endpoint, access_token }; ghost { name, url, api_key, ' +
       'publish_status (draft | published) }; shopify { name, access_token, blog_id, author_name, publish_status ' +
