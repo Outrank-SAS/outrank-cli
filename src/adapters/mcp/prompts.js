@@ -143,7 +143,9 @@ const providerHints = Object.freeze({
   ghost:
     'products_integrations_validate with url and api_key (the Ghost Admin API key, id:secret), then create with ' +
     'publish_status (draft | published).',
-  'nextjs-blog': 'products_integrations_create directly; data.secrets.api_key is shown once and must be saved.',
+  'nextjs-blog':
+    'products_integrations_create directly; data.secrets.api_key is shown once and must be saved. No secrets means ' +
+    'the key of the existing Next.js Blog marketplace integration was reused: the site needs no change.',
 });
 
 const setupPublishingIntegrationText = (productId, provider) =>
