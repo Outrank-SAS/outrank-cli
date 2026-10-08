@@ -491,6 +491,36 @@
     "stderr": "",
     "requests": []
   },
+  "preview-post-missing-target": {
+    "argv": [
+      "products",
+      "blog",
+      "preview",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--scope",
+      "post"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --target-id <article-id|page-id> for --scope post or page.\"\n  },\n  \"agent_guidance\": \"Pass --scope design for the draft theme, or --scope post|page with --target-id <article-id|page-id>.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "preview-design-with-target": {
+    "argv": [
+      "products",
+      "blog",
+      "preview",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--scope",
+      "design",
+      "--target-id",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--target-id only applies to --scope post or page; omit it for --scope design.\"\n  },\n  \"agent_guidance\": \"Pass --scope design for the draft theme, or --scope post|page with --target-id <article-id|page-id>.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
   "design-help": {
     "argv": [
       "products",

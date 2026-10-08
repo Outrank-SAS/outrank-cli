@@ -60,6 +60,11 @@ export default [
   { name: 'preview-design', argv: blog('preview', PRODUCT_ID, '--scope', 'design') },
   { name: 'preview-post', argv: blog('preview', PRODUCT_ID, '--scope', 'post', '--target-id', ITEM_ID) },
   { name: 'preview-missing-scope', argv: blog('preview', PRODUCT_ID) },
+  { name: 'preview-post-missing-target', argv: blog('preview', PRODUCT_ID, '--scope', 'post') },
+  {
+    name: 'preview-design-with-target',
+    argv: blog('preview', PRODUCT_ID, '--scope', 'design', '--target-id', ITEM_ID),
+  },
 
   { name: 'design-help', argv: blog('design', '--help'), config: null },
   { name: 'design-get', argv: blog('design', 'get', PRODUCT_ID) },

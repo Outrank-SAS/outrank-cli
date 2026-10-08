@@ -5,12 +5,15 @@ import {
   BLOG_PAGE_LAYOUTS,
   BLOG_PAGE_STATUSES,
   BLOG_POST_LIST_STATUSES,
+  BLOG_PREVIEW_DESIGN_SCOPE,
   BLOG_PREVIEW_SCOPES,
   BLOG_SNIPPET_KINDS,
   BLOG_SUBSCRIBER_STATUSES,
   BLOG_TEMPLATES,
   BLOG_WEBHOOK_EVENTS,
 } from '../../core/constants.js';
+import { Surface } from '../../core/constants.js';
+import { MCP_USAGE_GUIDANCE, usageError } from '../../core/errors.js';
 import { bool, int, json, list, object, oneOf, string, uuid } from '../../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from '../registry.js';
 import { productInput } from './shared.js';
@@ -189,6 +192,25 @@ const POSITIONS_BODY = object().shape({
   ),
 });
 
+const PREVIEW_TARGET_MESSAGES = Object.freeze({
+  [Surface.CLI]: {
+    missing: 'Missing required option: --target-id <article-id|page-id> for --scope post or page.',
+    unexpected: '--target-id only applies to --scope post or page; omit it for --scope design.',
+  },
+  [Surface.MCP]: {
+    missing: 'Missing required argument: target_id (the article id for post, the page id for page).',
+    unexpected: 'target_id only applies to scope post or page; omit it for scope design.',
+  },
+});
+
+const refinePreviewTarget = (input, ctx) => {
+  const needsTarget = input.scope !== BLOG_PREVIEW_DESIGN_SCOPE;
+  if (needsTarget === Boolean(input.targetId)) return;
+  const isMcp = ctx.surface === Surface.MCP;
+  const messages = PREVIEW_TARGET_MESSAGES[isMcp ? Surface.MCP : Surface.CLI];
+  throw usageError(needsTarget ? messages.missing : messages.unexpected, isMcp ? MCP_USAGE_GUIDANCE : SCOPE_REQUIRED.guidance);
+};
+
 const pickParams = (input, names) => Object.fromEntries(names.map((name) => [name, input[name]]));
 
 const blogCommand = ({
@@ -204,6 +226,7 @@ const blogCommand = ({
   bodyOf,
   query,
   mcp,
+  refine,
   description,
 }) =>
   defineCommand({
@@ -217,6 +240,7 @@ const blogCommand = ({
     ...(body ? { body } : {}),
     ...(bodyField ? { bodyField } : {}),
     ...(mcp ? { mcp } : {}),
+    ...(refine ? { refine } : {}),
     run: (values, ctx) =>
       ctx.http({
         method,
@@ -741,6 +765,7 @@ export const blogGroup = defineGroup({
         scope: oneOf(BLOG_PREVIEW_SCOPES).required(SCOPE_REQUIRED),
         targetId: uuid().describe('Article id for a post, page id for a page; omit for design.'),
       },
+      refine: refinePreviewTarget,
       bodyOf: (values) => ({ scope: values.scope, ...(values.targetId ? { targetId: values.targetId } : {}) }),
     }),
     designGroup,
