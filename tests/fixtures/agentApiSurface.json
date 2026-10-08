@@ -1,6 +1,6 @@
 {
   "apiBasePath": "/api/agent/v1",
-  "sourceCommit": "15b9e7c3f0190adddc6e0c13bd377b9d043e527c",
+  "sourceCommit": "9f9f56f530a5a883cfa9a5b751f267af4aa4b46a",
   "sourceDirty": false,
   "routes": [
     {
@@ -1222,7 +1222,7 @@
       "route": "/products/{id}/blog/design"
     },
     {
-      "text": "/api/agent/v1/products/<interpolated>/blog/preview-token",
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/preview-token",
       "route": "/products/{id}/blog/design"
     },
     {
