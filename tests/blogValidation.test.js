@@ -145,3 +145,13 @@ test('irreversible blog tools are flagged destructive so MCP clients ask first',
     ]);
   });
 });
+
+test('a post content update needs a title or a body', async () => {
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ call, nonWhoamiRequests }) => {
+    const empty = await call('products_blog_posts_update_content', { product_id: PRODUCT_ID, article_id: TARGET_ID, body: {} });
+    assert.equal(empty.envelope.error.code, CliErrorCode.INVALID_USAGE);
+    assert.equal(nonWhoamiRequests().length, 0);
+    await call('products_blog_posts_update_content', { product_id: PRODUCT_ID, article_id: TARGET_ID, body: { title: 'T' } });
+    assert.equal(nonWhoamiRequests().length, 1);
+  });
+});

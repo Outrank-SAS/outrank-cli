@@ -980,6 +980,22 @@
       }
     ]
   },
+  "posts-update-content-empty": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "update-content",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Send title, content or both.\"\n  },\n  \"agent_guidance\": \"Send {\\\"title\\\": \\\"...\\\"}, {\\\"content\\\": \\\"<markdown>\\\"} or both.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
   "posts-publish": {
     "argv": [
       "products",

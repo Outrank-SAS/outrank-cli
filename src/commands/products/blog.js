@@ -266,6 +266,15 @@ const refineSnippetContent = (input, ctx) => {
   }
 };
 
+const POST_CONTENT_GUIDANCE = 'Send {"title": "..."}, {"content": "<markdown>"} or both.';
+
+const refinePostContent = (input, ctx) => {
+  const { title, content } = input.body ?? {};
+  if (title === undefined && content === undefined) {
+    throw bodyUsageError(ctx, 'Send title, content or both.', POST_CONTENT_GUIDANCE);
+  }
+};
+
 const refineWebhookEvents = (input, ctx) => {
   const events = input.body?.events;
   if (Array.isArray(events) && events.length === 0) {
@@ -501,6 +510,7 @@ const postsGroup = group({
       ids: POST_ID,
       body: BodyMode.JSON,
       bodyField: POST_CONTENT_BODY,
+      refine: refinePostContent,
     }),
     blogCommand({
       id: 'posts.publish',

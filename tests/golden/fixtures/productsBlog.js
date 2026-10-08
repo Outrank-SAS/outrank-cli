@@ -89,6 +89,7 @@ export default [
   { name: 'posts-update', argv: blog('posts', 'update', PRODUCT_ID, ITEM_ID, '--json', POST_SETTINGS_JSON) },
   { name: 'posts-get-content', argv: blog('posts', 'get-content', PRODUCT_ID, ITEM_ID) },
   { name: 'posts-update-content', argv: blog('posts', 'update-content', PRODUCT_ID, ITEM_ID, '--json', POST_CONTENT_JSON) },
+  { name: 'posts-update-content-empty', argv: blog('posts', 'update-content', PRODUCT_ID, ITEM_ID, '--json', '{}') },
   { name: 'posts-publish', argv: blog('posts', 'publish', PRODUCT_ID, ITEM_ID) },
   {
     name: 'posts-publish-scheduled',
