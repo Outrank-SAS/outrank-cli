@@ -109,3 +109,16 @@ test('a webhook with an empty events list is refused before any request', async 
     assert.equal(nonWhoamiRequests().length, 0);
   });
 });
+
+test('cta and html snippets need content; a newsletter snippet may omit it', async () => {
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ call, nonWhoamiRequests }) => {
+    for (const kind of ['cta', 'html']) {
+      const { envelope } = await call('products_blog_snippets_create', { product_id: PRODUCT_ID, body: { name: 'X', kind } });
+      assert.equal(envelope.error.code, CliErrorCode.INVALID_USAGE);
+      assert.match(envelope.error.message, /content/);
+    }
+    assert.equal(nonWhoamiRequests().length, 0);
+    await call('products_blog_snippets_create', { product_id: PRODUCT_ID, body: { name: 'News', kind: 'newsletter' } });
+    assert.equal(nonWhoamiRequests().length, 1);
+  });
+});

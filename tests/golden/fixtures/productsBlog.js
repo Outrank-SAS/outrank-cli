@@ -103,6 +103,10 @@ export default [
   ...collection('redirects', { createJson: REDIRECT_JSON, update: false }),
   ...collection('snippets', { createJson: SNIPPET_JSON, updateJson: '{"isActive":false}' }),
   ...collection('webhooks', { createJson: WEBHOOK_JSON, updateJson: WEBHOOK_UPDATE_JSON, itemRead: true }),
+  {
+    name: 'snippets-create-cta-without-content',
+    argv: blog('snippets', 'create', PRODUCT_ID, '--json', '{"name":"Try","kind":"cta"}'),
+  },
   { name: 'webhooks-test', argv: blog('webhooks', 'test', PRODUCT_ID, ITEM_ID) },
   {
     name: 'redirects-create-missing-to-path',

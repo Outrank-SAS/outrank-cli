@@ -2015,6 +2015,21 @@
     "stderr": "",
     "requests": []
   },
+  "snippets-create-cta-without-content": {
+    "argv": [
+      "products",
+      "blog",
+      "snippets",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"name\":\"Try\",\"kind\":\"cta\"}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"A cta snippet needs a content object.\"\n  },\n  \"agent_guidance\": \"A snippet needs name and kind (cta, html or newsletter); cta and html snippets also need content.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
   "webhooks-test": {
     "argv": [
       "products",

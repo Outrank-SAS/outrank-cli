@@ -56,6 +56,7 @@ export const BLOG_PREVIEW_SCOPES = Object.freeze([BLOG_PREVIEW_DESIGN_SCOPE, 'po
 export const BLOG_PAGE_STATUSES = Object.freeze(['draft', 'published']);
 export const BLOG_PAGE_LAYOUTS = Object.freeze(['default', 'wide']);
 export const BLOG_SNIPPET_KINDS = Object.freeze(['cta', 'html', 'newsletter']);
+export const BLOG_SNIPPET_KINDS_WITH_REQUIRED_CONTENT = Object.freeze(['cta', 'html']);
 export const BLOG_POSITION_MAX = 10_000;
 export const BLOG_MAX_POSITIONS_PER_REQUEST = 100;
 export const BLOG_REDIRECT_GONE_STATUS_CODE = 410;

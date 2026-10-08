@@ -12,6 +12,7 @@ import {
   BLOG_REDIRECT_GONE_STATUS_CODE,
   BLOG_REDIRECT_STATUS_CODES,
   BLOG_SNIPPET_KINDS,
+  BLOG_SNIPPET_KINDS_WITH_REQUIRED_CONTENT,
   BLOG_SUBSCRIBER_STATUSES,
   BLOG_TEMPLATES,
   BLOG_WEBHOOK_EVENTS,
@@ -254,6 +255,14 @@ const refinePositions = (input, ctx) => {
   }
   if (new Set(items.map((item) => item.id)).size !== items.length) {
     throw bodyUsageError(ctx, 'Each id may appear only once in items.', ITEMS_REQUIRED.guidance);
+  }
+};
+
+const refineSnippetContent = (input, ctx) => {
+  const { kind, content } = input.body ?? {};
+  const hasContent = Boolean(content) && typeof content === 'object' && !Array.isArray(content);
+  if (BLOG_SNIPPET_KINDS_WITH_REQUIRED_CONTENT.includes(kind) && !hasContent) {
+    throw bodyUsageError(ctx, `A ${kind} snippet needs a content object.`, SNIPPET_REQUIRED.guidance);
   }
 };
 
@@ -680,6 +689,7 @@ const snippetsGroup = collectionGroup({
   idLabel: 'snippet-id',
   createBody: snippetShape(true),
   updateBody: snippetShape(false),
+  createRefine: refineSnippetContent,
   guidance: 'Snippets are reusable call-to-action, newsletter or HTML blocks shown on the blog.',
 });
 
