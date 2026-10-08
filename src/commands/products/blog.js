@@ -7,6 +7,8 @@ import {
   BLOG_POST_LIST_STATUSES,
   BLOG_PREVIEW_DESIGN_SCOPE,
   BLOG_PREVIEW_SCOPES,
+  BLOG_REDIRECT_GONE_STATUS_CODE,
+  BLOG_REDIRECT_STATUS_CODES,
   BLOG_SNIPPET_KINDS,
   BLOG_SUBSCRIBER_STATUSES,
   BLOG_TEMPLATES,
@@ -211,6 +213,21 @@ const refinePreviewTarget = (input, ctx) => {
   const isMcp = ctx.surface === Surface.MCP;
   const messages = PREVIEW_TARGET_MESSAGES[isMcp ? Surface.MCP : Surface.CLI];
   throw usageError(needsTarget ? messages.missing : messages.unexpected, isMcp ? MCP_USAGE_GUIDANCE : SCOPE_REQUIRED.guidance);
+};
+
+const REDIRECT_GUIDANCE =
+  'Send {"fromPath": "/old", "toPath": "/new"} for a redirect (statusCode 301 or 302), or ' +
+  '{"fromPath": "/old", "statusCode": 410} to mark a page as gone.';
+
+const refineRedirect = (input, ctx) => {
+  const { statusCode, toPath } = input.body ?? {};
+  const guidance = ctx.surface === Surface.MCP ? MCP_USAGE_GUIDANCE : REDIRECT_GUIDANCE;
+  if (statusCode !== undefined && !BLOG_REDIRECT_STATUS_CODES.includes(statusCode)) {
+    throw usageError(`statusCode must be one of ${BLOG_REDIRECT_STATUS_CODES.join(', ')}.`, guidance);
+  }
+  if (statusCode !== BLOG_REDIRECT_GONE_STATUS_CODE && !(typeof toPath === 'string' && toPath.trim())) {
+    throw usageError('toPath is required unless statusCode is 410.', guidance);
+  }
 };
 
 const pickParams = (input, names) => Object.fromEntries(names.map((name) => [name, input[name]]));
@@ -474,6 +491,7 @@ const collectionGroup = ({
   itemRead = false,
   reorder = false,
   update = true,
+  createRefine,
   extraChildren = [],
   extraUsage = [],
   guidance,
@@ -521,6 +539,7 @@ const collectionGroup = ({
         suffix: `/${id}`,
         body: BodyMode.JSON,
         bodyField: createBody,
+        refine: createRefine,
       }),
       ...(update
         ? [
@@ -605,6 +624,7 @@ const redirectsGroup = collectionGroup({
   idName: 'redirectId',
   idLabel: 'redirect-id',
   createBody: REDIRECT_BODY,
+  createRefine: refineRedirect,
   update: false,
   guidance: 'Redirects send an old path to a new one (301 or 302) or mark it gone (410).',
 });

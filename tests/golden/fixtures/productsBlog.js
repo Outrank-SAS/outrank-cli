@@ -104,6 +104,18 @@ export default [
   ...collection('snippets', { createJson: SNIPPET_JSON, updateJson: '{"isActive":false}' }),
   ...collection('webhooks', { createJson: WEBHOOK_JSON, updateJson: WEBHOOK_UPDATE_JSON, itemRead: true }),
   { name: 'webhooks-test', argv: blog('webhooks', 'test', PRODUCT_ID, ITEM_ID) },
+  {
+    name: 'redirects-create-missing-to-path',
+    argv: blog('redirects', 'create', PRODUCT_ID, '--json', '{"fromPath":"/old"}'),
+  },
+  {
+    name: 'redirects-create-invalid-status',
+    argv: blog('redirects', 'create', PRODUCT_ID, '--json', '{"fromPath":"/old","toPath":"/new","statusCode":307}'),
+  },
+  {
+    name: 'redirects-create-gone',
+    argv: blog('redirects', 'create', PRODUCT_ID, '--json', '{"fromPath":"/old","statusCode":410}'),
+  },
 
   { name: 'subscribers-help', argv: blog('subscribers', '--help'), config: null },
   { name: 'subscribers-list', argv: blog('subscribers', 'list', PRODUCT_ID, '--status', 'subscribed', '--page', '1') },

@@ -56,6 +56,8 @@ export const BLOG_PREVIEW_SCOPES = Object.freeze([BLOG_PREVIEW_DESIGN_SCOPE, 'po
 export const BLOG_PAGE_STATUSES = Object.freeze(['draft', 'published']);
 export const BLOG_PAGE_LAYOUTS = Object.freeze(['default', 'wide']);
 export const BLOG_SNIPPET_KINDS = Object.freeze(['cta', 'html', 'newsletter']);
+export const BLOG_REDIRECT_GONE_STATUS_CODE = 410;
+export const BLOG_REDIRECT_STATUS_CODES = Object.freeze([301, 302, BLOG_REDIRECT_GONE_STATUS_CODE]);
 export const BLOG_WEBHOOK_EVENTS = Object.freeze(['subscriber.created']);
 
 export const BILLING_MIN_ADDITIONAL_PRODUCTS = 1;

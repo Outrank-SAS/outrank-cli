@@ -2038,6 +2038,65 @@
       }
     ]
   },
+  "redirects-create-missing-to-path": {
+    "argv": [
+      "products",
+      "blog",
+      "redirects",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"fromPath\":\"/old\"}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"toPath is required unless statusCode is 410.\"\n  },\n  \"agent_guidance\": \"Send {\\\"fromPath\\\": \\\"/old\\\", \\\"toPath\\\": \\\"/new\\\"} for a redirect (statusCode 301 or 302), or {\\\"fromPath\\\": \\\"/old\\\", \\\"statusCode\\\": 410} to mark a page as gone.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "redirects-create-invalid-status": {
+    "argv": [
+      "products",
+      "blog",
+      "redirects",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"fromPath\":\"/old\",\"toPath\":\"/new\",\"statusCode\":307}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"statusCode must be one of 301, 302, 410.\"\n  },\n  \"agent_guidance\": \"Send {\\\"fromPath\\\": \\\"/old\\\", \\\"toPath\\\": \\\"/new\\\"} for a redirect (statusCode 301 or 302), or {\\\"fromPath\\\": \\\"/old\\\", \\\"statusCode\\\": 410} to mark a page as gone.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "redirects-create-gone": {
+    "argv": [
+      "products",
+      "blog",
+      "redirects",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"fromPath\":\"/old\",\"statusCode\":410}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/redirects",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "fromPath": "/old",
+          "statusCode": 410
+        }
+      }
+    ]
+  },
   "subscribers-help": {
     "argv": [
       "products",
