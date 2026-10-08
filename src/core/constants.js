@@ -45,6 +45,24 @@ export const GSC_SEARCH_ANALYTICS_MAX_LIMIT = 1000;
 export const KEYWORDS_GENERATE_MIN_COUNT = 5;
 export const KEYWORDS_GENERATE_MAX_COUNT = 30;
 
+export const BLOG_LIST_MIN_PAGE = 1;
+export const BLOG_TEMPLATES = Object.freeze(['classic', 'editorial', 'journal', 'studio', 'minimal']);
+export const BLOG_ANALYTICS_RANGES = Object.freeze(['7d', '30d', '90d']);
+export const BLOG_DOMAIN_MODES = Object.freeze(['subdomain', 'apex', 'subfolder']);
+export const BLOG_POST_LIST_STATUSES = Object.freeze(['all', 'published', 'scheduled', 'draft']);
+export const BLOG_SUBSCRIBER_STATUSES = Object.freeze(['subscribed', 'unsubscribed']);
+export const BLOG_PREVIEW_DESIGN_SCOPE = 'design';
+export const BLOG_PREVIEW_SCOPES = Object.freeze([BLOG_PREVIEW_DESIGN_SCOPE, 'post', 'page']);
+export const BLOG_PAGE_STATUSES = Object.freeze(['draft', 'published']);
+export const BLOG_PAGE_LAYOUTS = Object.freeze(['default', 'wide']);
+export const BLOG_SNIPPET_KINDS = Object.freeze(['cta', 'html', 'newsletter']);
+export const BLOG_SNIPPET_KINDS_WITH_REQUIRED_CONTENT = Object.freeze(['cta', 'html']);
+export const BLOG_POSITION_MAX = 10_000;
+export const BLOG_MAX_POSITIONS_PER_REQUEST = 100;
+export const BLOG_REDIRECT_GONE_STATUS_CODE = 410;
+export const BLOG_REDIRECT_STATUS_CODES = Object.freeze([301, 302, BLOG_REDIRECT_GONE_STATUS_CODE]);
+export const BLOG_WEBHOOK_EVENTS = Object.freeze(['subscriber.created']);
+
 export const BILLING_MIN_ADDITIONAL_PRODUCTS = 1;
 export const BILLING_MAX_ADDITIONAL_PRODUCTS = 30;
 export const BILLING_MIN_CONFIRM_CHARGE_CENTS = 0;

@@ -29,7 +29,8 @@
         "billing": "full",
         "improvements": "full",
         "marketplace-buyer": "full",
-        "marketplace-seller": "full"
+        "marketplace-seller": "full",
+        "blog": "full"
       },
       "unverified_toolsets": {},
       "flows": {

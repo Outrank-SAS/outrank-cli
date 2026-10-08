@@ -10,7 +10,7 @@ import { listFixtures } from './golden/fixtures/index.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const COMMANDS_DIR = path.resolve(HERE, '..', 'src', 'commands');
-const EXPECTED_COMMAND_COUNT = 157;
+const EXPECTED_COMMAND_COUNT = 214;
 const MAX_TOOL_NAME_LENGTH = 46;
 const FORBIDDEN_IN_COMMANDS = [/core\/args\.js/, /core\/api\.js/, /\bprocess\./, /\bconsole\./];
 

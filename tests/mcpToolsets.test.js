@@ -7,7 +7,7 @@ import { registry } from '../src/commands/index.js';
 import { toolName } from '../src/commands/registry.js';
 import { readWhoamiFixture } from './helpers/mcpHarness.js';
 
-const ALL_TOOL_COUNT = 154;
+const ALL_TOOL_COUNT = 211;
 const CORE_TOOL_COUNT = 16;
 const ENTRY_POINT_COUNT = 16;
 const BRAND_NEW_TOOL_COUNT = CORE_TOOL_COUNT + ENTRY_POINT_COUNT;
@@ -17,10 +17,14 @@ const SELLER_ONLY_TOOL_COUNT = 80;
 const BASIC_PLAN_TOOL_COUNT = 106;
 const READ_ONLY_ARTICLES_TOOL_COUNT = 74;
 const SELLER_WITH_ARTICLES_TOOL_COUNT = 139;
-const READ_ONLY_ALL_TOOL_COUNT = 73;
+const READ_ONLY_ALL_TOOL_COUNT = 93;
 const KEYWORDS_AND_ARTICLES_TOOL_COUNT = 25;
 const IMPROVEMENTS_PREFIX = 'improvements_';
 const IMPROVEMENTS_TOOL_COUNT = 16;
+const BLOG_PREFIX = 'products_blog_';
+const BLOG_TOOL_COUNT = 57;
+const BLOG_READ_TOOL_COUNT = 20;
+const BLOG_ONLY_TOOL_COUNT = BRAND_NEW_TOOL_COUNT + BLOG_TOOL_COUNT;
 const IMPROVEMENTS_READ_TOOLS = [
   'improvements_candidates_list',
   'improvements_executions_get',
@@ -82,7 +86,24 @@ test('a brand-new organization gets the core tools and every setup entry point, 
     'marketplace-seller',
     'marketplace-buyer',
     'billing',
+    'blog',
   ]);
+  assert.equal(names.some((name) => name.startsWith(BLOG_PREFIX)), false);
+});
+
+test('an organization granted the blog toolset gets every blog tool on top of core and the entry points', () => {
+  const names = namesOf(select({ entitlements: withToolsets({ blog: 'full' }) }));
+  assert.equal(names.length, BLOG_ONLY_TOOL_COUNT);
+  assert.equal(names.filter((name) => name.startsWith(BLOG_PREFIX)).length, BLOG_TOOL_COUNT);
+  assert.equal(names.includes('products_blog_create'), true);
+  assert.equal(names.includes('articles_list'), false);
+});
+
+test('a read-only blog grant exposes only the blog reads', () => {
+  const names = namesOf(select({ entitlements: withToolsets({ blog: 'read' }) }));
+  assert.equal(names.filter((name) => name.startsWith(BLOG_PREFIX)).length, BLOG_READ_TOOL_COUNT);
+  assert.equal(names.includes('products_blog_get'), true);
+  assert.equal(names.includes('products_blog_posts_publish'), false);
 });
 
 test('a subscribed organization without a product yet also gets the billing tools', () => {

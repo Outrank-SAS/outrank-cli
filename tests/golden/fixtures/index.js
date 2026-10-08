@@ -10,6 +10,7 @@ import productsIntegrations from './productsIntegrations.js';
 import productsGsc from './productsGsc.js';
 import productsLinking from './productsLinking.js';
 import productsBacklinks from './productsBacklinks.js';
+import productsBlog from './productsBlog.js';
 import marketplaceSeller from './marketplaceSeller.js';
 import marketplaceNotifications from './marketplaceNotifications.js';
 import marketplaceBuyer from './marketplaceBuyer.js';
@@ -30,6 +31,7 @@ export const FIXTURE_GROUPS = {
   productsGsc,
   productsLinking,
   productsBacklinks,
+  productsBlog,
   marketplaceSeller,
   marketplaceNotifications,
   marketplaceBuyer,

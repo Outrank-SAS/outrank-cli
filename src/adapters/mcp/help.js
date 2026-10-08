@@ -8,7 +8,7 @@ Options:
   --toolsets <names>    Comma-separated toolsets to expose, or all. Default: auto (from the organization's
                         entitlements, plus the setup tools of every area).
                         Toolsets: core, integrations, gsc, linking, backlinks, keywords, articles, improvements,
-                        marketplace-seller, marketplace-buyer, billing.
+                        marketplace-seller, marketplace-buyer, billing, blog.
   --read-only           Expose only tools that do not change anything.
   --profile <name>      Use a stored profile (one per organization). See: outrank-cli auth profiles
   --upload-dir <dir>    Directory image uploads may be read from. Default: the directory the server starts in.
