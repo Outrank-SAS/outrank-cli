@@ -407,7 +407,7 @@ Generated from the command registry with `npm run docs:tools`. The registry is c
 | `products_blog_design_get` | `products blog design get` | read | blog | Show the live and draft theme config of the blog. |
 | `products_blog_design_update` | `products blog design update` | write | blog | Save the draft theme config of the blog from a JSON body (the live blog is unchanged). |
 | `products_blog_design_publish` | `products blog design publish` | write | blog | Publish the draft theme to the live blog. |
-| `products_blog_design_discard` | `products blog design discard` | write | blog | Discard the draft theme and go back to the live one. |
+| `products_blog_design_discard` | `products blog design discard` | destructive | blog | Discard the draft theme and go back to the live one. |
 | `products_blog_domain_get` | `products blog domain get` | read | blog | Show the custom domain of the blog and its DNS and verification state. |
 | `products_blog_domain_connect` | `products blog domain connect` | write | blog | Connect or replace the custom domain of the blog from a JSON body. |
 | `products_blog_domain_verify` | `products blog domain verify` | write | blog | Check the DNS of the custom domain and activate it once it is correct. |
@@ -448,7 +448,7 @@ Generated from the command registry with `npm run docs:tools`. The registry is c
 | `products_blog_webhooks_list` | `products blog webhooks list` | read | blog | List the webhooks of the blog. |
 | `products_blog_webhooks_get` | `products blog webhooks get` | read | blog | Show one webhook of the blog. |
 | `products_blog_webhooks_create` | `products blog webhooks create` | write | blog | Create a webhook on the blog from a JSON body. |
-| `products_blog_webhooks_update` | `products blog webhooks update` | write | blog | Change one webhook of the blog from a JSON body. |
+| `products_blog_webhooks_update` | `products blog webhooks update` | destructive | blog | Change one webhook of the blog from a JSON body. |
 | `products_blog_webhooks_delete` | `products blog webhooks delete` | destructive | blog | Delete one webhook of the blog. |
 | `products_blog_webhooks_test` | `products blog webhooks test` | write | blog | Send a test event to one webhook and report the response status. |
 | `marketplace_seller_status` ★ | `marketplace seller status` | read | marketplace-seller | Show the seller onboarding and enrollment status of a product. |

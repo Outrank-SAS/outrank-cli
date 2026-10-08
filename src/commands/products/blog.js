@@ -376,7 +376,7 @@ const designGroup = group({
     blogCommand({
       id: 'design.discard',
       summary: 'Discard the draft theme and go back to the live one.',
-      kind: CommandKind.WRITE,
+      kind: CommandKind.DESTRUCTIVE,
       method: 'POST',
       suffix: '/design/discard',
     }),
@@ -543,6 +543,7 @@ const collectionGroup = ({
   update = true,
   createRefine,
   updateRefine,
+  updateKind = CommandKind.WRITE,
   extraChildren = [],
   extraUsage = [],
   guidance,
@@ -597,7 +598,7 @@ const collectionGroup = ({
             blogCommand({
               id: `${id}.update`,
               summary: `Change one ${noun} of the blog from a JSON body.`,
-              kind: CommandKind.WRITE,
+              kind: updateKind,
               method: 'PATCH',
               suffix: itemPath,
               ids,
@@ -702,6 +703,7 @@ const webhooksGroup = collectionGroup({
   updateBody: webhookShape(false),
   createRefine: refineWebhookEvents,
   updateRefine: refineWebhookEvents,
+  updateKind: CommandKind.DESTRUCTIVE,
   itemRead: true,
   extraUsage: ['webhooks test <product-id> <webhook-id>'],
   extraChildren: [

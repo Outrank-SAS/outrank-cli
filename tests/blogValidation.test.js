@@ -122,3 +122,26 @@ test('cta and html snippets need content; a newsletter snippet may omit it', asy
     assert.equal(nonWhoamiRequests().length, 1);
   });
 });
+
+test('irreversible blog tools are flagged destructive so MCP clients ask first', async () => {
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ client }) => {
+    const { tools } = await client.listTools();
+    const destructive = tools
+      .filter((tool) => tool.name.startsWith('products_blog_') && tool.annotations?.destructiveHint === true)
+      .map((tool) => tool.name)
+      .sort();
+    assert.deepEqual(destructive, [
+      'products_blog_authors_delete',
+      'products_blog_categories_delete',
+      'products_blog_delete',
+      'products_blog_design_discard',
+      'products_blog_domain_remove',
+      'products_blog_pages_delete',
+      'products_blog_redirects_delete',
+      'products_blog_snippets_delete',
+      'products_blog_subscribers_delete',
+      'products_blog_webhooks_delete',
+      'products_blog_webhooks_update',
+    ]);
+  });
+});

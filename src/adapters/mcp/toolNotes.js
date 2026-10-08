@@ -522,6 +522,7 @@ export const TOOL_NOTES = Object.freeze({
     body: 'Fields: url (required, public https URL), events (default [subscriber.created]).',
   },
   'products.blog.webhooks.update': {
+    note: 'Changing the url or events, or rotating the secret, can break deliveries until the endpoint is updated.',
     body: 'Fields (any): url, events, isActive, rotateSecret (true returns a new secret once).',
   },
 });

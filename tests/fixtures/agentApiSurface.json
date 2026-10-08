@@ -1,6 +1,6 @@
 {
   "apiBasePath": "/api/agent/v1",
-  "sourceCommit": "553d3e86475cb0409c33578c33d0588a4b703249",
+  "sourceCommit": "560cce7cc1e25b42d6c9fc85618ddfa4430bfbc3",
   "sourceDirty": false,
   "routes": [
     {
@@ -1283,6 +1283,10 @@
     },
     {
       "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/sync",
+      "route": "/products/{id}/blog/posts/{articleId}/content"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/unpublish",
       "route": "/products/{id}/blog/posts/{articleId}/content"
     },
     {
