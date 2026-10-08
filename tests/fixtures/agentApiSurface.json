@@ -1,6 +1,6 @@
 {
   "apiBasePath": "/api/agent/v1",
-  "sourceCommit": "43e77efa3bb07734a8ce24cc6932a4f493269150",
+  "sourceCommit": "15b9e7c3f0190adddc6e0c13bd377b9d043e527c",
   "sourceDirty": false,
   "routes": [
     {
@@ -242,6 +242,234 @@
     {
       "method": "GET",
       "path": "/products/{id}/backlinks/unverified"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/analytics"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/blog/authors/{authorId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/blog/authors/{authorId}"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/authors"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/authors"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/blog/categories/{categoryId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/blog/categories/{categoryId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/blog/categories/positions"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/categories"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/categories"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/design/discard"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/design/publish"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/design"
+    },
+    {
+      "method": "PUT",
+      "path": "/products/{id}/blog/design"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/domain"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/domain"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/blog/domain"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/domain/verify"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/pages/{pageId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/blog/pages/{pageId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/blog/pages/{pageId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/blog/pages/positions"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/pages"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/pages"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/posts/{articleId}/content"
+    },
+    {
+      "method": "PUT",
+      "path": "/products/{id}/blog/posts/{articleId}/content"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/posts/{articleId}/publish"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/posts/{articleId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/blog/posts/{articleId}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/posts/{articleId}/sync"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/posts/{articleId}/unpublish"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/posts"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/posts"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/preview-token"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/blog/redirects/{redirectId}"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/redirects"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/redirects"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/blog"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/blog/settings"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/setup"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/blog/snippets/{snippetId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/blog/snippets/{snippetId}"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/snippets"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/snippets"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/starter-posts"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/subdomain-availability"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/blog/subscribers/{subscriberId}"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/subscribers"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/usage"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/webhooks/{webhookId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/blog/webhooks/{webhookId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/blog/webhooks/{webhookId}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/webhooks/{webhookId}/test"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/blog/webhooks"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/blog/webhooks"
     },
     {
       "method": "GET",
@@ -956,6 +1184,294 @@
     {
       "text": "POST /api/agent/v1/products/<interpolated>/backlinks/<backlinkId>/reverify",
       "route": "/products/{id}/backlinks/unverified"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/authors",
+      "route": "/products/{id}/blog/authors/{authorId}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/authors",
+      "route": "/products/{id}/blog/authors"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/posts/<articleId>",
+      "route": "/products/{id}/blog/authors"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/categories",
+      "route": "/products/{id}/blog/categories/{categoryId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/categories",
+      "route": "/products/{id}/blog/categories/positions"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/categories",
+      "route": "/products/{id}/blog/categories"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/posts/<articleId>",
+      "route": "/products/{id}/blog/categories"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/design",
+      "route": "/products/{id}/blog/design/publish"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/blog/design",
+      "route": "/products/{id}/blog/design"
+    },
+    {
+      "text": "/api/agent/v1/products/<interpolated>/blog/preview-token",
+      "route": "/products/{id}/blog/design"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/design/publish",
+      "route": "/products/{id}/blog/design"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/design/discard",
+      "route": "/products/{id}/blog/design"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/design",
+      "route": "/products/{id}/blog/design"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/domain/verify",
+      "route": "/products/{id}/blog/domain"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/domain",
+      "route": "/products/{id}/blog/domain"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/domain/verify",
+      "route": "/products/{id}/blog/domain/verify"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/pages",
+      "route": "/products/{id}/blog/pages/{pageId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/pages",
+      "route": "/products/{id}/blog/pages/positions"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/pages",
+      "route": "/products/{id}/blog/pages"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/pages/positions",
+      "route": "/products/{id}/blog/pages"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/pages/<pageId>",
+      "route": "/products/{id}/blog/pages"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/preview-token",
+      "route": "/products/{id}/blog/pages"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/posts",
+      "route": "/products/{id}/blog/posts/{articleId}/content"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/content",
+      "route": "/products/{id}/blog/posts/{articleId}/content"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/sync",
+      "route": "/products/{id}/blog/posts/{articleId}/content"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/publish",
+      "route": "/products/{id}/blog/posts/{articleId}/content"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/unpublish",
+      "route": "/products/{id}/blog/posts/{articleId}/publish"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/posts",
+      "route": "/products/{id}/blog/posts/{articleId}/publish"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/blog/posts/<articleId>/content",
+      "route": "/products/{id}/blog/posts/{articleId}/publish"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/posts",
+      "route": "/products/{id}/blog/posts/{articleId}"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>",
+      "route": "/products/{id}/blog/posts/{articleId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/content",
+      "route": "/products/{id}/blog/posts/{articleId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>",
+      "route": "/products/{id}/blog/posts/{articleId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>",
+      "route": "/products/{id}/blog/posts/{articleId}/sync"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<articleId>/publish",
+      "route": "/products/{id}/blog/posts/{articleId}/sync"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/publish",
+      "route": "/products/{id}/blog/posts/{articleId}/unpublish"
+    },
+    {
+      "text": "GET/PUT /api/agent/v1/products/<interpolated>/blog/posts/<articleId>/content",
+      "route": "/products/{id}/blog/posts"
+    },
+    {
+      "text": "GET/PATCH /api/agent/v1/products/<interpolated>/blog/posts/<articleId>",
+      "route": "/products/{id}/blog/posts"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<articleId>/publish",
+      "route": "/products/{id}/blog/posts"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/content",
+      "route": "/products/{id}/blog/posts"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>",
+      "route": "/products/{id}/blog/posts"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/publish",
+      "route": "/products/{id}/blog/posts"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/redirects",
+      "route": "/products/{id}/blog/redirects/{redirectId}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/redirects",
+      "route": "/products/{id}/blog/redirects"
+    },
+    {
+      "text": "DELETE /api/agent/v1/products/<interpolated>/blog/redirects/<redirectId>",
+      "route": "/products/{id}/blog/redirects"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/posts",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/design",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/settings",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/domain",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/setup",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "PUT /api/agent/v1/products/<interpolated>/blog/design",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/design/publish",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/domain",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/subdomain-availability?subdomain=<subdomain>",
+      "route": "/products/{id}/blog"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog",
+      "route": "/products/{id}/blog/settings"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog",
+      "route": "/products/{id}/blog/setup"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog",
+      "route": "/products/{id}/blog/setup"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/snippets",
+      "route": "/products/{id}/blog/snippets/{snippetId}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/snippets",
+      "route": "/products/{id}/blog/snippets"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/snippets/<snippetId>",
+      "route": "/products/{id}/blog/snippets"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/posts",
+      "route": "/products/{id}/blog/starter-posts"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog",
+      "route": "/products/{id}/blog/subdomain-availability"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/settings",
+      "route": "/products/{id}/blog/subdomain-availability"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/subscribers",
+      "route": "/products/{id}/blog/subscribers/{subscriberId}"
+    },
+    {
+      "text": "DELETE /api/agent/v1/products/<interpolated>/blog/subscribers/<subscriberId>",
+      "route": "/products/{id}/blog/subscribers"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/analytics",
+      "route": "/products/{id}/blog/usage"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/webhooks",
+      "route": "/products/{id}/blog/webhooks/{webhookId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/webhooks",
+      "route": "/products/{id}/blog/webhooks/{webhookId}/test"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/webhooks",
+      "route": "/products/{id}/blog/webhooks"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/webhooks/<webhookId>/test",
+      "route": "/products/{id}/blog/webhooks"
     },
     {
       "text": "GET /api/agent/v1/products",
@@ -1798,6 +2314,18 @@
       "route": null
     },
     {
+      "text": "GET /api/agent/v1/products",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/blog/setup",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog",
+      "route": null
+    },
+    {
       "text": "GET /api/agent/v1/products/<id>/marketplace/buyer/status",
       "route": null
     },
@@ -1826,7 +2354,7 @@
       "route": null
     },
     {
-      "text": "GET /api/agent/v1/products",
+      "text": "GET /api/agent/v1/products/<id>/blog",
       "route": null
     },
     {
@@ -1951,6 +2479,14 @@
     },
     {
       "text": "POST /api/agent/v1/billing/purchase-products",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/blog/setup",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/blog",
       "route": null
     }
   ]

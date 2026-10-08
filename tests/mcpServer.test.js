@@ -22,10 +22,10 @@ import {
   withMcp,
 } from './helpers/mcpHarness.js';
 
-const ALL_TOOL_COUNT = 154;
+const ALL_TOOL_COUNT = 211;
 const FALLBACK_TOOL_COUNT = 32;
 const KEYWORDS_TOOL_COUNT = 12;
-const READ_ONLY_ALL_TOOL_COUNT = 73;
+const READ_ONLY_ALL_TOOL_COUNT = 93;
 const TOOL_NAME_PATTERN = /^[a-zA-Z0-9_-]{1,64}$/;
 const PRODUCT_ID = 'aaaaaaaa-0000-4000-8000-000000000001';
 const SECOND_ID = 'bbbbbbbb-0000-4000-8000-000000000002';

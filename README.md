@@ -280,7 +280,7 @@ Tools that take a JSON `body` describe its fields in their description; `product
 Generated from the command registry with `npm run docs:tools`. The registry is checked against the Outrank server's route list in `tests/fixtures/agentApiSurface.json`, refreshed from a checkout of the Outrank app with `npm run surface:extract -- <path-to-outrank-repo>`: a server route without a tool, a tool without a server route, a guidance sentence naming an endpoint the server cannot map to a tool, or a rewritten argument the named tool would refuse fails the tests. The fixture records the server commit and, as `sourceDirty`, whether that checkout had uncommitted changes in the files it reads; extract again from a clean checkout before a release. To see whether the fixture is stale, run `node scripts/extractAgentApiSurface.js --check <path-to-outrank-repo>`, or run the tests with `OUTRANK_SERVER_DIR=<path-to-outrank-repo>`: both list the routes and guidance mentions that differ, and without the variable that one test is skipped. Kinds: `read` changes nothing; `write` changes Outrank or the connected site; `destructive` deletes or cannot be undone; `money` changes what the organization pays; `local` makes no request. Tools marked ★ are always listed in `auto` mode.
 
 <!-- mcp-tools:start -->
-154 tools.
+211 tools.
 
 | Tool | CLI command | Kind | Toolset | What it does |
 | --- | --- | --- | --- | --- |
@@ -394,6 +394,63 @@ Generated from the command registry with `npm run docs:tools`. The registry is c
 | `products_backlinks_reverify` | `products backlinks reverify` | write | backlinks | Re-run verification for one backlink. |
 | `products_backlinks_subscription` ★ | `products backlinks subscription` | read | backlinks | Show the backlink plan subscription of a product. |
 | `products_backlinks_subscribe_quote` ★ | `products backlinks subscribe-quote` | read | backlinks | Quote a backlink plan subscription for a product. |
+| `products_blog_get` | `products blog get` | read | blog | Show the hosted Outrank Blog of a product with its domain, usage and post counts. |
+| `products_blog_setup` | `products blog setup` | read | blog | Show the suggested name, subdomain and accent color for a new blog on a product. |
+| `products_blog_check_subdomain` | `products blog check-subdomain` | read | blog | Check whether an outrankblog.com subdomain is valid and free. |
+| `products_blog_create` | `products blog create` | write | blog | Create the hosted Outrank Blog of a product; every body field is optional. |
+| `products_blog_update_settings` | `products blog update-settings` | write | blog | Change the blog name, description, language, subdomain, badge, analytics or code injection. |
+| `products_blog_delete` | `products blog delete` | destructive | blog | Delete the blog of a product; its posts become unpublished articles again. |
+| `products_blog_usage` | `products blog usage` | read | blog | Show the plan limits and current usage of the blog. |
+| `products_blog_analytics` | `products blog analytics` | read | blog | Show the built-in traffic analytics of the blog. |
+| `products_blog_starter_posts` | `products blog starter-posts` | read | blog | Show the free AI starter-post allowance and the starter posts being written. |
+| `products_blog_preview` | `products blog preview` | write | blog | Create a short-lived private preview link for the draft design, a draft post or a draft page. |
+| `products_blog_design_get` | `products blog design get` | read | blog | Show the live and draft theme config of the blog. |
+| `products_blog_design_update` | `products blog design update` | write | blog | Save the draft theme config of the blog from a JSON body (the live blog is unchanged). |
+| `products_blog_design_publish` | `products blog design publish` | write | blog | Publish the draft theme to the live blog. |
+| `products_blog_design_discard` | `products blog design discard` | write | blog | Discard the draft theme and go back to the live one. |
+| `products_blog_domain_get` | `products blog domain get` | read | blog | Show the custom domain of the blog and its DNS and verification state. |
+| `products_blog_domain_connect` | `products blog domain connect` | write | blog | Connect or replace the custom domain of the blog from a JSON body. |
+| `products_blog_domain_verify` | `products blog domain verify` | write | blog | Check the DNS of the custom domain and activate it once it is correct. |
+| `products_blog_domain_remove` | `products blog domain remove` | destructive | blog | Remove the custom domain; the blog goes back to its outrankblog.com subdomain. |
+| `products_blog_posts_list` | `products blog posts list` | read | blog | List the posts of the blog with optional status, search and page filters. |
+| `products_blog_posts_create` | `products blog posts create` | write | blog | Create an empty draft post on the blog. |
+| `products_blog_posts_get` | `products blog posts get` | read | blog | Show the settings, status and live URL of one post. |
+| `products_blog_posts_update` | `products blog posts update` | write | blog | Change the slug, author, category, tags, excerpt, SEO or cover of one post from a JSON body. |
+| `products_blog_posts_get_content` | `products blog posts get-content` | read | blog | Show the title and markdown body of one post. |
+| `products_blog_posts_update_content` | `products blog posts update-content` | write | blog | Replace the title and/or markdown body of one post from a JSON body. |
+| `products_blog_posts_publish` | `products blog posts publish` | write | blog | Publish one post now, or schedule it with --scheduled-for. |
+| `products_blog_posts_unpublish` | `products blog posts unpublish` | write | blog | Take one post off the blog (or cancel its schedule); it becomes a draft. |
+| `products_blog_posts_sync` | `products blog posts sync` | write | blog | Push the latest body of a live post to the blog after editing it. |
+| `products_blog_pages_list` | `products blog pages list` | read | blog | List the pages of the blog. |
+| `products_blog_pages_get` | `products blog pages get` | read | blog | Show one page of the blog. |
+| `products_blog_pages_create` | `products blog pages create` | write | blog | Create a page on the blog from a JSON body. |
+| `products_blog_pages_update` | `products blog pages update` | write | blog | Change one page of the blog from a JSON body. |
+| `products_blog_pages_delete` | `products blog pages delete` | destructive | blog | Delete one page of the blog. |
+| `products_blog_pages_reorder` | `products blog pages reorder` | write | blog | Save the order of the pages from a JSON body of ids and positions. |
+| `products_blog_categories_list` | `products blog categories list` | read | blog | List the categories of the blog. |
+| `products_blog_categories_create` | `products blog categories create` | write | blog | Create a category on the blog from a JSON body. |
+| `products_blog_categories_update` | `products blog categories update` | write | blog | Change one category of the blog from a JSON body. |
+| `products_blog_categories_delete` | `products blog categories delete` | destructive | blog | Delete one category of the blog. |
+| `products_blog_categories_reorder` | `products blog categories reorder` | write | blog | Save the order of the categories from a JSON body of ids and positions. |
+| `products_blog_authors_list` | `products blog authors list` | read | blog | List the authors of the blog. |
+| `products_blog_authors_create` | `products blog authors create` | write | blog | Create a author on the blog from a JSON body. |
+| `products_blog_authors_update` | `products blog authors update` | write | blog | Change one author of the blog from a JSON body. |
+| `products_blog_authors_delete` | `products blog authors delete` | destructive | blog | Delete one author of the blog. |
+| `products_blog_redirects_list` | `products blog redirects list` | read | blog | List the redirects of the blog. |
+| `products_blog_redirects_create` | `products blog redirects create` | write | blog | Create a redirect on the blog from a JSON body. |
+| `products_blog_redirects_delete` | `products blog redirects delete` | destructive | blog | Delete one redirect of the blog. |
+| `products_blog_snippets_list` | `products blog snippets list` | read | blog | List the snippets of the blog. |
+| `products_blog_snippets_create` | `products blog snippets create` | write | blog | Create a snippet on the blog from a JSON body. |
+| `products_blog_snippets_update` | `products blog snippets update` | write | blog | Change one snippet of the blog from a JSON body. |
+| `products_blog_snippets_delete` | `products blog snippets delete` | destructive | blog | Delete one snippet of the blog. |
+| `products_blog_subscribers_list` | `products blog subscribers list` | read | blog | List the newsletter subscribers of the blog. |
+| `products_blog_subscribers_delete` | `products blog subscribers delete` | destructive | blog | Delete one newsletter subscriber of the blog. |
+| `products_blog_webhooks_list` | `products blog webhooks list` | read | blog | List the webhooks of the blog. |
+| `products_blog_webhooks_get` | `products blog webhooks get` | read | blog | Show one webhook of the blog. |
+| `products_blog_webhooks_create` | `products blog webhooks create` | write | blog | Create a webhook on the blog from a JSON body. |
+| `products_blog_webhooks_update` | `products blog webhooks update` | write | blog | Change one webhook of the blog from a JSON body. |
+| `products_blog_webhooks_delete` | `products blog webhooks delete` | destructive | blog | Delete one webhook of the blog. |
+| `products_blog_webhooks_test` | `products blog webhooks test` | write | blog | Send a test event to one webhook and report the response status. |
 | `marketplace_seller_status` ★ | `marketplace seller status` | read | marketplace-seller | Show the seller onboarding and enrollment status of a product. |
 | `marketplace_seller_onboard` ★ | `marketplace seller onboard` | write | marketplace-seller | Run the seller onboarding orchestrator: status, auto-adopt CMS, Stripe Express, eligibility. |
 | `marketplace_seller_eligibility` ★ | `marketplace seller eligibility` | read | marketplace-seller | Read the marketplace seller eligibility of a product. |

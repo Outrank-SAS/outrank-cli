@@ -1,0 +1,2072 @@
+{
+  "help": {
+    "argv": [
+      "products",
+      "blog",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog get <product-id>\\n  outrank-cli products blog setup <product-id>\\n  outrank-cli products blog check-subdomain <product-id> --subdomain <subdomain>\\n  outrank-cli products blog create <product-id> [--json <object>]\\n  outrank-cli products blog update-settings <product-id> --json <object>\\n  outrank-cli products blog delete <product-id> --confirm <subdomain>\\n  outrank-cli products blog usage <product-id>\\n  outrank-cli products blog analytics <product-id> [--range 7d|30d|90d]\\n  outrank-cli products blog starter-posts <product-id>\\n  outrank-cli products blog preview <product-id> --scope design|post|page [--target-id <id>]\\n  outrank-cli products blog design get|update|publish|discard <product-id> [--json <object>]\\n  outrank-cli products blog domain get|connect|verify|remove <product-id> [--json <object>]\\n  outrank-cli products blog posts list <product-id> [--status all|published|scheduled|draft] [--search <text>] [--page <n>]\\n  outrank-cli products blog posts create <product-id> [--title <title>]\\n  outrank-cli products blog posts get|get-content|unpublish|sync <product-id> <article-id>\\n  outrank-cli products blog posts update|update-content <product-id> <article-id> --json <object>\\n  outrank-cli products blog posts publish <product-id> <article-id> [--scheduled-for <iso-datetime>]\\n  outrank-cli products blog pages list|create|reorder <product-id> [--json <object>]\\n  outrank-cli products blog pages get|update|delete <product-id> <page-id> [--json <object>]\\n  outrank-cli products blog categories list|create|reorder <product-id> [--json <object>]\\n  outrank-cli products blog categories update|delete <product-id> <category-id> [--json <object>]\\n  outrank-cli products blog authors list|create <product-id> [--json <object>]\\n  outrank-cli products blog authors update|delete <product-id> <author-id> [--json <object>]\\n  outrank-cli products blog redirects list|create <product-id> [--json <object>]\\n  outrank-cli products blog redirects delete <product-id> <redirect-id>\\n  outrank-cli products blog snippets list|create <product-id> [--json <object>]\\n  outrank-cli products blog snippets update|delete <product-id> <snippet-id> [--json <object>]\\n  outrank-cli products blog subscribers list <product-id> [--status subscribed|unsubscribed] [--search <text>] [--page <n>]\\n  outrank-cli products blog subscribers delete <product-id> <subscriber-id>\\n  outrank-cli products blog webhooks list|create <product-id> [--json <object>]\\n  outrank-cli products blog webhooks get|update|delete|test <product-id> <webhook-id> [--json <object>]\"\n  },\n  \"agent_guidance\": \"Start with `get` to see whether the product has a hosted Outrank Blog. Without one, read `setup` and run `create`. Then manage posts, design, pages, categories, authors, domain, redirects, snippets, subscribers and webhooks from this subtree. Request bodies use camelCase fields, like the blog dashboard.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-subcommand": {
+    "argv": [
+      "products",
+      "blog",
+      "nonsense",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown products blog subcommand: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli products blog --help` to see the available blog commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "api-error": {
+    "argv": [
+      "products",
+      "blog",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "non-json-response": {
+    "argv": [
+      "products",
+      "blog",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_UPSTREAM_ERROR\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "network-error": {
+    "argv": [
+      "products",
+      "blog",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "no-key": {
+    "argv": [
+      "products",
+      "blog",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "get": {
+    "argv": [
+      "products",
+      "blog",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "get-missing-id": {
+    "argv": [
+      "products",
+      "blog",
+      "get"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "get-invalid-id": {
+    "argv": [
+      "products",
+      "blog",
+      "get",
+      "not-a-uuid"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"<product-id> must be a UUID.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "setup": {
+    "argv": [
+      "products",
+      "blog",
+      "setup",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/setup",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "check-subdomain": {
+    "argv": [
+      "products",
+      "blog",
+      "check-subdomain",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--subdomain",
+      "acme-journal"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/subdomain-availability?subdomain=acme-journal",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "check-subdomain-missing": {
+    "argv": [
+      "products",
+      "blog",
+      "check-subdomain",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --subdomain.\"\n  },\n  \"agent_guidance\": \"Pass the subdomain to check: `outrank-cli products blog check-subdomain <product-id> --subdomain <name>`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create": {
+    "argv": [
+      "products",
+      "blog",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"name\":\"Acme Journal\",\"subdomain\":\"acme-journal\",\"template\":\"editorial\",\"accentColor\":\"#2563EB\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Acme Journal",
+          "subdomain": "acme-journal",
+          "template": "editorial",
+          "accentColor": "#2563EB"
+        }
+      }
+    ]
+  },
+  "create-no-body": {
+    "argv": [
+      "products",
+      "blog",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
+  },
+  "create-invalid-template": {
+    "argv": [
+      "products",
+      "blog",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"template\":\"neon\"}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--json.template must be one of: classic, editorial, journal, studio, minimal.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "update-settings": {
+    "argv": [
+      "products",
+      "blog",
+      "update-settings",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"description\":\"Notes from Acme\",\"language\":\"en\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "description": "Notes from Acme",
+          "language": "en"
+        }
+      }
+    ]
+  },
+  "update-settings-missing-json": {
+    "argv": [
+      "products",
+      "blog",
+      "update-settings",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "delete": {
+    "argv": [
+      "products",
+      "blog",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--confirm",
+      "acme-journal"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "confirm": "acme-journal"
+        }
+      }
+    ]
+  },
+  "delete-missing-confirm": {
+    "argv": [
+      "products",
+      "blog",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --confirm.\"\n  },\n  \"agent_guidance\": \"Deleting a blog takes it offline and turns its posts back into unpublished articles. Confirm with the human, then pass --confirm <subdomain> with the blog subdomain shown by `outrank-cli products blog get <product-id>`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "usage": {
+    "argv": [
+      "products",
+      "blog",
+      "usage",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/usage",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "analytics": {
+    "argv": [
+      "products",
+      "blog",
+      "analytics",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--range",
+      "7d"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/analytics?range=7d",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "analytics-invalid-range": {
+    "argv": [
+      "products",
+      "blog",
+      "analytics",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--range",
+      "1y"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--range must be one of: 7d, 30d, 90d.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "starter-posts": {
+    "argv": [
+      "products",
+      "blog",
+      "starter-posts",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/starter-posts",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "preview-design": {
+    "argv": [
+      "products",
+      "blog",
+      "preview",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--scope",
+      "design"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/preview-token",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "scope": "design"
+        }
+      }
+    ]
+  },
+  "preview-post": {
+    "argv": [
+      "products",
+      "blog",
+      "preview",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--scope",
+      "post",
+      "--target-id",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/preview-token",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "scope": "post",
+          "targetId": "bbbbbbbb-0000-4000-8000-000000000002"
+        }
+      }
+    ]
+  },
+  "preview-missing-scope": {
+    "argv": [
+      "products",
+      "blog",
+      "preview",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --scope.\"\n  },\n  \"agent_guidance\": \"Pass --scope design for the draft theme, or --scope post|page with --target-id <article-id|page-id>.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "design-help": {
+    "argv": [
+      "products",
+      "blog",
+      "design",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog design get <product-id>\\n  outrank-cli products blog design update <product-id> --json <object>\\n  outrank-cli products blog design publish <product-id>\\n  outrank-cli products blog design discard <product-id>\"\n  },\n  \"agent_guidance\": \"Edit the draft theme with `update` (send the whole config, starting from the draft returned by `get`), preview it with `outrank-cli products blog preview <product-id> --scope design`, then `publish` it.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "design-get": {
+    "argv": [
+      "products",
+      "blog",
+      "design",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/design",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "design-update": {
+    "argv": [
+      "products",
+      "blog",
+      "design",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"theme\":{\"template\":\"editorial\"}}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/design",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "theme": {
+            "template": "editorial"
+          }
+        }
+      }
+    ]
+  },
+  "design-publish": {
+    "argv": [
+      "products",
+      "blog",
+      "design",
+      "publish",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/design/publish",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "design-discard": {
+    "argv": [
+      "products",
+      "blog",
+      "design",
+      "discard",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/design/discard",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "domain-help": {
+    "argv": [
+      "products",
+      "blog",
+      "domain",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog domain get <product-id>\\n  outrank-cli products blog domain connect <product-id> --json <object>\\n  outrank-cli products blog domain verify <product-id>\\n  outrank-cli products blog domain remove <product-id>\"\n  },\n  \"agent_guidance\": \"Connect a custom domain, show the returned DNS records to the human, then `verify` once the records are in place. DNS can take a while, so check again later instead of changing the records.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "domain-get": {
+    "argv": [
+      "products",
+      "blog",
+      "domain",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/domain",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "domain-connect": {
+    "argv": [
+      "products",
+      "blog",
+      "domain",
+      "connect",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"mode\":\"subdomain\",\"hostname\":\"blog.acme.example.com\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/domain",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "mode": "subdomain",
+          "hostname": "blog.acme.example.com"
+        }
+      }
+    ]
+  },
+  "domain-connect-missing-mode": {
+    "argv": [
+      "products",
+      "blog",
+      "domain",
+      "connect",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"hostname\":\"a.b.com\"}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required field: --json.mode.\"\n  },\n  \"agent_guidance\": \"Connecting a domain needs mode (subdomain, apex or subfolder) and hostname; subfolder also needs basePath.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "domain-verify": {
+    "argv": [
+      "products",
+      "blog",
+      "domain",
+      "verify",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/domain/verify",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "domain-remove": {
+    "argv": [
+      "products",
+      "blog",
+      "domain",
+      "remove",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/domain",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "posts-help": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog posts list <product-id> [--status all|published|scheduled|draft] [--search <text>] [--page <n>]\\n  outrank-cli products blog posts create <product-id> [--title <title>]\\n  outrank-cli products blog posts get <product-id> <article-id>\\n  outrank-cli products blog posts update <product-id> <article-id> --json <object>\\n  outrank-cli products blog posts get-content <product-id> <article-id>\\n  outrank-cli products blog posts update-content <product-id> <article-id> --json <object>\\n  outrank-cli products blog posts publish <product-id> <article-id> [--scheduled-for <iso-datetime>]\\n  outrank-cli products blog posts unpublish <product-id> <article-id>\\n  outrank-cli products blog posts sync <product-id> <article-id>\"\n  },\n  \"agent_guidance\": \"Posts are keyed by their article id. `create` a draft, write it with `update-content`, set slug, SEO and category with `update`, then `publish` (now or with --scheduled-for). After editing a live post, run `sync`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "posts-list": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--status",
+      "published",
+      "--search",
+      "pdf",
+      "--page",
+      "2"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts?status=published&search=pdf&page=2",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "posts-list-invalid-status": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--status",
+      "live"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--status must be one of: all, published, scheduled, draft.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "posts-create": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--title",
+      "Hello world"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "title": "Hello world"
+        }
+      }
+    ]
+  },
+  "posts-create-untitled": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
+  },
+  "posts-get": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "posts-get-missing-article": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <article-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "posts-update": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"slug\":\"hello-world\",\"excerpt\":\"Hello.\",\"tags\":[\"news\"]}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "slug": "hello-world",
+          "excerpt": "Hello.",
+          "tags": [
+            "news"
+          ]
+        }
+      }
+    ]
+  },
+  "posts-get-content": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "get-content",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002/content",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "posts-update-content": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "update-content",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"title\":\"Hello world\",\"content\":\"## Hello\\n\\nFirst post.\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PUT",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002/content",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "title": "Hello world",
+          "content": "## Hello\n\nFirst post."
+        }
+      }
+    ]
+  },
+  "posts-publish": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "publish",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002/publish",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
+  },
+  "posts-publish-scheduled": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "publish",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--scheduled-for",
+      "2026-11-01T09:00:00Z"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002/publish",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "scheduledFor": "2026-11-01T09:00:00Z"
+        }
+      }
+    ]
+  },
+  "posts-unpublish": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "unpublish",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002/unpublish",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "posts-sync": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "sync",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002/sync",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "pages-help": {
+    "argv": [
+      "products",
+      "blog",
+      "pages",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog pages list <product-id>\\n  outrank-cli products blog pages get <product-id> <page-id>\\n  outrank-cli products blog pages create <product-id> --json <object>\\n  outrank-cli products blog pages update <product-id> <page-id> --json <object>\\n  outrank-cli products blog pages delete <product-id> <page-id>\\n  outrank-cli products blog pages reorder <product-id> --json <object>\"\n  },\n  \"agent_guidance\": \"Pages are static pages such as About or Contact. A draft page stays hidden until it is saved with \\\"status\\\": \\\"published\\\"; \\\"showInNav\\\" adds it to the blog navigation and `reorder` sets the order.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "pages-list": {
+    "argv": [
+      "products",
+      "blog",
+      "pages",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/pages",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "pages-get": {
+    "argv": [
+      "products",
+      "blog",
+      "pages",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/pages/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "pages-create": {
+    "argv": [
+      "products",
+      "blog",
+      "pages",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"title\":\"About\",\"content\":\"About Acme.\",\"status\":\"published\",\"showInNav\":true}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/pages",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "title": "About",
+          "content": "About Acme.",
+          "status": "published",
+          "showInNav": true
+        }
+      }
+    ]
+  },
+  "pages-create-missing-json": {
+    "argv": [
+      "products",
+      "blog",
+      "pages",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "pages-update": {
+    "argv": [
+      "products",
+      "blog",
+      "pages",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"status\":\"draft\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/pages/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "status": "draft"
+        }
+      }
+    ]
+  },
+  "pages-delete": {
+    "argv": [
+      "products",
+      "blog",
+      "pages",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/pages/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "pages-delete-missing-id": {
+    "argv": [
+      "products",
+      "blog",
+      "pages",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <page-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "pages-reorder": {
+    "argv": [
+      "products",
+      "blog",
+      "pages",
+      "reorder",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"items\":[{\"id\":\"bbbbbbbb-0000-4000-8000-000000000002\",\"position\":0}]}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/pages/positions",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "items": [
+            {
+              "id": "bbbbbbbb-0000-4000-8000-000000000002",
+              "position": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "categories-help": {
+    "argv": [
+      "products",
+      "blog",
+      "categories",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog categories list <product-id>\\n  outrank-cli products blog categories create <product-id> --json <object>\\n  outrank-cli products blog categories update <product-id> <category-id> --json <object>\\n  outrank-cli products blog categories delete <product-id> <category-id>\\n  outrank-cli products blog categories reorder <product-id> --json <object>\"\n  },\n  \"agent_guidance\": \"Categories group posts. Assign one with `outrank-cli products blog posts update` and \\\"categoryId\\\".\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "categories-list": {
+    "argv": [
+      "products",
+      "blog",
+      "categories",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/categories",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "categories-create": {
+    "argv": [
+      "products",
+      "blog",
+      "categories",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"name\":\"Guides\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/categories",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Guides"
+        }
+      }
+    ]
+  },
+  "categories-create-missing-json": {
+    "argv": [
+      "products",
+      "blog",
+      "categories",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "categories-update": {
+    "argv": [
+      "products",
+      "blog",
+      "categories",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"description\":\"How-to\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/categories/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "description": "How-to"
+        }
+      }
+    ]
+  },
+  "categories-delete": {
+    "argv": [
+      "products",
+      "blog",
+      "categories",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/categories/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "categories-delete-missing-id": {
+    "argv": [
+      "products",
+      "blog",
+      "categories",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <category-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "categories-reorder": {
+    "argv": [
+      "products",
+      "blog",
+      "categories",
+      "reorder",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"items\":[{\"id\":\"bbbbbbbb-0000-4000-8000-000000000002\",\"position\":0}]}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/categories/positions",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "items": [
+            {
+              "id": "bbbbbbbb-0000-4000-8000-000000000002",
+              "position": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "authors-help": {
+    "argv": [
+      "products",
+      "blog",
+      "authors",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog authors list <product-id>\\n  outrank-cli products blog authors create <product-id> --json <object>\\n  outrank-cli products blog authors update <product-id> <author-id> --json <object>\\n  outrank-cli products blog authors delete <product-id> <author-id>\"\n  },\n  \"agent_guidance\": \"Authors are shown on posts. \\\"isDefault\\\" makes an author the default for new posts; set a post author with `outrank-cli products blog posts update` and \\\"authorId\\\".\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "authors-list": {
+    "argv": [
+      "products",
+      "blog",
+      "authors",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/authors",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "authors-create": {
+    "argv": [
+      "products",
+      "blog",
+      "authors",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"name\":\"Ada Writer\",\"isDefault\":true}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/authors",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Ada Writer",
+          "isDefault": true
+        }
+      }
+    ]
+  },
+  "authors-create-missing-json": {
+    "argv": [
+      "products",
+      "blog",
+      "authors",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "authors-update": {
+    "argv": [
+      "products",
+      "blog",
+      "authors",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"jobTitle\":\"Editor\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/authors/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "jobTitle": "Editor"
+        }
+      }
+    ]
+  },
+  "authors-delete": {
+    "argv": [
+      "products",
+      "blog",
+      "authors",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/authors/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "authors-delete-missing-id": {
+    "argv": [
+      "products",
+      "blog",
+      "authors",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <author-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "redirects-help": {
+    "argv": [
+      "products",
+      "blog",
+      "redirects",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog redirects list <product-id>\\n  outrank-cli products blog redirects create <product-id> --json <object>\\n  outrank-cli products blog redirects delete <product-id> <redirect-id>\"\n  },\n  \"agent_guidance\": \"Redirects send an old path to a new one (301 or 302) or mark it gone (410).\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "redirects-list": {
+    "argv": [
+      "products",
+      "blog",
+      "redirects",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/redirects",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "redirects-create": {
+    "argv": [
+      "products",
+      "blog",
+      "redirects",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"fromPath\":\"/old\",\"toPath\":\"/new\",\"statusCode\":301}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/redirects",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "fromPath": "/old",
+          "toPath": "/new",
+          "statusCode": 301
+        }
+      }
+    ]
+  },
+  "redirects-create-missing-json": {
+    "argv": [
+      "products",
+      "blog",
+      "redirects",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "redirects-delete": {
+    "argv": [
+      "products",
+      "blog",
+      "redirects",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/redirects/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "redirects-delete-missing-id": {
+    "argv": [
+      "products",
+      "blog",
+      "redirects",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <redirect-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "snippets-help": {
+    "argv": [
+      "products",
+      "blog",
+      "snippets",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog snippets list <product-id>\\n  outrank-cli products blog snippets create <product-id> --json <object>\\n  outrank-cli products blog snippets update <product-id> <snippet-id> --json <object>\\n  outrank-cli products blog snippets delete <product-id> <snippet-id>\"\n  },\n  \"agent_guidance\": \"Snippets are reusable call-to-action, newsletter or HTML blocks shown on the blog.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "snippets-list": {
+    "argv": [
+      "products",
+      "blog",
+      "snippets",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/snippets",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "snippets-create": {
+    "argv": [
+      "products",
+      "blog",
+      "snippets",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"name\":\"Try Acme\",\"kind\":\"cta\",\"content\":{\"title\":\"Try Acme\",\"button\":\"Start\",\"href\":\"https://acme.example.com\"}}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/snippets",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Try Acme",
+          "kind": "cta",
+          "content": {
+            "title": "Try Acme",
+            "button": "Start",
+            "href": "https://acme.example.com"
+          }
+        }
+      }
+    ]
+  },
+  "snippets-create-missing-json": {
+    "argv": [
+      "products",
+      "blog",
+      "snippets",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "snippets-update": {
+    "argv": [
+      "products",
+      "blog",
+      "snippets",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"isActive\":false}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/snippets/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "isActive": false
+        }
+      }
+    ]
+  },
+  "snippets-delete": {
+    "argv": [
+      "products",
+      "blog",
+      "snippets",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/snippets/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "snippets-delete-missing-id": {
+    "argv": [
+      "products",
+      "blog",
+      "snippets",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <snippet-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "webhooks-help": {
+    "argv": [
+      "products",
+      "blog",
+      "webhooks",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog webhooks list <product-id>\\n  outrank-cli products blog webhooks get <product-id> <webhook-id>\\n  outrank-cli products blog webhooks create <product-id> --json <object>\\n  outrank-cli products blog webhooks update <product-id> <webhook-id> --json <object>\\n  outrank-cli products blog webhooks delete <product-id> <webhook-id>\\n  outrank-cli products blog webhooks test <product-id> <webhook-id>\"\n  },\n  \"agent_guidance\": \"Webhooks call an https URL when a reader subscribes. The signing secret is returned once by `create` (and by `update` with \\\"rotateSecret\\\": true); give it to the human for their endpoint.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "webhooks-list": {
+    "argv": [
+      "products",
+      "blog",
+      "webhooks",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/webhooks",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "webhooks-get": {
+    "argv": [
+      "products",
+      "blog",
+      "webhooks",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/webhooks/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "webhooks-create": {
+    "argv": [
+      "products",
+      "blog",
+      "webhooks",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"url\":\"https://hooks.acme.example.com/outrank\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/webhooks",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "url": "https://hooks.acme.example.com/outrank"
+        }
+      }
+    ]
+  },
+  "webhooks-create-missing-json": {
+    "argv": [
+      "products",
+      "blog",
+      "webhooks",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "webhooks-update": {
+    "argv": [
+      "products",
+      "blog",
+      "webhooks",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--json",
+      "{\"rotateSecret\":true}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/webhooks/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "rotateSecret": true
+        }
+      }
+    ]
+  },
+  "webhooks-delete": {
+    "argv": [
+      "products",
+      "blog",
+      "webhooks",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/webhooks/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "webhooks-delete-missing-id": {
+    "argv": [
+      "products",
+      "blog",
+      "webhooks",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <webhook-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "webhooks-test": {
+    "argv": [
+      "products",
+      "blog",
+      "webhooks",
+      "test",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/webhooks/bbbbbbbb-0000-4000-8000-000000000002/test",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "subscribers-help": {
+    "argv": [
+      "products",
+      "blog",
+      "subscribers",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog subscribers list <product-id> [--status subscribed|unsubscribed] [--search <text>] [--page <n>]\\n  outrank-cli products blog subscribers delete <product-id> <subscriber-id>\"\n  },\n  \"agent_guidance\": \"Subscribers are readers who joined the blog newsletter; their emails are personal data.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "subscribers-list": {
+    "argv": [
+      "products",
+      "blog",
+      "subscribers",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--status",
+      "subscribed",
+      "--page",
+      "1"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/subscribers?status=subscribed&page=1",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "subscribers-delete": {
+    "argv": [
+      "products",
+      "blog",
+      "subscribers",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/subscribers/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  }
+}

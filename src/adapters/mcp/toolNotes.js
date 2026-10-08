@@ -17,6 +17,22 @@ const WEBFLOW_TOKEN_BODY = 'Fields: api_token (required)';
 const FRAMER_BODY = 'Fields: project_url (https://framer.com/projects/<id>, required), server_api_key (required)';
 const ADMIN_NOTE = 'Works only when the user who created the API key is an organization admin.';
 const BACKLINK_SUBSCRIPTION_NOTE = 'Needs an active backlink subscription.';
+const BLOG_CAMEL_CASE = 'Blog fields use camelCase.';
+const BLOG_LIST_FIELDS = { search: 'Text search.', page: 'Page number, from 1.' };
+const BLOG_POSITIONS_BODY =
+  'Fields: items (required, [{ id, position }], each id once, position from 0). Send every item whose position ' +
+  'changes.';
+const BLOG_PAGE_BODY =
+  'Fields: title, slug, content (markdown), seoTitle, seoDescription, status (draft | published), showInNav, ' +
+  'position, layout (default | wide).';
+const BLOG_CATEGORY_BODY = 'Fields: name, slug, description, seoTitle, seoDescription, position.';
+const BLOG_AUTHOR_BODY =
+  'Fields: name, slug, avatarUrl, bio, jobTitle, websiteUrl, social ({ x | linkedin | github | ...: https URL }), ' +
+  'isDefault.';
+const BLOG_SNIPPET_BODY =
+  'Fields: name, kind (cta | newsletter | html), content (cta: { title, body, button, href, style: accent | ' +
+  'neutral | outline }; newsletter: { title, body, buttonLabel }; html: { html, load: idle | eager }), placement ' +
+  '({ position: none | after_intro | middle | before_conclusion | end, categorySlugs [] }), isActive.';
 
 export const TOOL_NOTES = Object.freeze({
   'auth.whoami': {
@@ -424,5 +440,85 @@ export const TOOL_NOTES = Object.freeze({
   },
   'marketplace.notifications.mark-read': {
     fields: { role: 'buyer | seller.', ids: 'Notification ids. Omit to mark every unread one as read.' },
+  },
+  'products.blog.get': {
+    note: 'Returns blog null when the product has no blog yet; create one with products_blog_create.',
+  },
+  'products.blog.check-subdomain': { fields: { subdomain: 'Subdomain to check, without .outrankblog.com.' } },
+  'products.blog.create': {
+    note:
+      'Free and instant: the blog goes live on <subdomain>.outrankblog.com. When the product already publishes to ' +
+      'another integration, articles keep going there unless publishHere is true.',
+    body:
+      'Fields (all optional): name, subdomain, template (classic | editorial | journal | studio | minimal), ' +
+      'accentColor (#RRGGBB), publishReadyArticles, publishHere. ' +
+      BLOG_CAMEL_CASE,
+  },
+  'products.blog.update-settings': {
+    note: 'Removing the badge, platform indexing and turning off built-in analytics need a paid plan.',
+    body:
+      'Fields (at least one): name, description, language (en or en-US), platformSubdomain, isPlatformIndexable, ' +
+      'badgeEnabled, analyticsSettings { ga4MeasurementId, gtmContainerId, loadStrategy (idle | eager), ' +
+      'googleSiteVerification, bingSiteVerification, builtInAnalytics }, codeInjection { head | bodyStart | ' +
+      'bodyEnd: { html, strategy (idle | eager) } }. Partial objects are merged into the saved ones.',
+  },
+  'products.blog.delete': {
+    note: 'Cannot be undone. Get the human to confirm first.',
+    fields: { confirm: 'The blog subdomain from products_blog_get (data.blog.platform_subdomain).' },
+  },
+  'products.blog.analytics': { fields: { range: '7d | 30d (default) | 90d.' } },
+  'products.blog.preview': {
+    note: 'The link expires after a short time; anyone with it can view the draft until then.',
+    fields: { scope: 'design | post | page.', targetId: 'Article id for post, page id for page; omit for design.' },
+  },
+  'products.blog.design.update': {
+    note: 'Saves the draft only. Publish it with products_blog_design_publish.',
+    body:
+      'The whole theme config: start from data.configDraft of products_blog_design_get and change only what you ' +
+      'need (theme, header, footer, homepage.sections, seo, post). A body of { config: {...} } is accepted too.',
+  },
+  'products.blog.domain.connect': {
+    note: 'Show the returned DNS records to the user, then call products_blog_domain_verify once they are added.',
+    body:
+      'Fields: mode (required: subdomain | apex | subfolder), hostname (required, for example blog.example.com), ' +
+      'basePath (for subfolder, for example /blog).',
+  },
+  'products.blog.posts.list': {
+    fields: { status: 'all (default) | published | scheduled | draft.', ...BLOG_LIST_FIELDS },
+  },
+  'products.blog.posts.create': { fields: { title: 'Optional; defaults to Untitled post.' } },
+  'products.blog.posts.update': {
+    body:
+      'Fields (any): slug, authorId, categoryId, newCategoryName, tags [], featured, excerpt, seoTitle, ' +
+      'seoDescription, ogImageUrl, coverImageUrl, coverAlt, canonicalUrl, noindex, showToc. ' +
+      BLOG_CAMEL_CASE,
+  },
+  'products.blog.posts.update-content': {
+    note: 'If the post is live, run products_blog_posts_sync afterwards to update the blog.',
+    body: 'Fields (at least one): title, content (markdown; replaces the whole body).',
+  },
+  'products.blog.posts.publish': {
+    fields: { scheduledFor: 'ISO-8601 date-time with offset; omit to publish now.' },
+  },
+  'products.blog.pages.create': { body: `${BLOG_PAGE_BODY} title is required.` },
+  'products.blog.pages.update': { body: BLOG_PAGE_BODY },
+  'products.blog.pages.reorder': { body: BLOG_POSITIONS_BODY },
+  'products.blog.categories.create': { body: `${BLOG_CATEGORY_BODY} name is required.` },
+  'products.blog.categories.update': { body: BLOG_CATEGORY_BODY },
+  'products.blog.categories.reorder': { body: BLOG_POSITIONS_BODY },
+  'products.blog.authors.create': { body: `${BLOG_AUTHOR_BODY} name is required.` },
+  'products.blog.authors.update': { body: BLOG_AUTHOR_BODY },
+  'products.blog.redirects.create': {
+    body: 'Fields: fromPath (required, such as /old-post), toPath (path or URL; omit for 410), statusCode (301 | 302 | 410).',
+  },
+  'products.blog.snippets.create': { body: `${BLOG_SNIPPET_BODY} name, kind and content are required.` },
+  'products.blog.snippets.update': { body: BLOG_SNIPPET_BODY },
+  'products.blog.subscribers.list': { fields: { status: 'subscribed | unsubscribed.', ...BLOG_LIST_FIELDS } },
+  'products.blog.webhooks.create': {
+    note: 'data.secret is shown only once: give it to the user to verify webhook signatures.',
+    body: 'Fields: url (required, public https URL), events (default [subscriber.created]).',
+  },
+  'products.blog.webhooks.update': {
+    body: 'Fields (any): url, events, isActive, rotateSecret (true returns a new secret once).',
   },
 });

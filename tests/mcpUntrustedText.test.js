@@ -32,6 +32,8 @@ const WRAPPED_TOOL_IDS = [
   'articles.precreate',
   'articles.upload-image',
   'articles.upload-featured-image',
+  'products.blog.subscribers.list',
+  'products.blog.analytics',
 ];
 const HOSTED_ARTICLE_TITLE = 'Ten ways to plan a kitchen';
 const HOSTED_ARTICLE_KEYWORD = 'kitchen planning';

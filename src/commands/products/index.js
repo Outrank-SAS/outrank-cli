@@ -1,5 +1,6 @@
 import { defineGroup } from '../registry.js';
 import { backlinksGroup } from './backlinks.js';
+import { blogGroup } from './blog.js';
 import {
   competitorsGroup,
   outputSettingsGroup,
@@ -78,6 +79,10 @@ export const PRODUCTS_HELP = `Usage:
   outrank-cli products backlinks reverify <product-id> <backlink-id>
   outrank-cli products backlinks subscription <product-id>
   outrank-cli products backlinks subscribe-quote <product-id> --plan premium|enterprise
+  outrank-cli products blog get <product-id>
+  outrank-cli products blog create <product-id> [--json <object>]
+  outrank-cli products blog posts list <product-id>
+  outrank-cli products blog --help   (design, domain, posts, pages, categories, authors, redirects, snippets, subscribers, webhooks)
 
 JSON Input:
   Use one of: --json '<object>', --json-file payload.json, or --json-stdin
@@ -142,6 +147,8 @@ Examples:
   outrank-cli products backlinks reverify 00000000-0000-0000-0000-000000000000 11111111-1111-1111-1111-111111111111
   outrank-cli products backlinks subscription 00000000-0000-0000-0000-000000000000
   outrank-cli products backlinks subscribe-quote 00000000-0000-0000-0000-000000000000 --plan premium
+  outrank-cli products blog create 00000000-0000-0000-0000-000000000000 --json '{"subdomain":"acme","template":"editorial","accentColor":"#2563EB"}'
+  outrank-cli products blog posts update-content 00000000-0000-0000-0000-000000000000 11111111-1111-1111-1111-111111111111 --json-file post.json
 `;
 
 export const productsGroup = defineGroup({
@@ -150,7 +157,7 @@ export const productsGroup = defineGroup({
     usage: PRODUCTS_HELP,
     guidance:
       'Choose one of: list, get, create, update, pause, resume, integrations, output-settings, target-audiences, ' +
-      'competitors, gsc, linking, backlinks.',
+      'competitors, gsc, linking, backlinks, blog.',
   },
   unknown: (word) => ({
     message: `Unknown products subcommand: ${word}.`,
@@ -170,5 +177,6 @@ export const productsGroup = defineGroup({
     gscGroup,
     linkingGroup,
     backlinksGroup,
+    blogGroup,
   ],
 });

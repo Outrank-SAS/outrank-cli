@@ -68,6 +68,24 @@ const SHAPED_BODIES = Object.freeze({
   },
   articles_update_content: { required: [], properties: ['content'] },
   improvements_settings_update: { required: [], properties: ['enabled', 'auto_push', 'publishing_days'] },
+  products_blog_create: { required: [], properties: ['name', 'subdomain', 'template', 'accentColor', 'publishReadyArticles', 'publishHere'] },
+  products_blog_update_settings: { required: [], properties: ['name', 'description', 'language', 'platformSubdomain', 'isPlatformIndexable', 'badgeEnabled', 'analyticsSettings', 'codeInjection'] },
+  products_blog_domain_connect: { required: ['mode', 'hostname'], properties: ['mode', 'hostname', 'basePath'] },
+  products_blog_posts_update: { required: [], properties: ['slug', 'authorId', 'categoryId', 'newCategoryName', 'tags', 'featured', 'excerpt', 'seoTitle', 'seoDescription', 'ogImageUrl', 'coverImageUrl', 'coverAlt', 'canonicalUrl', 'noindex', 'showToc'] },
+  products_blog_posts_update_content: { required: [], properties: ['title', 'content'] },
+  products_blog_pages_create: { required: ['title'], properties: ['title', 'slug', 'content', 'seoTitle', 'seoDescription', 'status', 'showInNav', 'position', 'layout'] },
+  products_blog_pages_update: { required: [], properties: ['title', 'slug', 'content', 'seoTitle', 'seoDescription', 'status', 'showInNav', 'position', 'layout'] },
+  products_blog_pages_reorder: { required: ['items'], properties: ['items'] },
+  products_blog_categories_create: { required: ['name'], properties: ['name', 'slug', 'description', 'seoTitle', 'seoDescription', 'position'] },
+  products_blog_categories_update: { required: [], properties: ['name', 'slug', 'description', 'seoTitle', 'seoDescription', 'position'] },
+  products_blog_categories_reorder: { required: ['items'], properties: ['items'] },
+  products_blog_authors_create: { required: ['name'], properties: ['name', 'slug', 'avatarUrl', 'bio', 'jobTitle', 'websiteUrl', 'social', 'isDefault'] },
+  products_blog_authors_update: { required: [], properties: ['name', 'slug', 'avatarUrl', 'bio', 'jobTitle', 'websiteUrl', 'social', 'isDefault'] },
+  products_blog_redirects_create: { required: ['fromPath'], properties: ['fromPath', 'toPath', 'statusCode'] },
+  products_blog_snippets_create: { required: ['name', 'kind', 'content'], properties: ['name', 'kind', 'content', 'placement', 'isActive'] },
+  products_blog_snippets_update: { required: [], properties: ['name', 'kind', 'content', 'placement', 'isActive'] },
+  products_blog_webhooks_create: { required: ['url'], properties: ['url', 'events'] },
+  products_blog_webhooks_update: { required: [], properties: ['url', 'events', 'isActive', 'rotateSecret'] },
 });
 const UNTRUSTED_TEXT_FIELD = 'untrusted_counterparty_text';
 const ARTICLE_MARKDOWN = '# Title\n\nBody.';
@@ -121,7 +139,17 @@ test('a free-form JSON value inside a shaped body or a list is not narrowed to a
   );
   assert.deepEqual(
     nested.map(({ spec, trail }) => `${toolName(spec.id)}:${trail.join('.')}`),
-    ['keywords_add:properties.items.items'],
+    [
+      'keywords_add:properties.items.items',
+      'products_blog_update_settings:properties.analyticsSettings',
+      'products_blog_update_settings:properties.codeInjection',
+      'products_blog_authors_create:properties.social',
+      'products_blog_authors_update:properties.social',
+      'products_blog_snippets_create:properties.content',
+      'products_blog_snippets_create:properties.placement',
+      'products_blog_snippets_update:properties.content',
+      'products_blog_snippets_update:properties.placement',
+    ],
   );
   for (const { spec, trail } of nested) {
     const body = zodField(z, spec.input[BODY_INPUT_NAME], { jsonAsObject: true });
