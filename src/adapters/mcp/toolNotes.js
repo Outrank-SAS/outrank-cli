@@ -481,7 +481,7 @@ export const TOOL_NOTES = Object.freeze({
     note: 'Show the returned DNS records to the user, then call products_blog_domain_verify once they are added.',
     body:
       'Fields: mode (required: subdomain | apex | subfolder), hostname (required, for example blog.example.com), ' +
-      'basePath (for subfolder, for example /blog).',
+      'basePath (subfolder mode only, the path the blog lives under; default /blog).',
   },
   'products.blog.posts.list': {
     fields: { status: 'all (default) | published | scheduled | draft.', ...BLOG_LIST_FIELDS },

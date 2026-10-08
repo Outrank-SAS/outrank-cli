@@ -703,7 +703,7 @@
       "{\"hostname\":\"a.b.com\"}"
     ],
     "exitCode": 1,
-    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required field: --json.mode.\"\n  },\n  \"agent_guidance\": \"Connecting a domain needs mode (subdomain, apex or subfolder) and hostname; subfolder also needs basePath.\"\n}\n",
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required field: --json.mode.\"\n  },\n  \"agent_guidance\": \"Connecting a domain needs mode (subdomain, apex or subfolder) and hostname; for subfolder, basePath sets the path (default /blog).\"\n}\n",
     "stderr": "",
     "requests": []
   },

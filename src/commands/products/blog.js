@@ -71,7 +71,9 @@ const SCOPE_REQUIRED = {
   guidance: 'Pass --scope design for the draft theme, or --scope post|page with --target-id <article-id|page-id>.',
 };
 const DOMAIN_REQUIRED = {
-  guidance: 'Connecting a domain needs mode (subdomain, apex or subfolder) and hostname; subfolder also needs basePath.',
+  guidance:
+    'Connecting a domain needs mode (subdomain, apex or subfolder) and hostname; for subfolder, basePath sets ' +
+    'the path (default /blog).',
 };
 const NAME_REQUIRED = { guidance: 'A name is required.' };
 const TITLE_REQUIRED = { guidance: 'A page needs a title.' };
@@ -103,7 +105,7 @@ const BLOG_SETTINGS_BODY = object().shape({
 const DOMAIN_BODY = object().shape({
   mode: oneOf(BLOG_DOMAIN_MODES).required(DOMAIN_REQUIRED),
   hostname: string().required(DOMAIN_REQUIRED).describe('Hostname such as blog.example.com or example.com.'),
-  basePath: string().describe('Path such as /blog, required for subfolder mode.'),
+  basePath: string().describe('Subfolder mode only: the path the blog lives under. Default /blog.'),
 });
 
 const POST_SETTINGS_BODY = object().shape({
