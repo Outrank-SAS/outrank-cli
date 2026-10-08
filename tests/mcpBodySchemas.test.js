@@ -82,7 +82,7 @@ const SHAPED_BODIES = Object.freeze({
   products_blog_authors_create: { required: ['name'], properties: ['name', 'slug', 'avatarUrl', 'bio', 'jobTitle', 'websiteUrl', 'social', 'isDefault'] },
   products_blog_authors_update: { required: [], properties: ['name', 'slug', 'avatarUrl', 'bio', 'jobTitle', 'websiteUrl', 'social', 'isDefault'] },
   products_blog_redirects_create: { required: ['fromPath'], properties: ['fromPath', 'toPath', 'statusCode'] },
-  products_blog_snippets_create: { required: ['name', 'kind', 'content'], properties: ['name', 'kind', 'content', 'placement', 'isActive'] },
+  products_blog_snippets_create: { required: ['name', 'kind'], properties: ['name', 'kind', 'content', 'placement', 'isActive'] },
   products_blog_snippets_update: { required: [], properties: ['name', 'kind', 'content', 'placement', 'isActive'] },
   products_blog_webhooks_create: { required: ['url'], properties: ['url', 'events'] },
   products_blog_webhooks_update: { required: [], properties: ['url', 'events', 'isActive', 'rotateSecret'] },

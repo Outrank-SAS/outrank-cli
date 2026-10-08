@@ -34,6 +34,7 @@ const WRAPPED_TOOL_IDS = [
   'articles.upload-featured-image',
   'products.blog.subscribers.list',
   'products.blog.analytics',
+  'products.blog.webhooks.test',
 ];
 const HOSTED_ARTICLE_TITLE = 'Ten ways to plan a kitchen';
 const HOSTED_ARTICLE_KEYWORD = 'kitchen planning';

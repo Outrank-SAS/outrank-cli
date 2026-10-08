@@ -433,7 +433,7 @@ Generated from the command registry with `npm run docs:tools`. The registry is c
 | `products_blog_categories_delete` | `products blog categories delete` | destructive | blog | Delete one category of the blog. |
 | `products_blog_categories_reorder` | `products blog categories reorder` | write | blog | Save the order of the categories from a JSON body of ids and positions. |
 | `products_blog_authors_list` | `products blog authors list` | read | blog | List the authors of the blog. |
-| `products_blog_authors_create` | `products blog authors create` | write | blog | Create a author on the blog from a JSON body. |
+| `products_blog_authors_create` | `products blog authors create` | write | blog | Create an author on the blog from a JSON body. |
 | `products_blog_authors_update` | `products blog authors update` | write | blog | Change one author of the blog from a JSON body. |
 | `products_blog_authors_delete` | `products blog authors delete` | destructive | blog | Delete one author of the blog. |
 | `products_blog_redirects_list` | `products blog redirects list` | read | blog | List the redirects of the blog. |

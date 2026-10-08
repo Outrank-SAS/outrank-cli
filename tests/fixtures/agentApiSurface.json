@@ -1,6 +1,6 @@
 {
   "apiBasePath": "/api/agent/v1",
-  "sourceCommit": "9f9f56f530a5a883cfa9a5b751f267af4aa4b46a",
+  "sourceCommit": "5751124baa1025785b6885f0ff35fc0828fc5483",
   "sourceDirty": false,
   "routes": [
     {
@@ -1266,7 +1266,7 @@
       "route": "/products/{id}/blog/pages"
     },
     {
-      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/pages/<pageId>",
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/pages/<interpolated>",
       "route": "/products/{id}/blog/pages"
     },
     {

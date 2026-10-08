@@ -20,8 +20,8 @@ const BACKLINK_SUBSCRIPTION_NOTE = 'Needs an active backlink subscription.';
 const BLOG_CAMEL_CASE = 'Blog fields use camelCase.';
 const BLOG_LIST_FIELDS = { search: 'Text search.', page: 'Page number, from 1.' };
 const BLOG_POSITIONS_BODY =
-  'Fields: items (required, [{ id, position }], each id once, position from 0). Send every item whose position ' +
-  'changes.';
+  'Fields: items (required, at most 100 of { id, position }, each id once, position 0-10000). Send every item ' +
+  'whose position changes.';
 const BLOG_PAGE_BODY =
   'Fields: title, slug, content (markdown), seoTitle, seoDescription, status (draft | published), showInNav, ' +
   'position, layout (default | wide).';
@@ -460,7 +460,8 @@ export const TOOL_NOTES = Object.freeze({
       'Fields (at least one): name, description, language (en or en-US), platformSubdomain, isPlatformIndexable, ' +
       'badgeEnabled, analyticsSettings { ga4MeasurementId, gtmContainerId, loadStrategy (idle | eager), ' +
       'googleSiteVerification, bingSiteVerification, builtInAnalytics }, codeInjection { head | bodyStart | ' +
-      'bodyEnd: { html, strategy (idle | eager) } }. Partial objects are merged into the saved ones.',
+      'bodyEnd: { html, strategy (idle | eager) } }. analyticsSettings keys are merged into the saved ones; each ' +
+      'codeInjection slot you send replaces that slot whole, so send both html and strategy.',
   },
   'products.blog.delete': {
     note: 'Cannot be undone. Get the human to confirm first.',
@@ -511,7 +512,9 @@ export const TOOL_NOTES = Object.freeze({
   'products.blog.redirects.create': {
     body: 'Fields: fromPath (required, such as /old-post), toPath (path or URL; omit for 410), statusCode (301 | 302 | 410).',
   },
-  'products.blog.snippets.create': { body: `${BLOG_SNIPPET_BODY} name, kind and content are required.` },
+  'products.blog.snippets.create': {
+    body: `${BLOG_SNIPPET_BODY} name and kind are required; content is required for cta and html.`,
+  },
   'products.blog.snippets.update': { body: BLOG_SNIPPET_BODY },
   'products.blog.subscribers.list': { fields: { status: 'subscribed | unsubscribed.', ...BLOG_LIST_FIELDS } },
   'products.blog.webhooks.create': {

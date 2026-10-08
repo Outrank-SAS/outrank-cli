@@ -65,3 +65,47 @@ test('a redirect without toPath is refused unless it is a 410, and only 301, 302
     );
   });
 });
+
+test('reorder needs a position for every item, within the server limits, each id once', async () => {
+  const { BLOG_MAX_POSITIONS_PER_REQUEST, BLOG_POSITION_MAX } = await import('../src/core/constants.js');
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ call, nonWhoamiRequests }) => {
+    const refused = [
+      { items: [{ id: TARGET_ID }] },
+      { items: [{ id: TARGET_ID, position: BLOG_POSITION_MAX + 1 }] },
+      { items: [{ id: TARGET_ID, position: 0 }, { id: TARGET_ID, position: 1 }] },
+      {
+        items: Array.from({ length: BLOG_MAX_POSITIONS_PER_REQUEST + 1 }, (_, index) => ({
+          id: `bbbbbbbb-0000-4000-8000-${String(index).padStart(12, '0')}`,
+          position: index,
+        })),
+      },
+    ];
+    for (const body of refused) {
+      const { envelope } = await call('products_blog_pages_reorder', { product_id: PRODUCT_ID, body });
+      assert.equal(envelope.ok, false, JSON.stringify(body).slice(0, 80));
+    }
+    assert.equal(nonWhoamiRequests().length, 0);
+    await call('products_blog_pages_reorder', {
+      product_id: PRODUCT_ID,
+      body: { items: [{ id: TARGET_ID, position: BLOG_POSITION_MAX }] },
+    });
+    assert.equal(nonWhoamiRequests().length, 1);
+  });
+});
+
+test('a webhook with an empty events list is refused before any request', async () => {
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ call, nonWhoamiRequests }) => {
+    const created = await call('products_blog_webhooks_create', {
+      product_id: PRODUCT_ID,
+      body: { url: 'https://hooks.example.com/x', events: [] },
+    });
+    const updated = await call('products_blog_webhooks_update', {
+      product_id: PRODUCT_ID,
+      webhook_id: TARGET_ID,
+      body: { events: [] },
+    });
+    assert.equal(created.envelope.error.code, CliErrorCode.INVALID_USAGE);
+    assert.equal(updated.envelope.error.code, CliErrorCode.INVALID_USAGE);
+    assert.equal(nonWhoamiRequests().length, 0);
+  });
+});

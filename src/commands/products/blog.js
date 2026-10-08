@@ -2,8 +2,10 @@ import {
   BLOG_ANALYTICS_RANGES,
   BLOG_DOMAIN_MODES,
   BLOG_LIST_MIN_PAGE,
+  BLOG_MAX_POSITIONS_PER_REQUEST,
   BLOG_PAGE_LAYOUTS,
   BLOG_PAGE_STATUSES,
+  BLOG_POSITION_MAX,
   BLOG_POST_LIST_STATUSES,
   BLOG_PREVIEW_DESIGN_SCOPE,
   BLOG_PREVIEW_SCOPES,
@@ -81,7 +83,9 @@ const NAME_REQUIRED = { guidance: 'A name is required.' };
 const TITLE_REQUIRED = { guidance: 'A page needs a title.' };
 const FROM_PATH_REQUIRED = { guidance: 'A redirect needs fromPath, the old path such as /old-post.' };
 const URL_REQUIRED = { guidance: 'A webhook needs an https:// url.' };
-const SNIPPET_REQUIRED = { guidance: 'A snippet needs name, kind (cta, html or newsletter) and content.' };
+const SNIPPET_REQUIRED = {
+  guidance: 'A snippet needs name and kind (cta, html or newsletter); cta and html snippets also need content.',
+};
 const ITEMS_REQUIRED = { guidance: 'Send {"items": [{"id": "<id>", "position": 0}, ...]} with each id once.' };
 
 const BLOG_CREATE_BODY = object().shape({
@@ -101,7 +105,9 @@ const BLOG_SETTINGS_BODY = object().shape({
   isPlatformIndexable: bool().describe('Paid plans only.'),
   badgeEnabled: bool().describe('Turning the Outrank badge off needs a paid plan.'),
   analyticsSettings: json().describe('Partial object, for example {"ga4MeasurementId": "G-ABC123", "builtInAnalytics": true}.'),
-  codeInjection: json().describe('Partial object, for example {"head": {"html": "<script>...</script>", "strategy": "idle"}}.'),
+  codeInjection: json().describe(
+    'Slots to replace, each sent whole, for example {"head": {"html": "<script>...</script>", "strategy": "idle"}}.',
+  ),
 });
 
 const DOMAIN_BODY = object().shape({
@@ -142,7 +148,7 @@ const pageShape = (titleRequired) =>
     seoDescription: string().nullable(),
     status: oneOf(BLOG_PAGE_STATUSES),
     showInNav: bool(),
-    position: int({ min: 0 }).describe(POSITION_HINT),
+    position: int({ min: 0, max: BLOG_POSITION_MAX }).describe(POSITION_HINT),
     layout: oneOf(BLOG_PAGE_LAYOUTS),
   });
 
@@ -153,7 +159,7 @@ const categoryShape = (nameRequired) =>
     description: string().nullable(),
     seoTitle: string().nullable(),
     seoDescription: string().nullable(),
-    position: int({ min: 0 }).describe(POSITION_HINT),
+    position: int({ min: 0, max: BLOG_POSITION_MAX }).describe(POSITION_HINT),
   });
 
 const authorShape = (nameRequired) =>
@@ -178,7 +184,7 @@ const snippetShape = (required) =>
   object().shape({
     name: required ? string().required(SNIPPET_REQUIRED) : string(),
     kind: required ? oneOf(BLOG_SNIPPET_KINDS).required(SNIPPET_REQUIRED) : oneOf(BLOG_SNIPPET_KINDS),
-    content: required ? json().required(SNIPPET_REQUIRED) : json(),
+    content: json().describe('Required for cta and html snippets; newsletter snippets fall back to defaults.'),
     placement: json().describe('Where it shows in posts, for example {"position": "end", "categorySlugs": []}.'),
     isActive: bool(),
   });
@@ -191,7 +197,12 @@ const webhookShape = (required) =>
   });
 
 const POSITIONS_BODY = object().shape({
-  items: list({ item: object().shape({ id: uuid().required(ITEMS_REQUIRED), position: int({ min: 0 }) }) }).required(
+  items: list({
+    item: object().shape({
+      id: uuid().required(ITEMS_REQUIRED),
+      position: int({ min: 0, max: BLOG_POSITION_MAX }).required(ITEMS_REQUIRED),
+    }),
+  }).required(
     ITEMS_REQUIRED,
   ),
 });
@@ -227,6 +238,29 @@ const refineRedirect = (input, ctx) => {
   }
   if (statusCode !== BLOG_REDIRECT_GONE_STATUS_CODE && !(typeof toPath === 'string' && toPath.trim())) {
     throw usageError('toPath is required unless statusCode is 410.', guidance);
+  }
+};
+
+const VOWEL_START_PATTERN = /^[aeiou]/i;
+const articleFor = (noun) => (VOWEL_START_PATTERN.test(noun) ? 'an' : 'a');
+
+const bodyUsageError = (ctx, message, guidance) =>
+  usageError(message, ctx.surface === Surface.MCP ? MCP_USAGE_GUIDANCE : guidance);
+
+const refinePositions = (input, ctx) => {
+  const items = input.body?.items ?? [];
+  if (items.length > BLOG_MAX_POSITIONS_PER_REQUEST) {
+    throw bodyUsageError(ctx, `items accepts at most ${BLOG_MAX_POSITIONS_PER_REQUEST} entries per request.`, ITEMS_REQUIRED.guidance);
+  }
+  if (new Set(items.map((item) => item.id)).size !== items.length) {
+    throw bodyUsageError(ctx, 'Each id may appear only once in items.', ITEMS_REQUIRED.guidance);
+  }
+};
+
+const refineWebhookEvents = (input, ctx) => {
+  const events = input.body?.events;
+  if (Array.isArray(events) && events.length === 0) {
+    throw bodyUsageError(ctx, 'events needs at least one event; omit it to receive every event.', URL_REQUIRED.guidance);
   }
 };
 
@@ -286,7 +320,14 @@ const usageFor = (lines) => `Usage:\n${lines.map((line) => `  outrank-cli produc
 
 const listQuery = (values) => ({ status: values.status, search: values.search, page: values.page });
 
-const SUBSCRIBER_UNTRUSTED_FIELDS = ['items[].email', 'items[].name', 'items[].source_path'];
+const SUBSCRIBER_UNTRUSTED_FIELDS = [
+  'items[].email',
+  'items[].name',
+  'items[].source_path',
+  'items[].consent_text',
+  'items[].form_key',
+];
+const WEBHOOK_TEST_UNTRUSTED_FIELDS = ['responseSnippet', 'error'];
 const ANALYTICS_UNTRUSTED_FIELDS = ['topPages[].path', 'topPages[].url', 'referrers[].source'];
 
 const designGroup = group({
@@ -492,6 +533,7 @@ const collectionGroup = ({
   reorder = false,
   update = true,
   createRefine,
+  updateRefine,
   extraChildren = [],
   extraUsage = [],
   guidance,
@@ -533,7 +575,7 @@ const collectionGroup = ({
         : []),
       blogCommand({
         id: `${id}.create`,
-        summary: `Create a ${noun} on the blog from a JSON body.`,
+        summary: `Create ${articleFor(noun)} ${noun} on the blog from a JSON body.`,
         kind: CommandKind.WRITE,
         method: 'POST',
         suffix: `/${id}`,
@@ -552,6 +594,7 @@ const collectionGroup = ({
               ids,
               body: BodyMode.JSON,
               bodyField: updateBody,
+              refine: updateRefine,
             }),
           ]
         : []),
@@ -573,6 +616,7 @@ const collectionGroup = ({
               suffix: `/${id}/positions`,
               body: BodyMode.JSON,
               bodyField: POSITIONS_BODY,
+              refine: refinePositions,
             }),
           ]
         : []),
@@ -646,6 +690,8 @@ const webhooksGroup = collectionGroup({
   idLabel: 'webhook-id',
   createBody: webhookShape(true),
   updateBody: webhookShape(false),
+  createRefine: refineWebhookEvents,
+  updateRefine: refineWebhookEvents,
   itemRead: true,
   extraUsage: ['webhooks test <product-id> <webhook-id>'],
   extraChildren: [
@@ -656,6 +702,7 @@ const webhooksGroup = collectionGroup({
       method: 'POST',
       suffix: '/webhooks/{webhookId}/test',
       ids: ['webhookId'],
+      mcp: { untrustedOutput: true, untrustedFields: WEBHOOK_TEST_UNTRUSTED_FIELDS },
     }),
   ],
   guidance:
