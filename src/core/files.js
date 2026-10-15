@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { MAX_IMAGE_UPLOAD_BYTES } from './constants.js';
+import { MAX_IMAGE_UPLOAD_BYTES, MAX_TEXT_FILE_BYTES } from './constants.js';
 import { usageError } from './errors.js';
 
 const ImageMime = Object.freeze({
@@ -183,4 +183,40 @@ export const readImageUpload = async ({ filePath, allowedDir }) => {
   if (buffer.length > MAX_IMAGE_UPLOAD_BYTES) throw oversizeError('The file', buffer.length);
 
   return toUpload(buffer, fileName);
+};
+
+const UTF8_ENCODING = 'utf-8';
+const BYTE_ORDER_MARK = '\uFEFF';
+const LINE_BREAK_PATTERN = /\r\n?/g;
+const LINE_FEED = '\n';
+const TEXT_OVERSIZE_GUIDANCE = 'Split the content or shorten it below the limit, then retry.';
+const TEXT_ENCODING_GUIDANCE = 'Save the file as UTF-8 text, then retry.';
+
+export const readTextFile = async ({ filePath, option }) => {
+  if (typeof filePath !== 'string' || filePath === '') {
+    throw usageError(`Missing required option: ${option} <path>.`, `Pass a local file path with \`${option} <path>\`.`);
+  }
+  let buffer;
+  try {
+    const stats = await fs.stat(filePath);
+    if (!stats.isFile()) throw usageError(`Not a file: ${filePath}`, readGuidance(filePath));
+    if (stats.size > MAX_TEXT_FILE_BYTES) {
+      throw usageError(
+        `${filePath} is ${stats.size} bytes; the maximum is ${MAX_TEXT_FILE_BYTES} bytes.`,
+        TEXT_OVERSIZE_GUIDANCE,
+      );
+    }
+    buffer = await fs.readFile(filePath);
+  } catch (error) {
+    if (error?.cliCode) throw error;
+    throw usageError(`Failed to read file: ${error.message}`, readGuidance(filePath));
+  }
+  let text;
+  try {
+    text = new TextDecoder(UTF8_ENCODING, { fatal: true }).decode(buffer);
+  } catch {
+    throw usageError(`${filePath} is not valid UTF-8 text.`, TEXT_ENCODING_GUIDANCE);
+  }
+  const withoutBom = text.startsWith(BYTE_ORDER_MARK) ? text.slice(BYTE_ORDER_MARK.length) : text;
+  return withoutBom.replace(LINE_BREAK_PATTERN, LINE_FEED);
 };

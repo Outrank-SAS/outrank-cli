@@ -11,6 +11,7 @@ export const FieldKind = Object.freeze({
   OBJECT: 'object',
   JSON: 'json',
   IMAGE: 'image',
+  TEXT_FILE: 'text-file',
 });
 
 export const BoolSerialize = Object.freeze({
@@ -63,6 +64,7 @@ export const list = ({ split = DEFAULT_LIST_SEPARATOR, serialize = ListSerialize
 export const object = () => createField(FieldKind.OBJECT, { properties: undefined });
 export const json = () => createField(FieldKind.JSON);
 export const image = () => createField(FieldKind.IMAGE);
+export const textFile = () => createField(FieldKind.TEXT_FILE);
 
 export const isField = (value) => Boolean(value) && Object.values(FieldKind).includes(value.kind);
 
@@ -122,6 +124,10 @@ const parseScalar = (field, value, label) => {
   if (field.kind === FieldKind.IMAGE) {
     const valid = isPlainObject(value) && IMAGE_FIELDS.every((name) => typeof value[name] === 'string' && value[name]);
     if (!valid) throw usageError(`${label} must be an image upload (file_base64, file_name, file_type).`);
+    return value;
+  }
+  if (field.kind === FieldKind.TEXT_FILE) {
+    if (typeof value !== 'string') throw usageError(`${label} must be the path of a text file.`);
     return value;
   }
   throw new Error(`Unknown field kind: ${field.kind}`);
@@ -254,6 +260,7 @@ const zodScalar = (z, field, options = {}) => {
   if (field.kind === FieldKind.IMAGE) {
     return z.object({ file_base64: z.string().min(1), file_name: z.string().min(1), file_type: z.string().min(1) });
   }
+  if (field.kind === FieldKind.TEXT_FILE) return z.string();
   throw new Error(`Unknown field kind: ${field.kind}`);
 };
 

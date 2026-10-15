@@ -18,6 +18,14 @@ const FRAMER_BODY = 'Fields: project_url (https://framer.com/projects/<id>, requ
 const ADMIN_NOTE = 'Works only when the user who created the API key is an organization admin.';
 const BACKLINK_SUBSCRIPTION_NOTE = 'Needs an active backlink subscription.';
 const BLOG_CAMEL_CASE = 'Blog fields use camelCase.';
+const BLOG_POST_SETTINGS_FIELDS =
+  'slug, authorId, categoryId, newCategoryName (creates the category), tags [], featured, excerpt, seoTitle, ' +
+  'seoDescription, ogImageUrl, coverImageUrl, coverAlt, canonicalUrl, noindex, showToc';
+const BLOG_POST_WRITE_BODY =
+  'Fields: title, content (markdown; replaces the whole body; do not repeat the title as a # heading) or ' +
+  'contentHtml (converted to markdown), metaDescription, status (draft | published | scheduled), scheduledFor ' +
+  `(ISO-8601 with offset, required with scheduled), ${BLOG_POST_SETTINGS_FIELDS}. ${BLOG_CAMEL_CASE}`;
+const SAME_AS_BODY = (field) => `Same as body.${field}; either one works.`;
 const BLOG_LIST_FIELDS = { search: 'Text search.', page: 'Page number, from 1.' };
 const BLOG_POSITIONS_BODY =
   'Fields: items (required, at most 100 of { id, position }, each id once, position 0-10000). Send every item ' +
@@ -137,9 +145,33 @@ export const TOOL_NOTES = Object.freeze({
     note: 'The body can be long. Markdown is the stored form; html is a rendering of it.',
     fields: { format: 'markdown (default) | html.' },
   },
+  'articles.create': {
+    note:
+      'Stores an article you wrote (no generation slot) on a product with an Articles subscription. With publish ' +
+      "true it is also sent to the product's connected CMS; data.publish_error says when that failed (the article " +
+      'is kept: fix the cause and call articles_publish, never articles_create again). A slug already used by the ' +
+      'product returns CONFLICT with error.details.existing_article_id. For a hosted Outrank Blog prefer ' +
+      'products_blog_posts_create.',
+    body:
+      'Fields: product_id (required), title (required), content (markdown) or content_html (exactly one), ' +
+      'meta_description (max 160), slug, image_url (https), tags [], publish (boolean).',
+    fields: { productId: SAME_AS_BODY('product_id'), title: SAME_AS_BODY('title'), publish: SAME_AS_BODY('publish') },
+  },
+  'articles.publish': {
+    note:
+      "Sends a generated or approved article to the product's connected CMS for the first time. Most CMSs create " +
+      'a new post on every publish, so do not repeat it after a success; push later edits with articles_sync.',
+  },
+  'articles.sync': {
+    note:
+      'Pushes the current title, body, meta description and cover image of a published article to the post ' +
+      'already in the CMS (found by its slug); nothing new is created. Run it after articles_update_content or ' +
+      'articles_update on a published article.',
+  },
   'articles.update': {
     note:
-      'Setting status to published publishes through the product integration for real. The slug cannot be changed.',
+      'Changes the article inside Outrank only: status here does not send anything to the CMS. Publish with ' +
+      'articles_publish and push edits of a published article with articles_sync. The slug cannot be changed.',
     body:
       'Fields (at least one): title, meta_description, image_url, status (generated | approved | published), ' +
       `instructions, ${ARTICLE_TYPE_FIELDS}.`,
@@ -472,6 +504,17 @@ export const TOOL_NOTES = Object.freeze({
     note: 'The link expires after a short time; anyone with it can view the draft until then.',
     fields: { scope: 'design | post | page.', targetId: 'Article id for post, page id for page; omit for design.' },
   },
+  'products.blog.design.patch': {
+    note:
+      'Preferred way to change the design: send only the fields that change. Objects are merged into the current ' +
+      'draft and arrays replace the old array (send the whole navItems or sections list). With publish true the ' +
+      'result goes live at once.',
+    body:
+      'Fields: config (required; a partial theme config such as { theme: { colors: { accent: "#2563EB" }, logoUrl }, ' +
+      'header: { navItems [], cta }, footer: { tagline, social }, seo: { homeTitle, homeDescription }, post: ' +
+      '{ showToc } }), publish (boolean).',
+    fields: { publish: SAME_AS_BODY('publish') },
+  },
   'products.blog.design.update': {
     note: 'Saves the draft only. Publish it with products_blog_design_publish.',
     body:
@@ -487,15 +530,33 @@ export const TOOL_NOTES = Object.freeze({
   'products.blog.posts.list': {
     fields: { status: 'all (default) | published | scheduled | draft.', ...BLOG_LIST_FIELDS },
   },
-  'products.blog.posts.create': { fields: { title: 'Optional; defaults to Untitled post.' } },
+  'products.blog.posts.create': {
+    note:
+      'Writes the whole post in one call: send the title, the body and status published to put it live now, or ' +
+      'scheduled with scheduledFor. Everything is checked before anything is created. A slug already used on the ' +
+      'blog returns CONFLICT with error.details.existingArticleId: update that post instead of creating it again.',
+    body: BLOG_POST_WRITE_BODY,
+    fields: {
+      title: `${SAME_AS_BODY('title')} Optional for a draft; defaults to Untitled post.`,
+      status: SAME_AS_BODY('status'),
+      scheduledFor: SAME_AS_BODY('scheduledFor'),
+    },
+  },
   'products.blog.posts.update': {
-    body:
-      'Fields (any): slug, authorId, categoryId, newCategoryName, tags [], featured, excerpt, seoTitle, ' +
-      'seoDescription, ogImageUrl, coverImageUrl, coverAlt, canonicalUrl, noindex, showToc. ' +
-      BLOG_CAMEL_CASE,
+    note:
+      'Send only the fields that change. A live post is refreshed on the blog automatically (no sync call needed). ' +
+      'status draft unpublishes, published publishes now, scheduled needs scheduledFor. data.applied lists what ' +
+      'was saved; on an error, error.details.applied lists the steps saved before it.',
+    body: `${BLOG_POST_WRITE_BODY} At least one field.`,
+    fields: { title: SAME_AS_BODY('title'), status: SAME_AS_BODY('status'), scheduledFor: SAME_AS_BODY('scheduledFor') },
+  },
+  'products.blog.posts.delete': {
+    note: 'Takes the post off the blog and deletes it. To only hide it, use products_blog_posts_update with status draft.',
   },
   'products.blog.posts.update-content': {
-    note: 'If the post is live, run products_blog_posts_sync afterwards to update the blog.',
+    note:
+      'If the post is live, run products_blog_posts_sync afterwards to update the blog. products_blog_posts_update ' +
+      'does both in one call.',
     body: 'Fields (at least one): title, content (markdown; replaces the whole body).',
   },
   'products.blog.posts.publish': {

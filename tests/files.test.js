@@ -4,9 +4,9 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { MAX_IMAGE_UPLOAD_BYTES } from '../src/core/constants.js';
+import { MAX_IMAGE_UPLOAD_BYTES, MAX_TEXT_FILE_BYTES } from '../src/core/constants.js';
 import { CliErrorCode } from '../src/core/errors.js';
-import { readImageUpload, sniffImageMime } from '../src/core/files.js';
+import { readImageUpload, readTextFile, sniffImageMime } from '../src/core/files.js';
 
 const PNG_HEADER = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 const JPEG_HEADER = Buffer.from([0xff, 0xd8, 0xff, 0xe0]);
@@ -96,4 +96,38 @@ test('the sniffer recognises every supported format and nothing else', () => {
   assert.equal(sniffImageMime(Buffer.from('RIFF....WAVE')), undefined);
   assert.equal(sniffImageMime(Buffer.from('<svg/>')), undefined);
   assert.equal(sniffImageMime(Buffer.alloc(0)), undefined);
+});
+
+const CONTENT_OPTION = '--content-file';
+const MARKDOWN_TEXT = '## Héllo\n\nBody with ünïcode.\n';
+const UTF8_BOM = Buffer.from([0xef, 0xbb, 0xbf]);
+const INVALID_UTF8 = Buffer.from([0x48, 0xc3, 0x28]);
+
+test('a markdown file is read as UTF-8 text without its byte order mark', async () => {
+  const plain = await write('post.md', Buffer.from(MARKDOWN_TEXT, 'utf8'));
+  assert.equal(await readTextFile({ filePath: plain, option: CONTENT_OPTION }), MARKDOWN_TEXT);
+  const withBom = await write('bom.md', Buffer.concat([UTF8_BOM, Buffer.from(MARKDOWN_TEXT, 'utf8')]));
+  assert.equal(await readTextFile({ filePath: withBom, option: CONTENT_OPTION }), MARKDOWN_TEXT);
+});
+
+test('Windows and old Mac line endings in a text file are read as plain line feeds', async () => {
+  const crlf = await write('crlf.md', Buffer.from(MARKDOWN_TEXT.replaceAll('\n', '\r\n'), 'utf8'));
+  assert.equal(await readTextFile({ filePath: crlf, option: CONTENT_OPTION }), MARKDOWN_TEXT);
+  const cr = await write('cr.md', Buffer.from(MARKDOWN_TEXT.replaceAll('\n', '\r'), 'utf8'));
+  assert.equal(await readTextFile({ filePath: cr, option: CONTENT_OPTION }), MARKDOWN_TEXT);
+});
+
+test('a text file at the size limit is read and one byte over is refused', async () => {
+  const atLimit = await writeSized('limit.md', Buffer.from('a'), MAX_TEXT_FILE_BYTES);
+  assert.equal((await readTextFile({ filePath: atLimit, option: CONTENT_OPTION })).length, MAX_TEXT_FILE_BYTES);
+  const oversize = await writeSized('big.md', Buffer.from('a'), MAX_TEXT_FILE_BYTES + ONE_BYTE);
+  await rejectsUsage(readTextFile({ filePath: oversize, option: CONTENT_OPTION }), /the maximum is/);
+});
+
+test('invalid UTF-8, a missing file, a directory and an empty path are usage errors naming the option', async () => {
+  const invalid = await write('latin1.md', INVALID_UTF8);
+  await rejectsUsage(readTextFile({ filePath: invalid, option: CONTENT_OPTION }), /not valid UTF-8/);
+  await rejectsUsage(readTextFile({ filePath: path.join(dir, 'nope.md'), option: CONTENT_OPTION }), /ENOENT/);
+  await rejectsUsage(readTextFile({ filePath: dir, option: CONTENT_OPTION }), /Not a file/);
+  await rejectsUsage(readTextFile({ filePath: '', option: CONTENT_OPTION }), /Missing required option: --content-file/);
 });

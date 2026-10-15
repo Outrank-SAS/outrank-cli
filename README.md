@@ -41,7 +41,8 @@ This repo currently targets the agent endpoints that already exist in `outrank`:
 - `products linking targets list|add-manual|upsert|clear-customizations|delete`
 - `products backlinks get|update|credits|earned|unverified|check-removal|reverify|subscription|subscribe-quote`
 - `keywords list|get|export|generation-status|add|update|suggest|generate|bulk-reschedule|delete|bulk-delete`
-- `articles list|get|get-content|update|update-content|replace|bulk-replace|upload-image|upload-featured-image|retry-publish|delete|precreate|generate`
+- `articles list|create|get|get-content|update|update-content|replace|bulk-replace|upload-image|upload-featured-image|publish|sync|retry-publish|delete|precreate|generate`
+- `products blog ...` for a hosted Outrank Blog: `posts list|create|get|update|delete|get-content|update-content|publish|unpublish|sync`, `design get|patch|update|publish|discard`, settings, pages, categories, authors, domain, redirects, snippets, subscribers, webhooks, preview and analytics
 - `improvements settings get|update`
 - `improvements analyze`
 - `improvements candidates list|brief|edit-brief|schedule`
@@ -280,7 +281,7 @@ Tools that take a JSON `body` describe its fields in their description; `product
 Generated from the command registry with `npm run docs:tools`. The registry is checked against the Outrank server's route list in `tests/fixtures/agentApiSurface.json`, refreshed from a checkout of the Outrank app with `npm run surface:extract -- <path-to-outrank-repo>`: a server route without a tool, a tool without a server route, a guidance sentence naming an endpoint the server cannot map to a tool, or a rewritten argument the named tool would refuse fails the tests. The fixture records the server commit and, as `sourceDirty`, whether that checkout had uncommitted changes in the files it reads; extract again from a clean checkout before a release. To see whether the fixture is stale, run `node scripts/extractAgentApiSurface.js --check <path-to-outrank-repo>`, or run the tests with `OUTRANK_SERVER_DIR=<path-to-outrank-repo>`: both list the routes and guidance mentions that differ, and without the variable that one test is skipped. Kinds: `read` changes nothing; `write` changes Outrank or the connected site; `destructive` deletes or cannot be undone; `money` changes what the organization pays; `local` makes no request. Tools marked ★ are always listed in `auto` mode.
 
 <!-- mcp-tools:start -->
-211 tools.
+216 tools.
 
 | Tool | CLI command | Kind | Toolset | What it does |
 | --- | --- | --- | --- | --- |
@@ -304,6 +305,7 @@ Generated from the command registry with `npm run docs:tools`. The registry is c
 | `keywords_delete` | `keywords delete` | destructive | keywords | Delete one keyword. |
 | `keywords_bulk_delete` | `keywords bulk-delete` | destructive | keywords | Delete several keywords from a JSON body of ids. |
 | `articles_list` | `articles list` | read | articles | List articles with optional filters, sorting and pagination. |
+| `articles_create` | `articles create` | write | articles | Create an article from your own content and optionally publish it to the connected CMS. |
 | `articles_get` | `articles get` | read | articles | Get article metadata by id. |
 | `articles_get_content` | `articles get-content` | read | articles | Get the article body as markdown or HTML. |
 | `articles_update` | `articles update` | write | articles | Update article metadata from a JSON body. |
@@ -312,6 +314,8 @@ Generated from the command registry with `npm run docs:tools`. The registry is c
 | `articles_bulk_replace` | `articles bulk-replace` | write | articles | Find and replace text across several articles from a JSON body. |
 | `articles_upload_image` | `articles upload-image` | write | articles | Upload an image for an article or a keyword. |
 | `articles_upload_featured_image` | `articles upload-featured-image` | write | articles | Upload the featured image of an article. |
+| `articles_publish` | `articles publish` | write | articles | Publish an article to the product's connected CMS for the first time. |
+| `articles_sync` | `articles sync` | write | articles | Push the edits of a published article to the post already in the connected CMS. |
 | `articles_retry_publish` | `articles retry-publish` | write | articles | Retry publishing an article to its integration. |
 | `articles_delete` | `articles delete` | destructive | articles | Delete an article. |
 | `articles_precreate` | `articles precreate` | write | articles | Pre-create the article for an eligible future scheduled keyword. |
@@ -408,14 +412,16 @@ Generated from the command registry with `npm run docs:tools`. The registry is c
 | `products_blog_design_update` | `products blog design update` | write | blog | Save the draft theme config of the blog from a JSON body (the live blog is unchanged). |
 | `products_blog_design_publish` | `products blog design publish` | write | blog | Publish the draft theme to the live blog. |
 | `products_blog_design_discard` | `products blog design discard` | destructive | blog | Discard the draft theme and go back to the live one. |
+| `products_blog_design_patch` | `products blog design patch` | write | blog | Change part of the blog theme (merged into the draft) and optionally publish it. |
 | `products_blog_domain_get` | `products blog domain get` | read | blog | Show the custom domain of the blog and its DNS and verification state. |
 | `products_blog_domain_connect` | `products blog domain connect` | write | blog | Connect or replace the custom domain of the blog from a JSON body. |
 | `products_blog_domain_verify` | `products blog domain verify` | write | blog | Check the DNS of the custom domain and activate it once it is correct. |
 | `products_blog_domain_remove` | `products blog domain remove` | destructive | blog | Remove the custom domain; the blog goes back to its outrankblog.com subdomain. |
 | `products_blog_posts_list` | `products blog posts list` | read | blog | List the posts of the blog with optional status, search and page filters. |
-| `products_blog_posts_create` | `products blog posts create` | write | blog | Create an empty draft post on the blog. |
+| `products_blog_posts_create` | `products blog posts create` | write | blog | Write a post on the blog in one call (title, body, SEO fields) as a draft, live or scheduled. |
 | `products_blog_posts_get` | `products blog posts get` | read | blog | Show the settings, status and live URL of one post. |
-| `products_blog_posts_update` | `products blog posts update` | write | blog | Change the slug, author, category, tags, excerpt, SEO or cover of one post from a JSON body. |
+| `products_blog_posts_update` | `products blog posts update` | write | blog | Change any field of one post (title, body, SEO, slug, category, cover, status); live posts refresh. |
+| `products_blog_posts_delete` | `products blog posts delete` | destructive | blog | Take one post off the blog and delete it. |
 | `products_blog_posts_get_content` | `products blog posts get-content` | read | blog | Show the title and markdown body of one post. |
 | `products_blog_posts_update_content` | `products blog posts update-content` | write | blog | Replace the title and/or markdown body of one post from a JSON body. |
 | `products_blog_posts_publish` | `products blog posts publish` | write | blog | Publish one post now, or schedule it with --scheduled-for. |
@@ -510,6 +516,11 @@ outrank-cli keywords generation-status --product 00000000-0000-0000-0000-0000000
 outrank-cli articles list --product 00000000-0000-0000-0000-000000000000 --status published
 outrank-cli articles get 00000000-0000-0000-0000-000000000000
 outrank-cli articles get-content 00000000-0000-0000-0000-000000000000 --format html
+outrank-cli articles create --product 00000000-0000-0000-0000-000000000000 --title "How to choose a CRM" --content-file crm.md --publish
+outrank-cli articles sync 00000000-0000-0000-0000-000000000000
+outrank-cli products blog posts create 00000000-0000-0000-0000-000000000000 --title "Why Acme" --content-file why-acme.md --status published
+outrank-cli products blog posts update 00000000-0000-0000-0000-000000000000 00000000-0000-0000-0000-000000000000 --content-file why-acme.md
+outrank-cli products blog design patch 00000000-0000-0000-0000-000000000000 --json '{"config":{"theme":{"colors":{"accent":"#2563EB"}}}}' --publish
 outrank-cli articles update 00000000-0000-0000-0000-000000000000 --json '{"title":"New title"}'
 outrank-cli articles update 00000000-0000-0000-0000-000000000000 --json '{"image_url":"https://example.com/featured.jpg"}'
 outrank-cli articles upload-image --file ./diagram.png --article 00000000-0000-0000-0000-000000000000
@@ -735,12 +746,25 @@ Buyer side:
 - `articles get <article-id>` returns `article_type_options`, which lists the valid dropdown values for `article_type`, `article_subtype`, and `expected_length`.
 - Article records with a linked scheduled keyword also return top-level `article_type`, `article_subtype`, `expected_length`, and label fields for direct reads.
 - Use `articles update --json '{"article_type":"guide","article_subtype":"comparison","expected_length":"long"}'` to mirror the dashboard's "Article Type Settings" modal. The API rejects values outside the returned option lists.
-- `articles update --json '{"status":"published"}'` attempts a real publish through the product's active integration for eligible attached articles; it is not just a local status flip.
+- `articles update --json '{"status":"published"}'` only changes the status inside Outrank; it sends nothing to the CMS. Use `articles publish` to send an article to the CMS and `articles sync` to push edits of a published one.
+- `articles create` stores an article you wrote (markdown from `--content-file`, or `content` / `content_html` in `--json`) without using a generation slot; `--publish` also sends it to the product's CMS. If `data.publish_error` is set the article was kept: fix the cause and run `articles publish`. A slug already used by the product returns `CONFLICT` with `details.existing_article_id`, so a retry never duplicates the article.
+- `articles publish <article-id>` sends an unpublished article to the CMS. Most CMSs create a new post on every publish, so never repeat it after a success.
+- `articles sync <article-id>` pushes the current title, body, meta description and cover image of a published article to the post already in the CMS (found by its slug).
 - Slug is returned for read-only reference but cannot be changed through the agent API.
 - `articles generate <keyword-id>` is only valid for scheduled keywords due today; it mirrors the dashboard's create-and-publish action.
 - `articles precreate <keyword-id>` is only valid for eligible future scheduled keywords, is unavailable on trial subscriptions, and should be polled through the keyword state afterward.
 - `articles update --json '{"status":"published"}'` cannot be used to manually publish a future scheduled article before its due date.
 - `articles retry-publish <article-id>` is only valid for generated articles with a publish error.
+
+## Blog publishing workflow
+
+For a product with a hosted Outrank Blog (`products blog get` shows it):
+
+- `products blog posts create <product-id> --title "..." --content-file post.md --status published` writes and publishes a post in one call. Add `--json` for `metaDescription`, `excerpt`, `slug`, `tags`, `categoryId` or `newCategoryName`, `coverImageUrl`, `coverAlt`, `seoTitle`, `seoDescription`, `canonicalUrl` and `noindex`; use `--status scheduled --scheduled-for <iso-datetime>` to schedule. Everything is validated before the post is created, and a slug that is already used returns `CONFLICT` with `details.existingArticleId`.
+- `products blog posts update <product-id> <article-id>` changes only the fields it is given, including the body (`--content-file`) and the status (`draft` unpublishes, `published` publishes now). A live post is refreshed on the blog automatically; `data.applied` lists what was saved.
+- `products blog posts delete <product-id> <article-id>` takes a post off the blog and deletes it.
+- `products blog update-settings <product-id> --json '{...}'` changes the blog name, description, language and subdomain; `products blog design patch <product-id> --json '{"config":{...}}' [--publish]` changes part of the theme, navigation, footer, homepage or SEO defaults (objects merge, arrays replace).
+- `--content-file` is CLI-only. Over MCP, send the markdown in `body.content`.
 
 ## Article improvements behavior notes
 

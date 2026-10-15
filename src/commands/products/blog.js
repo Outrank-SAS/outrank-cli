@@ -7,6 +7,7 @@ import {
   BLOG_PAGE_STATUSES,
   BLOG_POSITION_MAX,
   BLOG_POST_LIST_STATUSES,
+  BLOG_POST_WRITE_STATUSES,
   BLOG_PREVIEW_DESIGN_SCOPE,
   BLOG_PREVIEW_SCOPES,
   BLOG_REDIRECT_GONE_STATUS_CODE,
@@ -19,7 +20,7 @@ import {
 } from '../../core/constants.js';
 import { Surface } from '../../core/constants.js';
 import { MCP_USAGE_GUIDANCE, usageError } from '../../core/errors.js';
-import { bool, int, json, list, object, oneOf, string, uuid } from '../../core/schema.js';
+import { bool, int, json, list, object, oneOf, string, textFile, uuid } from '../../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from '../registry.js';
 import { productInput } from './shared.js';
 
@@ -35,11 +36,13 @@ const BLOG_USAGE = `Usage:
   outrank-cli products blog starter-posts <product-id>
   outrank-cli products blog preview <product-id> --scope design|post|page [--target-id <id>]
   outrank-cli products blog design get|update|publish|discard <product-id> [--json <object>]
+  outrank-cli products blog design patch <product-id> --json <object> [--publish]
   outrank-cli products blog domain get|connect|verify|remove <product-id> [--json <object>]
   outrank-cli products blog posts list <product-id> [--status all|published|scheduled|draft] [--search <text>] [--page <n>]
-  outrank-cli products blog posts create <product-id> [--title <title>]
-  outrank-cli products blog posts get|get-content|unpublish|sync <product-id> <article-id>
-  outrank-cli products blog posts update|update-content <product-id> <article-id> --json <object>
+  outrank-cli products blog posts create <product-id> [--title <title>] [--content-file <path>] [--status draft|published|scheduled] [--scheduled-for <iso-datetime>] [--json <object>]
+  outrank-cli products blog posts update <product-id> <article-id> [--title <title>] [--content-file <path>] [--status draft|published|scheduled] [--scheduled-for <iso-datetime>] [--json <object>]
+  outrank-cli products blog posts get|get-content|unpublish|sync|delete <product-id> <article-id>
+  outrank-cli products blog posts update-content <product-id> <article-id> --json <object>
   outrank-cli products blog posts publish <product-id> <article-id> [--scheduled-for <iso-datetime>]
   outrank-cli products blog pages list|create|reorder <product-id> [--json <object>]
   outrank-cli products blog pages get|update|delete <product-id> <page-id> [--json <object>]
@@ -133,6 +136,27 @@ const POST_SETTINGS_BODY = object().shape({
   canonicalUrl: string().describe(HTTPS_URL_HINT),
   noindex: bool(),
   showToc: bool(),
+});
+
+const POST_WRITE_FIELDS = {
+  title: string(),
+  content: string().describe('Markdown body; replaces the whole body. Do not repeat the title as a # heading.'),
+  contentHtml: string().describe('HTML body instead of content; converted to markdown.'),
+  metaDescription: string().describe('Search description, at most 320 characters.'),
+  status: oneOf(BLOG_POST_WRITE_STATUSES).describe(
+    'draft keeps or takes the post offline, published puts it live now, scheduled needs scheduledFor.',
+  ),
+  scheduledFor: string().describe('ISO 8601 date-time with offset, 1 minute to 365 days ahead.'),
+};
+
+const POST_WRITE_BODY = object().shape({ ...POST_WRITE_FIELDS, ...POST_SETTINGS_BODY.properties });
+
+const DESIGN_PATCH_BODY = object().shape({
+  config: json().describe(
+    'Only the design fields to change, for example {"theme": {"colors": {"accent": "#2563EB"}}}. Objects are ' +
+      'merged into the current draft; arrays replace the old array.',
+  ),
+  publish: bool().describe('Also make the merged design live.'),
 });
 
 const POST_CONTENT_BODY = object().shape({
@@ -267,6 +291,45 @@ const refineSnippetContent = (input, ctx) => {
 };
 
 const POST_CONTENT_GUIDANCE = 'Send {"title": "..."}, {"content": "<markdown>"} or both.';
+const POST_CREATE_GUIDANCE =
+  'Pass --title and the body with --content-file post.md (markdown), or send {"title": "...", "content": "..."} ' +
+  'with --json; add --status published to put it live now.';
+const POST_UPDATE_GUIDANCE =
+  'Pass at least one change: --title, --content-file, --status, or a --json object with the fields to change.';
+const SCHEDULE_GUIDANCE = 'Pass --status scheduled together with --scheduled-for <iso-datetime>.';
+
+const refinePostWrite = ({ requireChange }) => (input, ctx) => {
+  const body = input.body ?? {};
+  const guidance = requireChange ? POST_UPDATE_GUIDANCE : POST_CREATE_GUIDANCE;
+  if (requireChange && Object.keys(body).length === 0) {
+    throw bodyUsageError(ctx, 'Send at least one field to change.', guidance);
+  }
+  if (body.content !== undefined && body.contentHtml !== undefined) {
+    throw bodyUsageError(ctx, 'Send content (markdown) or contentHtml, not both.', guidance);
+  }
+  if ((body.status === 'scheduled') !== Boolean(body.scheduledFor)) {
+    throw bodyUsageError(ctx, 'status scheduled and scheduledFor go together.', SCHEDULE_GUIDANCE);
+  }
+};
+
+const refineDesignPatch = (input, ctx) => {
+  const config = input.body?.config;
+  if (!config || typeof config !== 'object' || Array.isArray(config)) {
+    throw bodyUsageError(
+      ctx,
+      'config must be an object with the design fields to change.',
+      'Send {"config": {"theme": {"colors": {"accent": "#2563EB"}}}}; add --publish to make it live.',
+    );
+  }
+};
+
+const POST_WRITE_MERGE = { title: 'title', content: 'contentFile', status: 'status', scheduledFor: 'scheduledFor' };
+const POST_WRITE_INPUT = {
+  title: string(),
+  contentFile: textFile().describe('Local markdown file used as the body (CLI only).'),
+  status: oneOf(BLOG_POST_WRITE_STATUSES),
+  scheduledFor: string(),
+};
 
 const refinePostContent = (input, ctx) => {
   const { title, content } = input.body ?? {};
@@ -294,6 +357,7 @@ const blogCommand = ({
   input = {},
   body,
   bodyField,
+  bodyMerge,
   bodyOf,
   query,
   mcp,
@@ -310,6 +374,7 @@ const blogCommand = ({
     cli: { positionals: [PRODUCT_ID, ...ids] },
     ...(body ? { body } : {}),
     ...(bodyField ? { bodyField } : {}),
+    ...(bodyMerge ? { bodyMerge } : {}),
     ...(mcp ? { mcp } : {}),
     ...(refine ? { refine } : {}),
     run: (values, ctx) =>
@@ -355,10 +420,12 @@ const designGroup = group({
     'design update <product-id> --json <object>',
     'design publish <product-id>',
     'design discard <product-id>',
+    'design patch <product-id> --json <object> [--publish]',
   ]),
   guidance:
-    'Edit the draft theme with `update` (send the whole config, starting from the draft returned by `get`), ' +
-    'preview it with `outrank-cli products blog preview <product-id> --scope design`, then `publish` it.',
+    'Change part of the theme with `patch` and {"config": {...}} (only the fields that change; add --publish to ' +
+    'make it live). `update` replaces the whole draft config. Preview a draft with ' +
+    '`outrank-cli products blog preview <product-id> --scope design`, then `publish` it.',
   children: [
     blogCommand({
       id: 'design.get',
@@ -388,6 +455,18 @@ const designGroup = group({
       kind: CommandKind.DESTRUCTIVE,
       method: 'POST',
       suffix: '/design/discard',
+    }),
+    blogCommand({
+      id: 'design.patch',
+      summary: 'Change part of the blog theme (merged into the draft) and optionally publish it.',
+      kind: CommandKind.WRITE,
+      method: 'PATCH',
+      suffix: '/design',
+      input: { publish: bool() },
+      body: BodyMode.JSON,
+      bodyField: DESIGN_PATCH_BODY,
+      bodyMerge: { publish: 'publish' },
+      refine: refineDesignPatch,
     }),
   ],
 });
@@ -444,9 +523,12 @@ const postsGroup = group({
   id: 'posts',
   usage: usageFor([
     'posts list <product-id> [--status all|published|scheduled|draft] [--search <text>] [--page <n>]',
-    'posts create <product-id> [--title <title>]',
+    'posts create <product-id> [--title <title>] [--content-file <path>] [--status draft|published|scheduled] ' +
+      '[--scheduled-for <iso-datetime>] [--json <object>]',
     'posts get <product-id> <article-id>',
-    'posts update <product-id> <article-id> --json <object>',
+    'posts update <product-id> <article-id> [--title <title>] [--content-file <path>] ' +
+      '[--status draft|published|scheduled] [--scheduled-for <iso-datetime>] [--json <object>]',
+    'posts delete <product-id> <article-id>',
     'posts get-content <product-id> <article-id>',
     'posts update-content <product-id> <article-id> --json <object>',
     'posts publish <product-id> <article-id> [--scheduled-for <iso-datetime>]',
@@ -454,8 +536,10 @@ const postsGroup = group({
     'posts sync <product-id> <article-id>',
   ]),
   guidance:
-    'Posts are keyed by their article id. `create` a draft, write it with `update-content`, set slug, SEO and ' +
-    'category with `update`, then `publish` (now or with --scheduled-for). After editing a live post, run `sync`.',
+    'Posts are keyed by their article id. `create` writes a whole post in one call: title, body (--content-file ' +
+    'or "content"), SEO fields and --status published or scheduled. `update` changes only the fields it is ' +
+    'given, including the body and the status, and refreshes a live post on its own. A slug that is already ' +
+    'used returns CONFLICT with error.details.existingArticleId: update that post instead of creating it again.',
   children: [
     blogCommand({
       id: 'posts.list',
@@ -468,12 +552,15 @@ const postsGroup = group({
     }),
     blogCommand({
       id: 'posts.create',
-      summary: 'Create an empty draft post on the blog.',
+      summary: 'Write a post on the blog in one call (title, body, SEO fields) as a draft, live or scheduled.',
       kind: CommandKind.WRITE,
       method: 'POST',
       suffix: '/posts',
-      input: { title: string() },
-      bodyOf: (values) => (values.title ? { title: values.title } : {}),
+      input: POST_WRITE_INPUT,
+      body: BodyMode.OPTIONAL_JSON_OR_EMPTY_OBJECT,
+      bodyField: POST_WRITE_BODY,
+      bodyMerge: POST_WRITE_MERGE,
+      refine: refinePostWrite({ requireChange: false }),
     }),
     blogCommand({
       id: 'posts.get',
@@ -485,13 +572,24 @@ const postsGroup = group({
     }),
     blogCommand({
       id: 'posts.update',
-      summary: 'Change the slug, author, category, tags, excerpt, SEO or cover of one post from a JSON body.',
+      summary: 'Change any field of one post (title, body, SEO, slug, category, cover, status); live posts refresh.',
       kind: CommandKind.WRITE,
       method: 'PATCH',
       suffix: POST_PATH,
       ids: POST_ID,
-      body: BodyMode.JSON,
-      bodyField: POST_SETTINGS_BODY,
+      input: POST_WRITE_INPUT,
+      body: BodyMode.OPTIONAL_JSON_OR_EMPTY_OBJECT,
+      bodyField: POST_WRITE_BODY,
+      bodyMerge: POST_WRITE_MERGE,
+      refine: refinePostWrite({ requireChange: true }),
+    }),
+    blogCommand({
+      id: 'posts.delete',
+      summary: 'Take one post off the blog and delete it.',
+      kind: CommandKind.DESTRUCTIVE,
+      method: 'DELETE',
+      suffix: POST_PATH,
+      ids: POST_ID,
     }),
     blogCommand({
       id: 'posts.get-content',

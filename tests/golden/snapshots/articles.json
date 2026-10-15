@@ -658,6 +658,144 @@
     "stderr": "",
     "requests": []
   },
+  "create-from-file-and-publish": {
+    "argv": [
+      "articles",
+      "create",
+      "--product",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--title",
+      "How to choose a CRM",
+      "--content-file",
+      "tests/golden/fixtures/payloads/article.md",
+      "--publish"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "title": "How to choose a CRM",
+          "content": "## Start with your sales process\n\nList the steps your team follows today.\n",
+          "publish": true
+        }
+      }
+    ]
+  },
+  "create-from-json": {
+    "argv": [
+      "articles",
+      "create",
+      "--json",
+      "{\"product_id\":\"aaaaaaaa-0000-4000-8000-000000000001\",\"title\":\"How to choose a CRM\",\"content_html\":\"<h2>Start</h2><p>List the steps.</p>\",\"meta_description\":\"A practical CRM checklist.\",\"slug\":\"choose-a-crm\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "product_id": "aaaaaaaa-0000-4000-8000-000000000001",
+          "title": "How to choose a CRM",
+          "content_html": "<h2>Start</h2><p>List the steps.</p>",
+          "meta_description": "A practical CRM checklist.",
+          "slug": "choose-a-crm"
+        }
+      }
+    ]
+  },
+  "create-missing-product": {
+    "argv": [
+      "articles",
+      "create",
+      "--title",
+      "How to choose a CRM",
+      "--content-file",
+      "tests/golden/fixtures/payloads/article.md"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --product <product-id>.\"\n  },\n  \"agent_guidance\": \"Pass --product <product-id>, --title and the body with --content-file article.md (markdown), or send {\\\"product_id\\\": \\\"...\\\", \\\"title\\\": \\\"...\\\", \\\"content\\\": \\\"...\\\"} with --json. Add --publish to send it to the CMS.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-two-bodies": {
+    "argv": [
+      "articles",
+      "create",
+      "--json",
+      "{\"product_id\":\"aaaaaaaa-0000-4000-8000-000000000001\",\"title\":\"x\",\"content\":\"x\",\"content_html\":\"<p>x</p>\"}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Send exactly one of content (markdown) or content_html.\"\n  },\n  \"agent_guidance\": \"Pass --product <product-id>, --title and the body with --content-file article.md (markdown), or send {\\\"product_id\\\": \\\"...\\\", \\\"title\\\": \\\"...\\\", \\\"content\\\": \\\"...\\\"} with --json. Add --publish to send it to the CMS.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "publish": {
+    "argv": [
+      "articles",
+      "publish",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/publish",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "publish-missing-id": {
+    "argv": [
+      "articles",
+      "publish"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <article-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "sync": {
+    "argv": [
+      "articles",
+      "sync",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/articles/bbbbbbbb-0000-4000-8000-000000000002/sync",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
   "retry-publish": {
     "argv": [
       "articles",

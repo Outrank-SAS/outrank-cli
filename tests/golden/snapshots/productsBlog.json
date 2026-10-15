@@ -629,6 +629,57 @@
       }
     ]
   },
+  "design-patch": {
+    "argv": [
+      "products",
+      "blog",
+      "design",
+      "patch",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"config\":{\"theme\":{\"colors\":{\"accent\":\"#2563EB\"}}}}",
+      "--publish"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/design",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "config": {
+            "theme": {
+              "colors": {
+                "accent": "#2563EB"
+              }
+            }
+          },
+          "publish": true
+        }
+      }
+    ]
+  },
+  "design-patch-missing-config": {
+    "argv": [
+      "products",
+      "blog",
+      "design",
+      "patch",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"publish\":true}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"config must be an object with the design fields to change.\"\n  },\n  \"agent_guidance\": \"Send {\\\"config\\\": {\\\"theme\\\": {\\\"colors\\\": {\\\"accent\\\": \\\"#2563EB\\\"}}}}; add --publish to make it live.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
   "domain-help": {
     "argv": [
       "products",
@@ -858,6 +909,133 @@
       }
     ]
   },
+  "posts-create-published-from-file": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--title",
+      "Why Acme",
+      "--content-file",
+      "tests/golden/fixtures/payloads/blog-post.md",
+      "--status",
+      "published",
+      "--json",
+      "{\"metaDescription\":\"Why Acme makes reporting simple.\",\"tags\":[\"news\"],\"newCategoryName\":\"Guides\"}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "metaDescription": "Why Acme makes reporting simple.",
+          "tags": [
+            "news"
+          ],
+          "newCategoryName": "Guides",
+          "title": "Why Acme",
+          "content": "## Why Acme\n\nAcme makes **reporting** simple.\n\n- Fast\n- Accurate\n",
+          "status": "published"
+        }
+      }
+    ]
+  },
+  "posts-create-scheduled": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--title",
+      "Why Acme",
+      "--content-file",
+      "tests/golden/fixtures/payloads/blog-post.md",
+      "--status",
+      "scheduled",
+      "--scheduled-for",
+      "2026-11-01T09:00:00Z"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "title": "Why Acme",
+          "content": "## Why Acme\n\nAcme makes **reporting** simple.\n\n- Fast\n- Accurate\n",
+          "status": "scheduled",
+          "scheduledFor": "2026-11-01T09:00:00Z"
+        }
+      }
+    ]
+  },
+  "posts-create-scheduled-without-date": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--title",
+      "Why Acme",
+      "--status",
+      "scheduled"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"status scheduled and scheduledFor go together.\"\n  },\n  \"agent_guidance\": \"Pass --status scheduled together with --scheduled-for <iso-datetime>.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "posts-create-both-bodies": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"title\":\"Hello world\",\"content\":\"x\",\"contentHtml\":\"<p>x</p>\"}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Send content (markdown) or contentHtml, not both.\"\n  },\n  \"agent_guidance\": \"Pass --title and the body with --content-file post.md (markdown), or send {\\\"title\\\": \\\"...\\\", \\\"content\\\": \\\"...\\\"} with --json; add --status published to put it live now.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "posts-create-missing-content-file": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--title",
+      "Why Acme",
+      "--content-file",
+      "tests/golden/fixtures/payloads/does-not-exist.md"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Failed to read file: ENOENT: no such file or directory, stat '<REPO_ROOT>/tests/golden/fixtures/payloads/does-not-exist.md'\"\n  },\n  \"agent_guidance\": \"Confirm that <REPO_ROOT>/tests/golden/fixtures/payloads/does-not-exist.md exists and is readable, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
   "posts-get": {
     "argv": [
       "products",
@@ -926,6 +1104,117 @@
         }
       }
     ]
+  },
+  "posts-update-body-from-file": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--content-file",
+      "tests/golden/fixtures/payloads/blog-post.md",
+      "--title",
+      "Why Acme, updated"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "title": "Why Acme, updated",
+          "content": "## Why Acme\n\nAcme makes **reporting** simple.\n\n- Fast\n- Accurate\n"
+        }
+      }
+    ]
+  },
+  "posts-update-unpublish": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--status",
+      "draft"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "status": "draft"
+        }
+      }
+    ]
+  },
+  "posts-update-nothing": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Send at least one field to change.\"\n  },\n  \"agent_guidance\": \"Pass at least one change: --title, --content-file, --status, or a --json object with the fields to change.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "posts-delete": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/blog/posts/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "posts-delete-missing-article": {
+    "argv": [
+      "products",
+      "blog",
+      "posts",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <article-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
   },
   "posts-get-content": {
     "argv": [

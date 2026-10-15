@@ -1984,5 +1984,62 @@
       "stderr": "",
       "requests": []
     }
+  },
+  "articles/help": {
+    "reason": "blog-post-publishing: help lists the one-call post create/update, posts delete, design patch and article create/publish/sync",
+    "expected": {
+      "argv": [
+        "articles",
+        "--help"
+      ],
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli articles list [--product <product-id>] [--status generated|approved|published|failed|deleted] [--title <text>] [--keyword <text>] [--content <text>] [--slug <text>] [--created-from <date>] [--created-to <date>] [--scheduled-from <date>] [--scheduled-to <date>] [--sort-by created_at|status|title] [--sort-order asc|desc] [--limit <n>] [--offset <n>]\\n  outrank-cli articles create --product <product-id> --title <title> --content-file <path> [--publish] [--json <object>]\\n  outrank-cli articles get <article-id>\\n  outrank-cli articles get-content <article-id> [--format markdown|html]\\n  outrank-cli articles update <article-id> --json <object>\\n  outrank-cli articles update-content <article-id> --json <object>\\n  outrank-cli articles replace <article-id> --json <object>\\n  outrank-cli articles bulk-replace --json <object>\\n  outrank-cli articles upload-image --file <path> [--article <article-id>] [--keyword <text>]\\n  outrank-cli articles upload-featured-image <article-id> --file <path>\\n  outrank-cli articles publish <article-id>\\n  outrank-cli articles sync <article-id>\\n  outrank-cli articles retry-publish <article-id>\\n  outrank-cli articles delete <article-id>\\n  outrank-cli articles precreate <keyword-id>  # eligible future scheduled keyword only\\n  outrank-cli articles generate <keyword-id>   # scheduled for today only\\n\\nJSON Input:\\n  Use one of: --json '<object>', --json-file payload.json, or --json-stdin\\n\\nExamples:\\n  outrank-cli articles list --product <UUID-1> --status published --limit 20\\n  outrank-cli articles create --product <UUID-1> --title \\\"How to choose a CRM\\\" --content-file crm.md --publish\\n  outrank-cli articles get <UUID-1>\\n  outrank-cli articles get-content <UUID-1> --format html\\n  outrank-cli articles update <UUID-1> --json '{\\\"title\\\":\\\"New title\\\"}'\\n  outrank-cli articles update <UUID-1> --json '{\\\"image_url\\\":\\\"https://example.com/featured.jpg\\\"}'\\n  outrank-cli articles update-content <UUID-1> --json-file article-content.json\\n  outrank-cli articles replace <UUID-1> --json '{\\\"find\\\":\\\"Old brand\\\",\\\"replace_with\\\":\\\"New brand\\\",\\\"preview_only\\\":true}'\\n  outrank-cli articles bulk-replace --json-file bulk-replace.json\\n  outrank-cli articles upload-image --file .\\\\diagram.png --article <UUID-1>\\n  outrank-cli articles upload-featured-image <UUID-1> --file .\\\\hero.jpg\\n  outrank-cli articles publish <UUID-1>\\n  outrank-cli articles sync <UUID-1>\\n  outrank-cli articles retry-publish <UUID-1>\\n  outrank-cli articles precreate <UUID-1>\\n  outrank-cli articles generate <UUID-1>\"\n  },\n  \"agent_guidance\": \"Choose one of: list, create, get, get-content, update, update-content, replace, bulk-replace, upload-image, upload-featured-image, publish, sync, retry-publish, delete, precreate, generate. `create` stores your own article (add --publish to send it to the CMS), `publish` sends an article to the CMS the first time, and `sync` pushes later edits to the post already in the CMS.\"\n}\n",
+      "stderr": "",
+      "requests": []
+    }
+  },
+  "productsBlog/help": {
+    "reason": "blog-post-publishing: help lists the one-call post create/update, posts delete, design patch and article create/publish/sync",
+    "expected": {
+      "argv": [
+        "products",
+        "blog",
+        "--help"
+      ],
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog get <product-id>\\n  outrank-cli products blog setup <product-id>\\n  outrank-cli products blog check-subdomain <product-id> --subdomain <subdomain>\\n  outrank-cli products blog create <product-id> [--json <object>]\\n  outrank-cli products blog update-settings <product-id> --json <object>\\n  outrank-cli products blog delete <product-id> --confirm <subdomain>\\n  outrank-cli products blog usage <product-id>\\n  outrank-cli products blog analytics <product-id> [--range 7d|30d|90d]\\n  outrank-cli products blog starter-posts <product-id>\\n  outrank-cli products blog preview <product-id> --scope design|post|page [--target-id <id>]\\n  outrank-cli products blog design get|update|publish|discard <product-id> [--json <object>]\\n  outrank-cli products blog design patch <product-id> --json <object> [--publish]\\n  outrank-cli products blog domain get|connect|verify|remove <product-id> [--json <object>]\\n  outrank-cli products blog posts list <product-id> [--status all|published|scheduled|draft] [--search <text>] [--page <n>]\\n  outrank-cli products blog posts create <product-id> [--title <title>] [--content-file <path>] [--status draft|published|scheduled] [--scheduled-for <iso-datetime>] [--json <object>]\\n  outrank-cli products blog posts update <product-id> <article-id> [--title <title>] [--content-file <path>] [--status draft|published|scheduled] [--scheduled-for <iso-datetime>] [--json <object>]\\n  outrank-cli products blog posts get|get-content|unpublish|sync|delete <product-id> <article-id>\\n  outrank-cli products blog posts update-content <product-id> <article-id> --json <object>\\n  outrank-cli products blog posts publish <product-id> <article-id> [--scheduled-for <iso-datetime>]\\n  outrank-cli products blog pages list|create|reorder <product-id> [--json <object>]\\n  outrank-cli products blog pages get|update|delete <product-id> <page-id> [--json <object>]\\n  outrank-cli products blog categories list|create|reorder <product-id> [--json <object>]\\n  outrank-cli products blog categories update|delete <product-id> <category-id> [--json <object>]\\n  outrank-cli products blog authors list|create <product-id> [--json <object>]\\n  outrank-cli products blog authors update|delete <product-id> <author-id> [--json <object>]\\n  outrank-cli products blog redirects list|create <product-id> [--json <object>]\\n  outrank-cli products blog redirects delete <product-id> <redirect-id>\\n  outrank-cli products blog snippets list|create <product-id> [--json <object>]\\n  outrank-cli products blog snippets update|delete <product-id> <snippet-id> [--json <object>]\\n  outrank-cli products blog subscribers list <product-id> [--status subscribed|unsubscribed] [--search <text>] [--page <n>]\\n  outrank-cli products blog subscribers delete <product-id> <subscriber-id>\\n  outrank-cli products blog webhooks list|create <product-id> [--json <object>]\\n  outrank-cli products blog webhooks get|update|delete|test <product-id> <webhook-id> [--json <object>]\"\n  },\n  \"agent_guidance\": \"Start with `get` to see whether the product has a hosted Outrank Blog. Without one, read `setup` and run `create`. Then manage posts, design, pages, categories, authors, domain, redirects, snippets, subscribers and webhooks from this subtree. Request bodies use camelCase fields, like the blog dashboard.\"\n}\n",
+      "stderr": "",
+      "requests": []
+    }
+  },
+  "productsBlog/design-help": {
+    "reason": "blog-post-publishing: help lists the one-call post create/update, posts delete, design patch and article create/publish/sync",
+    "expected": {
+      "argv": [
+        "products",
+        "blog",
+        "design",
+        "--help"
+      ],
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog design get <product-id>\\n  outrank-cli products blog design update <product-id> --json <object>\\n  outrank-cli products blog design publish <product-id>\\n  outrank-cli products blog design discard <product-id>\\n  outrank-cli products blog design patch <product-id> --json <object> [--publish]\"\n  },\n  \"agent_guidance\": \"Change part of the theme with `patch` and {\\\"config\\\": {...}} (only the fields that change; add --publish to make it live). `update` replaces the whole draft config. Preview a draft with `outrank-cli products blog preview <product-id> --scope design`, then `publish` it.\"\n}\n",
+      "stderr": "",
+      "requests": []
+    }
+  },
+  "productsBlog/posts-help": {
+    "reason": "blog-post-publishing: help lists the one-call post create/update, posts delete, design patch and article create/publish/sync",
+    "expected": {
+      "argv": [
+        "products",
+        "blog",
+        "posts",
+        "--help"
+      ],
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli products blog posts list <product-id> [--status all|published|scheduled|draft] [--search <text>] [--page <n>]\\n  outrank-cli products blog posts create <product-id> [--title <title>] [--content-file <path>] [--status draft|published|scheduled] [--scheduled-for <iso-datetime>] [--json <object>]\\n  outrank-cli products blog posts get <product-id> <article-id>\\n  outrank-cli products blog posts update <product-id> <article-id> [--title <title>] [--content-file <path>] [--status draft|published|scheduled] [--scheduled-for <iso-datetime>] [--json <object>]\\n  outrank-cli products blog posts delete <product-id> <article-id>\\n  outrank-cli products blog posts get-content <product-id> <article-id>\\n  outrank-cli products blog posts update-content <product-id> <article-id> --json <object>\\n  outrank-cli products blog posts publish <product-id> <article-id> [--scheduled-for <iso-datetime>]\\n  outrank-cli products blog posts unpublish <product-id> <article-id>\\n  outrank-cli products blog posts sync <product-id> <article-id>\"\n  },\n  \"agent_guidance\": \"Posts are keyed by their article id. `create` writes a whole post in one call: title, body (--content-file or \\\"content\\\"), SEO fields and --status published or scheduled. `update` changes only the fields it is given, including the body and the status, and refreshes a live post on its own. A slug that is already used returns CONFLICT with error.details.existingArticleId: update that post instead of creating it again.\"\n}\n",
+      "stderr": "",
+      "requests": []
+    }
   }
 }

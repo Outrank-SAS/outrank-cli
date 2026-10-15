@@ -11,7 +11,7 @@ import {
 import { Surface, createCommandContext, loadContext } from '../../core/context.js';
 import { USAGE_GUIDANCE, cliSuccess, toErrorEnvelope, usageError } from '../../core/errors.js';
 import { executeCommand } from '../../core/execute.js';
-import { readImageUpload } from '../../core/files.js';
+import { readImageUpload, readTextFile } from '../../core/files.js';
 import { FieldKind } from '../../core/schema.js';
 import { readJsonBody } from './jsonInput.js';
 import { OPTION_PREFIX, isHelpToken, parseCommandArgv } from './parse.js';
@@ -85,11 +85,18 @@ const collectRawInput = (spec, parsed) => {
   return raw;
 };
 
-const resolveImageInputs = async (spec, raw, cwd) => {
+const FILE_FIELD_KINDS = Object.freeze([FieldKind.IMAGE, FieldKind.TEXT_FILE]);
+
+const readFileInput = (field, name, filePath) =>
+  field.kind === FieldKind.IMAGE
+    ? readImageUpload({ filePath })
+    : readTextFile({ filePath, option: `${OPTION_PREFIX}${toKebabCase(name)}` });
+
+const resolveFileInputs = async (spec, raw, cwd) => {
   const resolved = { ...raw };
   for (const [name, field] of Object.entries(spec.input)) {
-    if (field.kind !== FieldKind.IMAGE || typeof raw[name] !== 'string' || raw[name] === '') continue;
-    resolved[name] = await readImageUpload({ filePath: path.resolve(cwd, raw[name]) });
+    if (!FILE_FIELD_KINDS.includes(field.kind) || typeof raw[name] !== 'string' || raw[name] === '') continue;
+    resolved[name] = await readFileInput(field, name, path.resolve(cwd, raw[name]));
   }
   return resolved;
 };
@@ -102,7 +109,7 @@ const runCommand = async (registry, spec, rest) => {
   const parsed = parseCommandArgv(rest, spec, { jsonBody });
   if (parsed.helpRequested) return null;
   const cwd = process.cwd();
-  const raw = await resolveImageInputs(spec, collectRawInput(spec, parsed), cwd);
+  const raw = await resolveFileInputs(spec, collectRawInput(spec, parsed), cwd);
   const resolved = await loadContext(parsed.globals, {
     enforceAllowlist: !spec.offline,
     allowUnknownProfile: spec.allowUnknownProfile,
