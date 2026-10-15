@@ -187,6 +187,8 @@ export const readImageUpload = async ({ filePath, allowedDir }) => {
 
 const UTF8_ENCODING = 'utf-8';
 const BYTE_ORDER_MARK = '\uFEFF';
+const LINE_BREAK_PATTERN = /\r\n?/g;
+const LINE_FEED = '\n';
 const TEXT_OVERSIZE_GUIDANCE = 'Split the content or shorten it below the limit, then retry.';
 const TEXT_ENCODING_GUIDANCE = 'Save the file as UTF-8 text, then retry.';
 
@@ -215,5 +217,6 @@ export const readTextFile = async ({ filePath, option }) => {
   } catch {
     throw usageError(`${filePath} is not valid UTF-8 text.`, TEXT_ENCODING_GUIDANCE);
   }
-  return text.startsWith(BYTE_ORDER_MARK) ? text.slice(BYTE_ORDER_MARK.length) : text;
+  const withoutBom = text.startsWith(BYTE_ORDER_MARK) ? text.slice(BYTE_ORDER_MARK.length) : text;
+  return withoutBom.replace(LINE_BREAK_PATTERN, LINE_FEED);
 };

@@ -110,6 +110,13 @@ test('a markdown file is read as UTF-8 text without its byte order mark', async 
   assert.equal(await readTextFile({ filePath: withBom, option: CONTENT_OPTION }), MARKDOWN_TEXT);
 });
 
+test('Windows and old Mac line endings in a text file are read as plain line feeds', async () => {
+  const crlf = await write('crlf.md', Buffer.from(MARKDOWN_TEXT.replaceAll('\n', '\r\n'), 'utf8'));
+  assert.equal(await readTextFile({ filePath: crlf, option: CONTENT_OPTION }), MARKDOWN_TEXT);
+  const cr = await write('cr.md', Buffer.from(MARKDOWN_TEXT.replaceAll('\n', '\r'), 'utf8'));
+  assert.equal(await readTextFile({ filePath: cr, option: CONTENT_OPTION }), MARKDOWN_TEXT);
+});
+
 test('a text file at the size limit is read and one byte over is refused', async () => {
   const atLimit = await writeSized('limit.md', Buffer.from('a'), MAX_TEXT_FILE_BYTES);
   assert.equal((await readTextFile({ filePath: atLimit, option: CONTENT_OPTION })).length, MAX_TEXT_FILE_BYTES);
