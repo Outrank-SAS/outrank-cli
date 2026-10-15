@@ -1,6 +1,6 @@
 {
   "apiBasePath": "/api/agent/v1",
-  "sourceCommit": "1e375e01bbc7c8315ce423e7713cccbee68a9c95",
+  "sourceCommit": "fcb397322ba8143b9a4fc2598e88d69e0dabad78",
   "sourceDirty": false,
   "routes": [
     {
@@ -14,6 +14,10 @@
     {
       "method": "POST",
       "path": "/articles/{id}/featured-image/upload"
+    },
+    {
+      "method": "POST",
+      "path": "/articles/{id}/publish"
     },
     {
       "method": "POST",
@@ -37,6 +41,10 @@
     },
     {
       "method": "POST",
+      "path": "/articles/{id}/sync"
+    },
+    {
+      "method": "POST",
       "path": "/articles/bulk-replace"
     },
     {
@@ -53,6 +61,10 @@
     },
     {
       "method": "GET",
+      "path": "/articles"
+    },
+    {
+      "method": "POST",
       "path": "/articles"
     },
     {
@@ -300,6 +312,10 @@
       "path": "/products/{id}/blog/design"
     },
     {
+      "method": "PATCH",
+      "path": "/products/{id}/blog/design"
+    },
+    {
       "method": "GET",
       "path": "/products/{id}/blog/domain"
     },
@@ -357,6 +373,10 @@
     },
     {
       "method": "PATCH",
+      "path": "/products/{id}/blog/posts/{articleId}"
+    },
+    {
+      "method": "DELETE",
       "path": "/products/{id}/blog/posts/{articleId}"
     },
     {
@@ -810,12 +830,36 @@
       "route": "/articles/{id}/content"
     },
     {
+      "text": "POST /api/agent/v1/articles/<interpolated>/sync",
+      "route": "/articles/{id}/content"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<interpolated>/publish",
+      "route": "/articles/{id}/content"
+    },
+    {
       "text": "GET /api/agent/v1/articles/<interpolated>/content",
       "route": "/articles/{id}/content"
     },
     {
       "text": "GET /api/agent/v1/articles/<interpolated>",
       "route": "/articles/{id}/content"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<id>/sync",
+      "route": "/articles/{id}/publish"
+    },
+    {
+      "text": "PUT /api/agent/v1/articles/<interpolated>/content",
+      "route": "/articles/{id}/publish"
+    },
+    {
+      "text": "PATCH /api/agent/v1/articles/<interpolated>",
+      "route": "/articles/{id}/publish"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<interpolated>/sync",
+      "route": "/articles/{id}/publish"
     },
     {
       "text": "GET /api/agent/v1/articles/<interpolated>",
@@ -854,6 +898,18 @@
       "route": "/articles/{id}"
     },
     {
+      "text": "POST /api/agent/v1/articles/<interpolated>/publish",
+      "route": "/articles/{id}"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<interpolated>/sync",
+      "route": "/articles/{id}"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<id>/publish",
+      "route": "/articles/{id}/sync"
+    },
+    {
       "text": "POST /api/agent/v1/articles/generate",
       "route": "/articles/generate"
     },
@@ -870,6 +926,22 @@
       "route": "/articles/precreate"
     },
     {
+      "text": "GET /api/agent/v1/articles/<id>",
+      "route": "/articles"
+    },
+    {
+      "text": "PUT /api/agent/v1/articles/<id>/content",
+      "route": "/articles"
+    },
+    {
+      "text": "PATCH /api/agent/v1/articles/<id>",
+      "route": "/articles"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<id>/publish",
+      "route": "/articles"
+    },
+    {
       "text": "GET /api/agent/v1/products",
       "route": "/articles"
     },
@@ -882,15 +954,7 @@
       "route": "/articles"
     },
     {
-      "text": "GET /api/agent/v1/articles/<id>",
-      "route": "/articles"
-    },
-    {
       "text": "GET /api/agent/v1/articles/<id>/content",
-      "route": "/articles"
-    },
-    {
-      "text": "PATCH /api/agent/v1/articles/<id>",
       "route": "/articles"
     },
     {
@@ -899,6 +963,22 @@
     },
     {
       "text": "POST /api/agent/v1/articles/bulk-replace",
+      "route": "/articles"
+    },
+    {
+      "text": "PUT /api/agent/v1/articles/<interpolated>/content",
+      "route": "/articles"
+    },
+    {
+      "text": "PATCH /api/agent/v1/articles/<interpolated>",
+      "route": "/articles"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<interpolated>/sync",
+      "route": "/articles"
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<interpolated>/publish",
       "route": "/articles"
     },
     {
@@ -1218,23 +1298,11 @@
       "route": "/products/{id}/blog/design/publish"
     },
     {
-      "text": "PUT /api/agent/v1/products/<interpolated>/blog/design",
+      "text": "/api/agent/v1/products/<interpolated>/blog/design",
       "route": "/products/{id}/blog/design"
     },
     {
       "text": "POST /api/agent/v1/products/<interpolated>/blog/preview-token",
-      "route": "/products/{id}/blog/design"
-    },
-    {
-      "text": "POST /api/agent/v1/products/<interpolated>/blog/design/publish",
-      "route": "/products/{id}/blog/design"
-    },
-    {
-      "text": "POST /api/agent/v1/products/<interpolated>/blog/design/discard",
-      "route": "/products/{id}/blog/design"
-    },
-    {
-      "text": "GET /api/agent/v1/products/<interpolated>/blog/design",
       "route": "/products/{id}/blog/design"
     },
     {
@@ -1306,19 +1374,11 @@
       "route": "/products/{id}/blog/posts/{articleId}/publish"
     },
     {
+      "text": "/api/agent/v1/products/<interpolated>/blog/posts/<interpolated>",
+      "route": "/products/{id}/blog/posts/{articleId}"
+    },
+    {
       "text": "GET /api/agent/v1/products/<interpolated>/blog/posts",
-      "route": "/products/{id}/blog/posts/{articleId}"
-    },
-    {
-      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>",
-      "route": "/products/{id}/blog/posts/{articleId}"
-    },
-    {
-      "text": "GET /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/content",
-      "route": "/products/{id}/blog/posts/{articleId}"
-    },
-    {
-      "text": "GET /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>",
       "route": "/products/{id}/blog/posts/{articleId}"
     },
     {
@@ -1326,7 +1386,11 @@
       "route": "/products/{id}/blog/posts/{articleId}/sync"
     },
     {
-      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<articleId>/publish",
+      "text": "PUT .../content",
+      "route": "/products/{id}/blog/posts/{articleId}/sync"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/posts/<articleId>",
       "route": "/products/{id}/blog/posts/{articleId}/sync"
     },
     {
@@ -1334,27 +1398,7 @@
       "route": "/products/{id}/blog/posts/{articleId}/unpublish"
     },
     {
-      "text": "GET/PUT /api/agent/v1/products/<interpolated>/blog/posts/<articleId>/content",
-      "route": "/products/{id}/blog/posts"
-    },
-    {
-      "text": "GET/PATCH /api/agent/v1/products/<interpolated>/blog/posts/<articleId>",
-      "route": "/products/{id}/blog/posts"
-    },
-    {
-      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<articleId>/publish",
-      "route": "/products/{id}/blog/posts"
-    },
-    {
-      "text": "PUT /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/content",
-      "route": "/products/{id}/blog/posts"
-    },
-    {
-      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>",
-      "route": "/products/{id}/blog/posts"
-    },
-    {
-      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts/<interpolated>/publish",
+      "text": "/api/agent/v1/products/<interpolated>/blog/posts/<interpolated>",
       "route": "/products/{id}/blog/posts"
     },
     {
@@ -1370,11 +1414,15 @@
       "route": "/products/{id}/blog/redirects"
     },
     {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts",
+      "route": "/products/{id}/blog"
+    },
+    {
       "text": "GET /api/agent/v1/products/<interpolated>/blog/posts",
       "route": "/products/{id}/blog"
     },
     {
-      "text": "GET /api/agent/v1/products/<interpolated>/blog/design",
+      "text": "PATCH /api/agent/v1/products/<interpolated>/blog/design",
       "route": "/products/{id}/blog"
     },
     {
@@ -1391,18 +1439,6 @@
     },
     {
       "text": "POST /api/agent/v1/products/<interpolated>/blog",
-      "route": "/products/{id}/blog"
-    },
-    {
-      "text": "POST /api/agent/v1/products/<interpolated>/blog/posts",
-      "route": "/products/{id}/blog"
-    },
-    {
-      "text": "PUT /api/agent/v1/products/<interpolated>/blog/design",
-      "route": "/products/{id}/blog"
-    },
-    {
-      "text": "POST /api/agent/v1/products/<interpolated>/blog/design/publish",
       "route": "/products/{id}/blog"
     },
     {
@@ -2318,6 +2354,18 @@
       "route": null
     },
     {
+      "text": "POST /api/agent/v1/articles/<id>/publish",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/articles/<id>/sync",
+      "route": null
+    },
+    {
+      "text": "PUT /api/agent/v1/articles/<id>/content",
+      "route": null
+    },
+    {
       "text": "GET /api/agent/v1/products",
       "route": null
     },
@@ -2359,6 +2407,10 @@
     },
     {
       "text": "GET /api/agent/v1/products/<id>/blog",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/blog/posts",
       "route": null
     },
     {

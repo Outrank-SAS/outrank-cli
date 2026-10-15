@@ -7,22 +7,22 @@ import { registry } from '../src/commands/index.js';
 import { toolName } from '../src/commands/registry.js';
 import { readWhoamiFixture } from './helpers/mcpHarness.js';
 
-const ALL_TOOL_COUNT = 211;
+const ALL_TOOL_COUNT = 216;
 const CORE_TOOL_COUNT = 16;
 const ENTRY_POINT_COUNT = 16;
 const BRAND_NEW_TOOL_COUNT = CORE_TOOL_COUNT + ENTRY_POINT_COUNT;
 const SUBSCRIBED_NO_PRODUCT_TOOL_COUNT = 33;
 const BUYER_ONLY_TOOL_COUNT = 56;
 const SELLER_ONLY_TOOL_COUNT = 80;
-const BASIC_PLAN_TOOL_COUNT = 106;
+const BASIC_PLAN_TOOL_COUNT = 109;
 const READ_ONLY_ARTICLES_TOOL_COUNT = 74;
-const SELLER_WITH_ARTICLES_TOOL_COUNT = 139;
+const SELLER_WITH_ARTICLES_TOOL_COUNT = 142;
 const READ_ONLY_ALL_TOOL_COUNT = 93;
-const KEYWORDS_AND_ARTICLES_TOOL_COUNT = 25;
+const KEYWORDS_AND_ARTICLES_TOOL_COUNT = 28;
 const IMPROVEMENTS_PREFIX = 'improvements_';
 const IMPROVEMENTS_TOOL_COUNT = 16;
 const BLOG_PREFIX = 'products_blog_';
-const BLOG_TOOL_COUNT = 57;
+const BLOG_TOOL_COUNT = 59;
 const BLOG_READ_TOOL_COUNT = 20;
 const BLOG_ONLY_TOOL_COUNT = BRAND_NEW_TOOL_COUNT + BLOG_TOOL_COUNT;
 const IMPROVEMENTS_READ_TOOLS = [

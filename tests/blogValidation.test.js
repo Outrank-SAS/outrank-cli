@@ -137,6 +137,7 @@ test('irreversible blog tools are flagged destructive so MCP clients ask first',
       'products_blog_design_discard',
       'products_blog_domain_remove',
       'products_blog_pages_delete',
+      'products_blog_posts_delete',
       'products_blog_redirects_delete',
       'products_blog_snippets_delete',
       'products_blog_subscribers_delete',
@@ -153,5 +154,102 @@ test('a post content update needs a title or a body', async () => {
     assert.equal(nonWhoamiRequests().length, 0);
     await call('products_blog_posts_update_content', { product_id: PRODUCT_ID, article_id: TARGET_ID, body: { title: 'T' } });
     assert.equal(nonWhoamiRequests().length, 1);
+  });
+});
+
+const POSTS_PATHNAME = `/api/agent/v1/products/${PRODUCT_ID}/blog/posts`;
+const POST_PATHNAME = `${POSTS_PATHNAME}/${TARGET_ID}`;
+const DESIGN_PATHNAME = `/api/agent/v1/products/${PRODUCT_ID}/blog/design`;
+const SCHEDULED_FOR = '2026-11-01T09:00:00Z';
+
+test('a one-call post create merges the title and status arguments into the body it sends', async () => {
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ call, nonWhoamiRequests }) => {
+    const { envelope } = await call('products_blog_posts_create', {
+      product_id: PRODUCT_ID,
+      title: 'Why Acme',
+      status: 'published',
+      body: { content: '## Why\n\nBecause.', tags: ['news'] },
+    });
+    assert.equal(envelope.ok, true, JSON.stringify(envelope));
+    const [sent] = nonWhoamiRequests();
+    assert.equal(sent.method, 'POST');
+    assert.equal(sent.pathname, POSTS_PATHNAME);
+    assert.deepEqual(sent.body, { content: '## Why\n\nBecause.', tags: ['news'], title: 'Why Acme', status: 'published' });
+  });
+});
+
+test('a post write with two bodies or a schedule without a date is refused before any request', async () => {
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ call, nonWhoamiRequests }) => {
+    const both = await call('products_blog_posts_create', {
+      product_id: PRODUCT_ID,
+      body: { title: 'T', content: 'x', contentHtml: '<p>x</p>' },
+    });
+    assert.equal(both.envelope.error.code, CliErrorCode.INVALID_USAGE);
+    const undated = await call('products_blog_posts_update', {
+      product_id: PRODUCT_ID,
+      article_id: TARGET_ID,
+      status: 'scheduled',
+    });
+    assert.equal(undated.envelope.error.code, CliErrorCode.INVALID_USAGE);
+    const dateOnly = await call('products_blog_posts_update', {
+      product_id: PRODUCT_ID,
+      article_id: TARGET_ID,
+      body: { scheduledFor: SCHEDULED_FOR },
+    });
+    assert.equal(dateOnly.envelope.error.code, CliErrorCode.INVALID_USAGE);
+    assert.equal(nonWhoamiRequests().length, 0);
+  });
+});
+
+test('a post update needs at least one change and sends exactly the changed fields', async () => {
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ call, nonWhoamiRequests }) => {
+    const empty = await call('products_blog_posts_update', { product_id: PRODUCT_ID, article_id: TARGET_ID });
+    assert.equal(empty.envelope.error.code, CliErrorCode.INVALID_USAGE);
+    assert.equal(nonWhoamiRequests().length, 0);
+    await call('products_blog_posts_update', {
+      product_id: PRODUCT_ID,
+      article_id: TARGET_ID,
+      status: 'scheduled',
+      scheduled_for: SCHEDULED_FOR,
+    });
+    const [sent] = nonWhoamiRequests();
+    assert.equal(sent.method, 'PATCH');
+    assert.equal(sent.pathname, POST_PATHNAME);
+    assert.deepEqual(sent.body, { status: 'scheduled', scheduledFor: SCHEDULED_FOR });
+  });
+});
+
+test('a post delete sends DELETE to the post', async () => {
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ call, nonWhoamiRequests }) => {
+    await call('products_blog_posts_delete', { product_id: PRODUCT_ID, article_id: TARGET_ID });
+    const [sent] = nonWhoamiRequests();
+    assert.equal(sent.method, 'DELETE');
+    assert.equal(sent.pathname, POST_PATHNAME);
+  });
+});
+
+test('a design patch needs a config object and merges the publish argument', async () => {
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ call, nonWhoamiRequests }) => {
+    const missing = await call('products_blog_design_patch', { product_id: PRODUCT_ID, body: { publish: true } });
+    assert.equal(missing.envelope.error.code, CliErrorCode.INVALID_USAGE);
+    assert.equal(nonWhoamiRequests().length, 0);
+    const config = { theme: { colors: { accent: '#2563EB' } } };
+    await call('products_blog_design_patch', { product_id: PRODUCT_ID, publish: true, body: { config } });
+    const [sent] = nonWhoamiRequests();
+    assert.equal(sent.method, 'PATCH');
+    assert.equal(sent.pathname, DESIGN_PATHNAME);
+    assert.deepEqual(sent.body, { config, publish: true });
+  });
+});
+
+test('the markdown file option stays CLI-only: MCP tools take the body inline', async () => {
+  await withMcp({ argv: ['--toolsets', 'all'] }, async ({ client, call }) => {
+    const { tools } = await client.listTools();
+    for (const name of ['products_blog_posts_create', 'products_blog_posts_update', 'articles_create']) {
+      const properties = Object.keys(tools.find((tool) => tool.name === name).inputSchema.properties);
+      assert.equal(properties.includes('content_file'), false, name);
+    }
+    const refused = await call('products_blog_posts_create', { product_id: PRODUCT_ID, content_file: '/etc/hosts' });
+    assert.equal(refused.envelope.error.code, CliErrorCode.INVALID_USAGE);
   });
 });

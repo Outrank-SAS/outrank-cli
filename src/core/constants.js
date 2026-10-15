@@ -27,6 +27,8 @@ export const MCP_STARTUP_RESOLVE_TIMEOUT_MS = 3_000;
 
 export const MAX_IMAGE_UPLOAD_MEGABYTES = 5;
 export const MAX_IMAGE_UPLOAD_BYTES = MAX_IMAGE_UPLOAD_MEGABYTES * BYTES_PER_MB;
+export const MAX_TEXT_FILE_MEGABYTES = 1;
+export const MAX_TEXT_FILE_BYTES = MAX_TEXT_FILE_MEGABYTES * BYTES_PER_MB;
 export const MAX_UPSTREAM_ERROR_BODY_CHARS = 500;
 export const MAX_RATE_LIMIT_HEADER_LENGTH = 64;
 export const MAX_TOOL_NAME_LENGTH = 46;
@@ -50,6 +52,7 @@ export const BLOG_TEMPLATES = Object.freeze(['classic', 'editorial', 'journal', 
 export const BLOG_ANALYTICS_RANGES = Object.freeze(['7d', '30d', '90d']);
 export const BLOG_DOMAIN_MODES = Object.freeze(['subdomain', 'apex', 'subfolder']);
 export const BLOG_POST_LIST_STATUSES = Object.freeze(['all', 'published', 'scheduled', 'draft']);
+export const BLOG_POST_WRITE_STATUSES = Object.freeze(['draft', 'published', 'scheduled']);
 export const BLOG_SUBSCRIBER_STATUSES = Object.freeze(['subscribed', 'unsubscribed']);
 export const BLOG_PREVIEW_DESIGN_SCOPE = 'design';
 export const BLOG_PREVIEW_SCOPES = Object.freeze([BLOG_PREVIEW_DESIGN_SCOPE, 'post', 'page']);

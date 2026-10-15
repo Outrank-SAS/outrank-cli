@@ -9,6 +9,11 @@ const DESIGN_JSON = '{"theme":{"template":"editorial"}}';
 const DOMAIN_JSON = '{"mode":"subdomain","hostname":"blog.acme.example.com"}';
 const POST_SETTINGS_JSON = '{"slug":"hello-world","excerpt":"Hello.","tags":["news"]}';
 const POST_CONTENT_JSON = '{"title":"Hello world","content":"## Hello\\n\\nFirst post."}';
+const POST_FILE = 'tests/golden/fixtures/payloads/blog-post.md';
+const MISSING_POST_FILE = 'tests/golden/fixtures/payloads/does-not-exist.md';
+const POST_SEO_JSON = '{"metaDescription":"Why Acme makes reporting simple.","tags":["news"],"newCategoryName":"Guides"}';
+const POST_BOTH_BODIES_JSON = '{"title":"Hello world","content":"x","contentHtml":"<p>x</p>"}';
+const DESIGN_PATCH_JSON = '{"config":{"theme":{"colors":{"accent":"#2563EB"}}}}';
 const PAGE_JSON = '{"title":"About","content":"About Acme.","status":"published","showInNav":true}';
 const POSITIONS_JSON = `{"items":[{"id":"${ITEM_ID}","position":0}]}`;
 const CATEGORY_JSON = '{"name":"Guides"}';
@@ -71,6 +76,8 @@ export default [
   { name: 'design-update', argv: blog('design', 'update', PRODUCT_ID, '--json', DESIGN_JSON) },
   { name: 'design-publish', argv: blog('design', 'publish', PRODUCT_ID) },
   { name: 'design-discard', argv: blog('design', 'discard', PRODUCT_ID) },
+  { name: 'design-patch', argv: blog('design', 'patch', PRODUCT_ID, '--json', DESIGN_PATCH_JSON, '--publish') },
+  { name: 'design-patch-missing-config', argv: blog('design', 'patch', PRODUCT_ID, '--json', '{"publish":true}') },
 
   { name: 'domain-help', argv: blog('domain', '--help'), config: null },
   { name: 'domain-get', argv: blog('domain', 'get', PRODUCT_ID) },
@@ -84,9 +91,46 @@ export default [
   { name: 'posts-list-invalid-status', argv: blog('posts', 'list', PRODUCT_ID, '--status', 'live') },
   { name: 'posts-create', argv: blog('posts', 'create', PRODUCT_ID, '--title', 'Hello world') },
   { name: 'posts-create-untitled', argv: blog('posts', 'create', PRODUCT_ID) },
+  {
+    name: 'posts-create-published-from-file',
+    argv: blog(
+      'posts', 'create', PRODUCT_ID,
+      '--title', 'Why Acme',
+      '--content-file', POST_FILE,
+      '--status', 'published',
+      '--json', POST_SEO_JSON,
+    ),
+  },
+  {
+    name: 'posts-create-scheduled',
+    argv: blog(
+      'posts', 'create', PRODUCT_ID,
+      '--title', 'Why Acme',
+      '--content-file', POST_FILE,
+      '--status', 'scheduled',
+      '--scheduled-for', SCHEDULED_FOR,
+    ),
+  },
+  {
+    name: 'posts-create-scheduled-without-date',
+    argv: blog('posts', 'create', PRODUCT_ID, '--title', 'Why Acme', '--status', 'scheduled'),
+  },
+  { name: 'posts-create-both-bodies', argv: blog('posts', 'create', PRODUCT_ID, '--json', POST_BOTH_BODIES_JSON) },
+  {
+    name: 'posts-create-missing-content-file',
+    argv: blog('posts', 'create', PRODUCT_ID, '--title', 'Why Acme', '--content-file', MISSING_POST_FILE),
+  },
   { name: 'posts-get', argv: blog('posts', 'get', PRODUCT_ID, ITEM_ID) },
   { name: 'posts-get-missing-article', argv: blog('posts', 'get', PRODUCT_ID) },
   { name: 'posts-update', argv: blog('posts', 'update', PRODUCT_ID, ITEM_ID, '--json', POST_SETTINGS_JSON) },
+  {
+    name: 'posts-update-body-from-file',
+    argv: blog('posts', 'update', PRODUCT_ID, ITEM_ID, '--content-file', POST_FILE, '--title', 'Why Acme, updated'),
+  },
+  { name: 'posts-update-unpublish', argv: blog('posts', 'update', PRODUCT_ID, ITEM_ID, '--status', 'draft') },
+  { name: 'posts-update-nothing', argv: blog('posts', 'update', PRODUCT_ID, ITEM_ID) },
+  { name: 'posts-delete', argv: blog('posts', 'delete', PRODUCT_ID, ITEM_ID) },
+  { name: 'posts-delete-missing-article', argv: blog('posts', 'delete', PRODUCT_ID) },
   { name: 'posts-get-content', argv: blog('posts', 'get-content', PRODUCT_ID, ITEM_ID) },
   { name: 'posts-update-content', argv: blog('posts', 'update-content', PRODUCT_ID, ITEM_ID, '--json', POST_CONTENT_JSON) },
   { name: 'posts-update-content-empty', argv: blog('posts', 'update-content', PRODUCT_ID, ITEM_ID, '--json', '{}') },

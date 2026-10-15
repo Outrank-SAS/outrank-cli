@@ -22,7 +22,7 @@ import {
   withMcp,
 } from './helpers/mcpHarness.js';
 
-const ALL_TOOL_COUNT = 211;
+const ALL_TOOL_COUNT = 216;
 const FALLBACK_TOOL_COUNT = 32;
 const KEYWORDS_TOOL_COUNT = 12;
 const READ_ONLY_ALL_TOOL_COUNT = 93;

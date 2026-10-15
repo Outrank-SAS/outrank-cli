@@ -83,6 +83,7 @@ export const buildToolInput = ({ z, spec, describeField, uploads }) => {
   const fieldByArgument = {};
   const images = [];
   for (const [name, field] of Object.entries(spec.input)) {
+    if (field.kind === FieldKind.TEXT_FILE) continue;
     if (field.kind === FieldKind.IMAGE) {
       Object.assign(shape, imageShape(z, name, uploads));
       images.push({ name, field, arguments: imageArgumentNames(name) });

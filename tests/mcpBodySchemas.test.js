@@ -9,6 +9,29 @@ import { withMcp } from './helpers/mcpHarness.js';
 
 const PRODUCT_ID = 'aaaaaaaa-0000-4000-8000-000000000001';
 const ARTICLE_ID = 'bbbbbbbb-0000-4000-8000-000000000002';
+const POST_WRITE_PROPERTIES = Object.freeze([
+  'title',
+  'content',
+  'contentHtml',
+  'metaDescription',
+  'status',
+  'scheduledFor',
+  'slug',
+  'authorId',
+  'categoryId',
+  'newCategoryName',
+  'tags',
+  'featured',
+  'excerpt',
+  'seoTitle',
+  'seoDescription',
+  'ogImageUrl',
+  'coverImageUrl',
+  'coverAlt',
+  'canonicalUrl',
+  'noindex',
+  'showToc',
+]);
 const SHAPED_BODIES = Object.freeze({
   products_create: {
     required: ['name', 'url', 'description', 'target_audiences', 'language', 'keyword_region', 'competitors'],
@@ -71,7 +94,13 @@ const SHAPED_BODIES = Object.freeze({
   products_blog_create: { required: [], properties: ['name', 'subdomain', 'template', 'accentColor', 'publishReadyArticles', 'publishHere'] },
   products_blog_update_settings: { required: [], properties: ['name', 'description', 'language', 'platformSubdomain', 'isPlatformIndexable', 'badgeEnabled', 'analyticsSettings', 'codeInjection'] },
   products_blog_domain_connect: { required: ['mode', 'hostname'], properties: ['mode', 'hostname', 'basePath'] },
-  products_blog_posts_update: { required: [], properties: ['slug', 'authorId', 'categoryId', 'newCategoryName', 'tags', 'featured', 'excerpt', 'seoTitle', 'seoDescription', 'ogImageUrl', 'coverImageUrl', 'coverAlt', 'canonicalUrl', 'noindex', 'showToc'] },
+  products_blog_posts_create: { required: [], properties: POST_WRITE_PROPERTIES },
+  products_blog_posts_update: { required: [], properties: POST_WRITE_PROPERTIES },
+  products_blog_design_patch: { required: [], properties: ['config', 'publish'] },
+  articles_create: {
+    required: [],
+    properties: ['product_id', 'title', 'content', 'content_html', 'meta_description', 'slug', 'image_url', 'tags', 'publish'],
+  },
   products_blog_posts_update_content: { required: [], properties: ['title', 'content'] },
   products_blog_pages_create: { required: ['title'], properties: ['title', 'slug', 'content', 'seoTitle', 'seoDescription', 'status', 'showInNav', 'position', 'layout'] },
   products_blog_pages_update: { required: [], properties: ['title', 'slug', 'content', 'seoTitle', 'seoDescription', 'status', 'showInNav', 'position', 'layout'] },
@@ -143,6 +172,7 @@ test('a free-form JSON value inside a shaped body or a list is not narrowed to a
       'keywords_add:properties.items.items',
       'products_blog_update_settings:properties.analyticsSettings',
       'products_blog_update_settings:properties.codeInjection',
+      'products_blog_design_patch:properties.config',
       'products_blog_authors_create:properties.social',
       'products_blog_authors_update:properties.social',
       'products_blog_snippets_create:properties.content',

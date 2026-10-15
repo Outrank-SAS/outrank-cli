@@ -1,6 +1,6 @@
 import { LIST_MAX_LIMIT, LIST_MIN_LIMIT, MIN_OFFSET, Surface } from '../core/constants.js';
 import { MCP_USAGE_GUIDANCE, usageError } from '../core/errors.js';
-import { image, int, object, oneOf, string, uuid } from '../core/schema.js';
+import { bool, image, int, list, object, oneOf, string, textFile, uuid } from '../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from './registry.js';
 
 const ARTICLE_UPDATE_STATUSES = ['generated', 'approved', 'published'];
@@ -10,7 +10,7 @@ const ARTICLE_EXPECTED_LENGTHS = ['auto', 'short', 'medium', 'long', 'comprehens
 const ARTICLE_TITLE_HINT = 'At most 300 characters.';
 const META_DESCRIPTION_HINT = 'Trimmed to 160 characters.';
 const IMAGE_URL_HINT = 'Absolute http(s) URL.';
-const ARTICLE_STATUS_HINT = 'published publishes through the product integration for real.';
+const ARTICLE_STATUS_HINT = 'Outrank status only; publish to the CMS with articles publish.';
 const ARTICLE_INSTRUCTIONS_HINT = 'Per-article instructions of the linked scheduled keyword.';
 const ARTICLE_SUBTYPE_HINT =
   'guide: howTo | explainer | comparison | reference; listicle: roundup | resources | examples.';
@@ -24,9 +24,21 @@ const ARTICLE_UPDATE_BODY = object().shape({
   article_subtype: oneOf(ARTICLE_SUBTYPES).describe(ARTICLE_SUBTYPE_HINT),
   expected_length: oneOf(ARTICLE_EXPECTED_LENGTHS),
 });
+const ARTICLE_CREATE_BODY = object().shape({
+  product_id: uuid(),
+  title: string().describe(ARTICLE_TITLE_HINT),
+  content: string().describe('The full article body as markdown. Do not repeat the title as a # heading.'),
+  content_html: string().describe('HTML body instead of content; converted to markdown.'),
+  meta_description: string().describe('At most 160 characters.'),
+  slug: string().describe('Lowercase letters, numbers and hyphens; defaults to the title.'),
+  image_url: string().describe(IMAGE_URL_HINT),
+  tags: list(),
+  publish: bool().describe("Also publish it to the product's connected CMS now."),
+});
 
 export const ARTICLES_HELP = `Usage:
   outrank-cli articles list [--product <product-id>] [--status generated|approved|published|failed|deleted] [--title <text>] [--keyword <text>] [--content <text>] [--slug <text>] [--created-from <date>] [--created-to <date>] [--scheduled-from <date>] [--scheduled-to <date>] [--sort-by created_at|status|title] [--sort-order asc|desc] [--limit <n>] [--offset <n>]
+  outrank-cli articles create --product <product-id> --title <title> --content-file <path> [--publish] [--json <object>]
   outrank-cli articles get <article-id>
   outrank-cli articles get-content <article-id> [--format markdown|html]
   outrank-cli articles update <article-id> --json <object>
@@ -35,6 +47,8 @@ export const ARTICLES_HELP = `Usage:
   outrank-cli articles bulk-replace --json <object>
   outrank-cli articles upload-image --file <path> [--article <article-id>] [--keyword <text>]
   outrank-cli articles upload-featured-image <article-id> --file <path>
+  outrank-cli articles publish <article-id>
+  outrank-cli articles sync <article-id>
   outrank-cli articles retry-publish <article-id>
   outrank-cli articles delete <article-id>
   outrank-cli articles precreate <keyword-id>  # eligible future scheduled keyword only
@@ -45,6 +59,7 @@ JSON Input:
 
 Examples:
   outrank-cli articles list --product 00000000-0000-0000-0000-000000000000 --status published --limit 20
+  outrank-cli articles create --product 00000000-0000-0000-0000-000000000000 --title "How to choose a CRM" --content-file crm.md --publish
   outrank-cli articles get 00000000-0000-0000-0000-000000000000
   outrank-cli articles get-content 00000000-0000-0000-0000-000000000000 --format html
   outrank-cli articles update 00000000-0000-0000-0000-000000000000 --json '{"title":"New title"}'
@@ -54,6 +69,8 @@ Examples:
   outrank-cli articles bulk-replace --json-file bulk-replace.json
   outrank-cli articles upload-image --file .\\diagram.png --article 00000000-0000-0000-0000-000000000000
   outrank-cli articles upload-featured-image 00000000-0000-0000-0000-000000000000 --file .\\hero.jpg
+  outrank-cli articles publish 00000000-0000-0000-0000-000000000000
+  outrank-cli articles sync 00000000-0000-0000-0000-000000000000
   outrank-cli articles retry-publish 00000000-0000-0000-0000-000000000000
   outrank-cli articles precreate 00000000-0000-0000-0000-000000000000
   outrank-cli articles generate 00000000-0000-0000-0000-000000000000
@@ -273,6 +290,71 @@ const uploadFeaturedImageCommand = defineCommand({
     }),
 });
 
+const ARTICLE_CREATE_GUIDANCE =
+  'Pass --product <product-id>, --title and the body with --content-file article.md (markdown), or send ' +
+  '{"product_id": "...", "title": "...", "content": "..."} with --json. Add --publish to send it to the CMS.';
+
+const CREATE_REQUIRED_FIELDS = Object.freeze([
+  { field: 'product_id', option: '--product <product-id>' },
+  { field: 'title', option: '--title <title>' },
+]);
+
+const refineCreate = (input, ctx) => {
+  const body = input.body ?? {};
+  const isMcp = ctx.surface === Surface.MCP;
+  const guidance = isMcp ? MCP_USAGE_GUIDANCE : ARTICLE_CREATE_GUIDANCE;
+  const missing = CREATE_REQUIRED_FIELDS.find(({ field }) => !(typeof body[field] === 'string' && body[field].trim()));
+  if (missing) {
+    throw usageError(isMcp ? `${missing.field} is required.` : `Missing required option: ${missing.option}.`, guidance);
+  }
+  const bodies = ['content', 'content_html'].filter((name) => body[name] !== undefined);
+  if (bodies.length !== 1) {
+    throw usageError('Send exactly one of content (markdown) or content_html.', guidance);
+  }
+};
+
+const createCommand = defineCommand({
+  id: 'articles.create',
+  summary: 'Create an article from your own content and optionally publish it to the connected CMS.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: {
+    productId: uuid(),
+    title: string(),
+    contentFile: textFile().describe('Local markdown file used as the body (CLI only).'),
+    publish: bool(),
+  },
+  cli: { options: { product: 'productId' } },
+  body: BodyMode.OPTIONAL_JSON_OR_EMPTY_OBJECT,
+  bodyField: ARTICLE_CREATE_BODY,
+  bodyMerge: { product_id: 'productId', title: 'title', content: 'contentFile', publish: 'publish' },
+  longRunning: { pollTool: 'articles.list' },
+  refine: refineCreate,
+  run: (input, ctx) => ctx.http({ method: 'POST', path: '/articles', body: input.body }),
+});
+
+const publishCommand = defineCommand({
+  id: 'articles.publish',
+  summary: "Publish an article to the product's connected CMS for the first time.",
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: articleIdInput(),
+  cli: ARTICLE_ID_CLI,
+  longRunning: { pollTool: 'articles.get' },
+  run: (input, ctx) => ctx.http({ method: 'POST', path: `${ARTICLE_PATH}/publish`, pathParams: articleIdParams(input) }),
+});
+
+const syncCommand = defineCommand({
+  id: 'articles.sync',
+  summary: 'Push the edits of a published article to the post already in the connected CMS.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  input: articleIdInput(),
+  cli: ARTICLE_ID_CLI,
+  longRunning: { pollTool: 'articles.get' },
+  run: (input, ctx) => ctx.http({ method: 'POST', path: `${ARTICLE_PATH}/sync`, pathParams: articleIdParams(input) }),
+});
+
 const retryPublishCommand = defineCommand({
   id: 'articles.retry-publish',
   summary: 'Retry publishing an article to its integration.',
@@ -329,8 +411,10 @@ export const articlesGroup = defineGroup({
   help: {
     usage: ARTICLES_HELP,
     guidance:
-      'Choose one of: list, get, get-content, update, update-content, replace, bulk-replace, upload-image, ' +
-      'upload-featured-image, retry-publish, delete, precreate, generate.',
+      'Choose one of: list, create, get, get-content, update, update-content, replace, bulk-replace, upload-image, ' +
+      'upload-featured-image, publish, sync, retry-publish, delete, precreate, generate. `create` stores your own ' +
+      'article (add --publish to send it to the CMS), `publish` sends an article to the CMS the first time, and ' +
+      '`sync` pushes later edits to the post already in the CMS.',
   },
   unknown: (word) => ({
     message: `Unknown articles subcommand: ${word}.`,
@@ -338,6 +422,7 @@ export const articlesGroup = defineGroup({
   }),
   children: [
     listCommand,
+    createCommand,
     getCommand,
     getContentCommand,
     updateCommand,
@@ -346,6 +431,8 @@ export const articlesGroup = defineGroup({
     bulkReplaceCommand,
     uploadImageCommand,
     uploadFeaturedImageCommand,
+    publishCommand,
+    syncCommand,
     retryPublishCommand,
     deleteCommand,
     precreateCommand,

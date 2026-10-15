@@ -23,7 +23,7 @@ import {
   withMcp,
 } from './helpers/mcpHarness.js';
 
-const EXPECTED_ROUTE_COUNT = 204;
+const EXPECTED_ROUTE_COUNT = 209;
 const ORCHESTRATOR_ID = 'marketplace.seller.onboard';
 const BROKEN_COMMAND_ID = 'products.broken-probe';
 const BROKEN_PROBE_REASON = 'run() threw: probe failure';

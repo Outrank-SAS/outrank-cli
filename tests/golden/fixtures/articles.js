@@ -18,6 +18,9 @@ const TINY_WEBP_PATH = `${PAYLOADS_DIR}/tiny.webp`;
 const TINY_GIF_PATH = `${PAYLOADS_DIR}/tiny.gif`;
 const NOT_AN_IMAGE_PATH = `${PAYLOADS_DIR}/not-an-image.txt`;
 const NONEXISTENT_IMAGE_PATH = `${PAYLOADS_DIR}/does-not-exist.png`;
+const ARTICLE_MARKDOWN_PATH = `${PAYLOADS_DIR}/article.md`;
+const ARTICLE_CREATE_JSON = `{"product_id":"${PRODUCT_ID}","title":"How to choose a CRM","content_html":"<h2>Start</h2><p>List the steps.</p>","meta_description":"A practical CRM checklist.","slug":"choose-a-crm"}`;
+const ARTICLE_CREATE_TWO_BODIES_JSON = `{"product_id":"${PRODUCT_ID}","title":"x","content":"x","content_html":"<p>x</p>"}`;
 
 export default [
   { name: 'help', argv: ['articles', '--help'], config: null },
@@ -141,6 +144,25 @@ export default [
     argv: ['articles', 'upload-featured-image'],
   },
 
+  {
+    name: 'create-from-file-and-publish',
+    argv: [
+      'articles', 'create',
+      '--product', PRODUCT_ID,
+      '--title', 'How to choose a CRM',
+      '--content-file', ARTICLE_MARKDOWN_PATH,
+      '--publish',
+    ],
+  },
+  { name: 'create-from-json', argv: ['articles', 'create', '--json', ARTICLE_CREATE_JSON] },
+  {
+    name: 'create-missing-product',
+    argv: ['articles', 'create', '--title', 'How to choose a CRM', '--content-file', ARTICLE_MARKDOWN_PATH],
+  },
+  { name: 'create-two-bodies', argv: ['articles', 'create', '--json', ARTICLE_CREATE_TWO_BODIES_JSON] },
+  { name: 'publish', argv: ['articles', 'publish', SECOND_ID] },
+  { name: 'publish-missing-id', argv: ['articles', 'publish'] },
+  { name: 'sync', argv: ['articles', 'sync', SECOND_ID] },
   { name: 'retry-publish', argv: ['articles', 'retry-publish', SECOND_ID] },
   { name: 'retry-publish-missing-id', argv: ['articles', 'retry-publish'] },
 
