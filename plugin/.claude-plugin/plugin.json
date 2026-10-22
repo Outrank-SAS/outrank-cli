@@ -1,0 +1,16 @@
+{
+  "name": "outrank",
+  "displayName": "Outrank",
+  "version": "0.10.0",
+  "description": "Plan SEO keywords, write and publish articles to your site, refresh declining pages and read Search Console, backlink and internal-linking data from Claude, through Outrank's hosted MCP server.",
+  "author": { "name": "Outrank", "email": "support@outrank.so", "url": "https://www.outrank.so" },
+  "homepage": "https://www.outrank.so/docs/mcp",
+  "repository": "https://github.com/Outrank-SAS/outrank-cli",
+  "license": "MIT",
+  "keywords": ["seo", "content", "articles", "keywords", "search-console", "backlinks", "mcp"],
+  "icon": "./logo.png",
+  "documentationUrl": "https://www.outrank.so/docs/mcp",
+  "supportUrl": "https://www.outrank.so/docs/mcp",
+  "privacyPolicyUrl": "https://www.outrank.so/privacy-policy",
+  "termsOfServiceUrl": "https://www.outrank.so/terms-of-use"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "outrank",
+  "owner": { "name": "Outrank", "email": "support@outrank.so" },
+  "plugins": [
+    {
+      "name": "outrank",
+      "source": "./plugin",
+      "description": "Outrank's hosted MCP server: SEO keywords, articles, publishing, Search Console and backlinks."
+    }
+  ]
+}
