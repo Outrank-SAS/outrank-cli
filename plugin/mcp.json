@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "outrank": {
+      "url": "https://www.outrank.so/api/mcp"
+    }
+  }
+}
