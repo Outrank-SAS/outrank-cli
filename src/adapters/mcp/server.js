@@ -23,7 +23,7 @@ import {
   PROGRESS_NOTIFICATION_METHOD,
   WHOAMI_COMMAND_ID,
 } from './constants.js';
-import { describeField, describeTool, toolAnnotations } from './descriptions.js';
+import { describeField, describeTool, toolAnnotations, toolTitle } from './descriptions.js';
 import { createGuidanceRewriter } from './guidance.js';
 import { MCP_LABELS, buildToolInput, parseToolArguments, toRawInput } from './input.js';
 import { buildInstructions } from './instructions.js';
@@ -58,6 +58,7 @@ export const buildToolDefinition = (spec, uploads) => {
     input,
     tool: {
       name: toolName(spec.id),
+      title: toolTitle(spec),
       description: describeTool(spec),
       inputSchema: input.inputSchema,
       annotations: toolAnnotations(spec),
@@ -71,13 +72,18 @@ export const createMcpServer = async ({
   options,
   env,
   readConfig,
+  context,
+  whoami,
+  remote = false,
   timeouts = {},
   logger = createLogger(),
   throttle,
 }) => {
   const progressIntervalMs = timeouts.progressIntervalMs ?? MCP_PROGRESS_INTERVAL_MS;
   const definitions = new Map();
-  const uploads = { dir: options.uploadDir, problem: options.uploadDirProblem ?? null };
+  const uploads = remote
+    ? { dir: null, problem: null }
+    : { dir: options.uploadDir, problem: options.uploadDirProblem ?? null };
   let server = null;
 
   const definitionFor = (spec) => {
@@ -104,6 +110,8 @@ export const createMcpServer = async ({
     options,
     env,
     readConfig,
+    context,
+    whoami,
     timeouts,
     onToolsChanged: notifyToolsChanged,
     ...(throttle ? { throttle } : {}),
@@ -199,7 +207,7 @@ export const createMcpServer = async ({
     { name: MCP_SERVER_NAME, version },
     {
       capabilities: { tools: { listChanged: true }, prompts: { listChanged: true }, resources: {} },
-      instructions: buildInstructions({ session, version }),
+      instructions: buildInstructions({ session, version, remote }),
     },
   );
   server.onerror = (error) => {

@@ -80,6 +80,8 @@ export const createSession = ({
   options,
   env = process.env,
   readConfig = loadConfig,
+  context: fixedContext = null,
+  whoami: initialWhoami = null,
   timeouts = {},
   now = Date.now,
   onToolsChanged = () => {},
@@ -127,13 +129,15 @@ export const createSession = ({
   const resolve = async () => {
     const previousKey = state.resolved?.apiKey;
     try {
-      state.resolved = resolveContext({
-        flags: { profile: options.profile },
-        env,
-        config: await readConfig(),
-        customBaseUrlFromStoredProfileOnly: true,
-        revealLocalDetails: false,
-      });
+      state.resolved =
+        fixedContext ??
+        resolveContext({
+          flags: { profile: options.profile },
+          env,
+          config: await readConfig(),
+          customBaseUrlFromStoredProfileOnly: true,
+          revealLocalDetails: false,
+        });
       state.contextError = null;
     } catch (error) {
       state.resolved = null;
@@ -249,7 +253,10 @@ export const createSession = ({
   const start = async () => {
     if (!options.startupError) await resolve();
     refreshSelection();
-    if (canIdentify()) await withBudget(requestIdentity(), startupBudgetMs);
+    if (initialWhoami && canIdentify()) applyWhoami(initialWhoami);
+    if (canIdentify() && state.identity.status !== IdentityStatus.OK) {
+      await withBudget(requestIdentity(), startupBudgetMs);
+    }
   };
 
   const ensureReady = async () => {

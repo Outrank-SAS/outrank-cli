@@ -115,6 +115,10 @@ outrank-cli auth logout --profile globex                          # clears only 
 
 Requirements: Node.js 18+ (check with `node --version`), an Outrank API key from <https://www.outrank.so/dashboard/settings/api-keys>, and an organization on the current Outrank app version. The same guide is on the web at <https://www.outrank.so/docs/mcp>.
 
+### Remote server
+
+Outrank also hosts the same tools at `https://www.outrank.so/api/mcp` (Streamable HTTP), for clients that connect to a URL instead of starting a command, such as Claude, ChatGPT or Cursor. Sign in with OAuth when the client asks, or send an API key as `Authorization: Bearer outr_live_...`. The hosted server always uses the `auto` toolsets, has no read-only switch and takes images as base64 only: it never reads a file. It is built from `createRemoteMcpServer` in `src/adapters/mcp/remote.js`, which takes the key, the Outrank origin and, optionally, the organization's `auth whoami` envelope so it does not ask for it again.
+
 ### Claude Code
 
 Run this in the project folder (macOS, Linux, WSL, or the Windows Command Prompt):
