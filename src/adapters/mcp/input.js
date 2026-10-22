@@ -17,6 +17,7 @@ const SCHEMA_DIALECT_KEY = '$schema';
 const BROAD_UPLOAD_DIR_GUIDANCE =
   'Ask the human to restart the server with --upload-dir <a directory that holds only the images to upload>, or ' +
   'pass the image as base64 with a file name instead.';
+const REMOTE_UPLOAD_GUIDANCE = 'Pass the image as base64 with a file name instead.';
 const UPLOAD_DIR_GUIDANCE =
   'Ask the human to create the upload directory or to restart the server with --upload-dir <existing directory>.';
 
@@ -39,7 +40,9 @@ const describeFilePath = (names, uploads) =>
 const imageShape = (z, name, uploads) => {
   const names = imageArgumentNames(name);
   return {
-    [names.filePath]: z.string().min(1).describe(describeFilePath(names, uploads)).optional(),
+    ...(uploads.dir === null
+      ? {}
+      : { [names.filePath]: z.string().min(1).describe(describeFilePath(names, uploads)).optional() }),
     [names.base64]: z
       .string()
       .min(1)
@@ -129,6 +132,9 @@ export const parseToolArguments = (toolInput, args) => {
 };
 
 const readImageFromPath = async (filePath, uploads) => {
+  if (uploads.dir === null) {
+    throw usageError('Uploads from a file path are not available on the remote server.', REMOTE_UPLOAD_GUIDANCE);
+  }
   if (uploads.problem) {
     throw usageError(
       `Uploads from a file path are disabled because the upload directory is too broad (${uploads.problem}).`,

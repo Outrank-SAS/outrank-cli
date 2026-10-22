@@ -80,7 +80,15 @@ export const describeField = (spec, name, field) => {
   return `${text}${defaultNote(field)}`;
 };
 
+const TITLE_WORD_SEPARATOR = /[.-]/;
+
+export const toolTitle = (spec) => {
+  const text = spec.id.split(TITLE_WORD_SEPARATOR).join(' ');
+  return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
+};
+
 export const toolAnnotations = (spec) => ({
+  title: toolTitle(spec),
   readOnlyHint: spec.kind === CommandKind.READ || spec.kind === CommandKind.LOCAL,
   destructiveHint: spec.kind === CommandKind.DESTRUCTIVE || spec.kind === CommandKind.MONEY,
   idempotentHint: spec.kind === CommandKind.READ || spec.kind === CommandKind.LOCAL,

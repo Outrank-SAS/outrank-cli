@@ -33,6 +33,7 @@ const WORKFLOW_RULES =
 const SETUP_TOOLS_NOTE = ' Setup tools of every area stay listed.';
 const REFRESH_NOTE = ' The tool list refreshes on its own once the organization lookup succeeds.';
 const ENABLE_HINT = ' The human can change this with --toolsets <names|all> and a restart.';
+const REMOTE_ENABLE_HINT = ' A toolset the organization gets later shows up after the client reconnects.';
 const READ_ONLY_NOTE = ' The server runs read-only: only read tools are listed.';
 const CONFIGURATION_REASON = 'left out by the server configuration';
 const ENTITLEMENT_REASON = 'not available to this organization yet';
@@ -59,7 +60,7 @@ const FLOW_HINTS = Object.freeze({
   marketplace_seller: () => `marketplace selling (${toolName('marketplace.seller.status')})`,
 });
 
-const describeOrganization = (session) => {
+const describeOrganization = (session, remote) => {
   const organization = session.organization();
   const failure = session.failure();
   if (failure) return `Context at startup: unavailable. ${failure.error.message}`;
@@ -67,8 +68,9 @@ const describeOrganization = (session) => {
     session.identity().status === IdentityStatus.OK
       ? `organization ${organization.id ?? 'unknown'} (${organization.user_email ?? 'unknown user'})`
       : 'organization not resolved yet';
+  const where = remote ? `remote server ${organization.base_url}` : `profile ${organization.profile}, base URL ${organization.base_url}`;
   return (
-    `Context at startup: ${who}, profile ${organization.profile}, base URL ${organization.base_url}. This server ` +
+    `Context at startup: ${who}, ${where}. This server ` +
     'works on one organization only; every result carries the current one under `organization`.'
   );
 };
@@ -84,15 +86,17 @@ const offReason = (session, selection) => {
   return FALLBACK_TEXT[session.fallbackReason()] ?? FALLBACK_TEXT[FallbackReason.LOOKUP_PENDING];
 };
 
-const fallbackNote = (session, selection) => {
+const fallbackNote = (session, selection, remote) => {
   if (selection.source !== SelectionSource.FALLBACK) {
     const narrowed = selection.disabledToolsets.length > 0 || toolsetsIn(selection, EntitlementMode.READ).length > 0;
-    return narrowed ? ENABLE_HINT : '';
+    if (!narrowed) return '';
+    return remote ? REMOTE_ENABLE_HINT : ENABLE_HINT;
   }
+  if (remote) return REFRESH_NOTE;
   return FALLBACK_NOTES[session.fallbackReason()] ?? REFRESH_NOTE;
 };
 
-const describeToolsets = (session) => {
+const describeToolsets = (session, remote) => {
   const selection = session.selection();
   const full = toolsetsIn(selection, EntitlementMode.FULL);
   const read = toolsetsIn(selection, EntitlementMode.READ);
@@ -103,7 +107,7 @@ const describeToolsets = (session) => {
     read.length > 0 ? ` Read only: ${read.join(LIST_SEPARATOR)}.` : '',
     off.length > 0 ? ` Off (${offReason(session, selection)}): ${off.join(LIST_SEPARATOR)}.` : '',
     off.length > 0 && automatic ? SETUP_TOOLS_NOTE : '',
-    fallbackNote(session, selection),
+    fallbackNote(session, selection, remote),
     selection.readOnly ? READ_ONLY_NOTE : '',
   ].join('');
 };
@@ -123,15 +127,15 @@ const clip = (text) =>
     ? text
     : `${text.slice(0, MAX_INSTRUCTIONS_CHARS - TRUNCATION_MARK.length)}${TRUNCATION_MARK}`;
 
-export const buildInstructions = ({ session, version }) =>
+export const buildInstructions = ({ session, version, remote = false }) =>
   clip(
     [
       `Outrank MCP server (outrank-cli ${version}) for the Outrank SEO platform.`,
       RESULT_RULES,
       SAFETY_RULES,
       WORKFLOW_RULES,
-      describeOrganization(session),
-      describeToolsets(session),
+      describeOrganization(session, remote),
+      describeToolsets(session, remote),
       describeFlows(session),
     ]
       .filter(Boolean)

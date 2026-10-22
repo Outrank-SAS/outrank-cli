@@ -3,7 +3,7 @@ import { SENSITIVE_BODY_FIELDS } from './constants.js';
 export const REDACTED = '<redacted>';
 const TOO_DEEP = '<nested too deeply>';
 const DEFAULT_MAX_DEPTH = 32;
-const API_KEY_PATTERN = /outr_(?:live|test)_[A-Za-z0-9_]+/g;
+const API_KEY_PATTERN = /outr_(?:live|test|oat|ort)_[A-Za-z0-9_-]+/g;
 const BEARER_PATTERN = /Bearer\s+[A-Za-z0-9._~+/=-]+/g;
 const SENSITIVE_FIELD_SET = new Set(SENSITIVE_BODY_FIELDS.map((name) => name.toLowerCase()));
 const SENSITIVE_KEY_PATTERN = /token|secret|password|passwd|api[_-]?key|authorization|credential|private[_-]?key/i;

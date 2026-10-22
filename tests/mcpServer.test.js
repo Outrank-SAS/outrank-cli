@@ -95,18 +95,21 @@ test('annotations follow the command kind: money and destructive tools ask for c
     const { tools } = await client.listTools();
     const annotationsOf = (name) => tools.find((tool) => tool.name === name).annotations;
     assert.deepEqual(annotationsOf('keywords_list'), {
+      title: 'Keywords list',
       readOnlyHint: true,
       destructiveHint: false,
       idempotentHint: true,
       openWorldHint: true,
     });
     assert.deepEqual(annotationsOf('keywords_add'), {
+      title: 'Keywords add',
       readOnlyHint: false,
       destructiveHint: false,
       idempotentHint: false,
       openWorldHint: true,
     });
     assert.deepEqual(annotationsOf('auth_status'), {
+      title: 'Auth status',
       readOnlyHint: true,
       destructiveHint: false,
       idempotentHint: true,
