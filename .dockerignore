@@ -1,0 +1,9 @@
+node_modules
+tests
+scripts
+.git
+.github
+plugin
+assets
+.claude-plugin
+.cursor-plugin
