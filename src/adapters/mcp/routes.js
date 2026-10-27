@@ -261,7 +261,7 @@ const inputNamed = (spec, key) => Object.keys(spec.input).find((name) => name ==
 const toArgumentValue = (field, value) => {
   if (isPlaceholderSegment(value)) return value;
   try {
-    return parseFieldValue(field, value, '');
+    return parseFieldValue(field, value, '', { coerceEnumText: true });
   } catch {
     return undefined;
   }

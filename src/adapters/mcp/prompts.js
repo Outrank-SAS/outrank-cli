@@ -127,6 +127,32 @@ const improveDecliningArticlesText = (productId) =>
       'the CMS is not connected for pushes and the article must be published by hand.',
   ].join('\n');
 
+const setupAiCitedListsText = (productId) =>
+  [
+    `Set up AI-Cited Lists for product ${productId} so Outrank can pitch the lists ChatGPT cites.`,
+    `1. ai_cited_lists_status {"product_id":"${productId}"}: it says whether the product is on the Backlinks ` +
+      'Enterprise plan and which of the three requirements are missing: mailbox, sender details, top-up consent.',
+    '2. Top-up consent: read the terms with ai_cited_lists_top_up_consent_get, explain that a verified spot costs ' +
+      'credits and that a short balance triggers a credit-pack purchase on the card on file, and call ' +
+      'ai_cited_lists_top_up_consent_confirm only after the user agrees in their own words.',
+    '3. Mailbox: ai_cited_lists_mailbox_connect returns a connect_url the user opens in a browser to allow sending ' +
+      'from their Google mailbox; poll ai_cited_lists_mailbox_poll with the attempt id until status is completed, ' +
+      'failed or expired. On failed, tell the user data.outcome; on either, follow the poll guidance (for ' +
+      'address_mismatch, they sign in with the pinned address; for access_lost, check ai_cited_lists_status) ' +
+      'before any fresh connect. Once completed, ' +
+      'ai_cited_lists_mailbox_get shows the four checks (connection, domain, reply filter, inbox test). Fix them ' +
+      'with ai_cited_lists_mailbox_domain_check, ai_cited_lists_mailbox_filter_test (after the user created the ' +
+      'Gmail forwarding filter) and ai_cited_lists_mailbox_inbox_test.',
+    '4. Sender details: ai_cited_lists_settings_update with the sender name, title and postal address the user ' +
+      'gives you.',
+    '5. Questions and entry: review ai_cited_lists_questions_list (add or edit buyer questions the way a buyer ' +
+      'would ask them) and ai_cited_lists_settings_get for the entry owners publish; ai_cited_lists_entry_generate ' +
+      'rewrites it from the site (minutes).',
+    '6. When ai_cited_lists_status reports the setup as complete, show ai_cited_lists_lists_list: the lists ' +
+      'ChatGPT cites this week get an offer on the next send date unless the user skips one with ' +
+      'ai_cited_lists_lists_skip. Report what ChatGPT said; never promise mentions.',
+  ].join('\n');
+
 const providerHints = Object.freeze({
   'wordpress-plugin': 'start with products_integrations_prepare: it returns the token the user pastes into the plugin.',
   'wordpress-com': 'products_integrations_connect, the user opens connect_url, then products_integrations_poll.',
@@ -195,6 +221,13 @@ const PROMPT_DEFINITIONS = Object.freeze([
     toolset: Toolset.IMPROVEMENTS,
     arguments: [productIdArgument],
     render: (args) => improveDecliningArticlesText(readProductId(args)),
+  },
+  {
+    name: 'setup_ai_cited_lists',
+    description: 'Set up AI-Cited Lists for an Enterprise product: top-up consent, mailbox checks, sender details.',
+    toolset: Toolset.AI_CITED_LISTS,
+    arguments: [productIdArgument],
+    render: (args) => setupAiCitedListsText(readProductId(args)),
   },
   {
     name: 'setup_publishing_integration',

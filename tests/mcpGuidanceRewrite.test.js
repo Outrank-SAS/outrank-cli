@@ -23,7 +23,7 @@ import {
   withMcp,
 } from './helpers/mcpHarness.js';
 
-const EXPECTED_ROUTE_COUNT = 209;
+const EXPECTED_ROUTE_COUNT = 238;
 const ORCHESTRATOR_ID = 'marketplace.seller.onboard';
 const BROKEN_COMMAND_ID = 'products.broken-probe';
 const BROKEN_PROBE_REASON = 'run() threw: probe failure';
@@ -384,6 +384,15 @@ test('literal provider segments map to the provider tools', () => {
     rewrite('POST /api/agent/v1/integration-providers/wordpress-plugin/validate'),
     'products_integrations_validate {"provider":"wordpress-plugin"}',
   );
+});
+
+test('a numeric enum query value in a route mention becomes a number in the tool reference', () => {
+  assert.equal(
+    rewrite('GET /api/agent/v1/products/<id>/ai-citations/summary?weeks=12'),
+    'ai_cited_lists_citations_summary {"product_id":"<id>","weeks":12}',
+  );
+  const unknownWeeks = 'GET /api/agent/v1/products/<id>/ai-citations/summary?weeks=8';
+  assert.equal(rewrite(unknownWeeks), unknownWeeks);
 });
 
 test('unknown paths and bare prefixes are left untouched', () => {

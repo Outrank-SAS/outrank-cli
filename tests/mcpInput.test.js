@@ -4,13 +4,18 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
+import { describeTool } from '../src/adapters/mcp/descriptions.js';
 import { TOOL_NOTES } from '../src/adapters/mcp/toolNotes.js';
 import { registry } from '../src/commands/index.js';
-import { BODY_INPUT_NAME } from '../src/commands/registry.js';
+import { BODY_INPUT_NAME, CommandKind } from '../src/commands/registry.js';
 import { MAX_IMAGE_UPLOAD_BYTES } from '../src/core/constants.js';
 import { CliErrorCode } from '../src/core/errors.js';
 import { bool, int, list, object, oneOf, string, toZodSchema, uuid, validateInput } from '../src/core/schema.js';
 import { withMcp } from './helpers/mcpHarness.js';
+
+const TOOL_NOTE_KEYS = ['note', 'fields', 'body', 'moneyWarning'];
+const TOP_UP_CONSENT_CONFIRM_ID = 'ai-cited-lists.top-up-consent.confirm';
+const GENERIC_MONEY_WARNING_MARK = 'exact plan and amount';
 
 const VALID_UUID = 'aaaaaaaa-0000-4000-8000-000000000001';
 const MIN_LIMIT = 1;
@@ -85,6 +90,10 @@ test('every tool note points at a real tool, a real argument and a real body', (
     const spec = registry.byId.get(id);
     assert.ok(spec, `tool note for unknown command ${id}`);
     assert.notEqual(spec.mcp, false, `tool note for a CLI-only command ${id}`);
+    for (const key of Object.keys(note)) assert.ok(TOOL_NOTE_KEYS.includes(key), `${id}: unknown tool note key ${key}`);
+    if (note.moneyWarning !== undefined) {
+      assert.equal(spec.kind, CommandKind.MONEY, `${id}: moneyWarning on a tool that is not a money tool`);
+    }
     for (const fieldName of Object.keys(note.fields ?? {})) {
       assert.ok(Object.hasOwn(spec.input, fieldName), `${id}: note for unknown argument ${fieldName}`);
       assert.notEqual(fieldName, BODY_INPUT_NAME, `${id}: describe the body with the body note`);
@@ -93,6 +102,14 @@ test('every tool note points at a real tool, a real argument and a real body', (
       assert.ok(Object.hasOwn(spec.input, BODY_INPUT_NAME), `${id}: body note on a tool without a body`);
     }
   }
+});
+
+test('a money tool with its own warning describes that warning instead of the generic one', () => {
+  const spec = registry.byId.get(TOP_UP_CONSENT_CONFIRM_ID);
+  const description = describeTool(spec);
+  assert.equal(spec.kind, CommandKind.MONEY);
+  assert.ok(description.includes(TOOL_NOTES[TOP_UP_CONSENT_CONFIRM_ID].moneyWarning));
+  assert.equal(description.includes(GENERIC_MONEY_WARNING_MARK), false);
 });
 
 test('every tool that takes a body says which fields it accepts', () => {
@@ -265,6 +282,17 @@ test('a file whose name starts with two dots inside the upload directory is acce
       assert.equal(envelope.ok, true);
       assert.equal(calls.at(-1).body.file_name, '..dots.png');
     });
+  });
+});
+
+test('the dkim-selector choice error names MCP arguments, not CLI flags', async () => {
+  await withMcp({ argv: ALL_TOOLSETS }, async ({ call, calls }) => {
+    const before = calls.length;
+    const { envelope } = await call('ai_cited_lists_mailbox_dkim_selector', { product_id: VALID_UUID });
+    assert.equal(envelope.error.code, CliErrorCode.INVALID_USAGE);
+    assert.equal(envelope.error.message, 'Pass exactly one of selector or reset.');
+    assert.equal(envelope.agent_guidance.includes('--'), false);
+    assert.equal(calls.length, before);
   });
 });
 

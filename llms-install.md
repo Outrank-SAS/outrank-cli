@@ -1,6 +1,6 @@
 # Installing the Outrank MCP server
 
-Outrank is an SEO content platform. Its MCP server plans keywords, generates and publishes articles, rewrites declining pages, and reads Search Console, backlink and internal-linking data for the user's Outrank organization.
+Outrank is an SEO content platform. Its MCP server plans keywords, generates and publishes articles, rewrites declining pages, runs AI-Cited Lists outreach for Backlinks Enterprise products, and reads Search Console, backlink and internal-linking data for the user's Outrank organization.
 
 ## Option 1: hosted server (recommended)
 

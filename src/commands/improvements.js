@@ -1,6 +1,7 @@
 import { IMPROVEMENTS_CANDIDATES_MAX_LIMIT, LIST_MAX_LIMIT, LIST_MIN_LIMIT, MIN_OFFSET } from '../core/constants.js';
 import { BoolSerialize, bool, int, list, object, oneOf, string, uuid } from '../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from './registry.js';
+import { subGroup } from './subGroup.js';
 
 const WEEKDAY_CODES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const ENABLED_HINT = 'true starts the unattended improvement loop.';
@@ -342,17 +343,6 @@ const executionsPush = defineCommand({
       body: input.body,
     }),
 });
-
-const subGroup = ({ id, usage, actions, children }) =>
-  defineGroup({
-    id,
-    help: { usage, guidance: `Use: improvements ${id.slice(id.indexOf('.') + 1)} ${actions}.` },
-    unknown: (word) => ({
-      message: `Unknown ${id.slice(id.indexOf('.') + 1)} action: ${word}.`,
-      guidance: `Use: improvements ${id.slice(id.indexOf('.') + 1)} ${actions}.`,
-    }),
-    children,
-  });
 
 export const improvementsGroup = defineGroup({
   id: 'improvements',

@@ -25,7 +25,8 @@
       "flows": {
         "articles": false,
         "marketplace_buyer": false,
-        "marketplace_seller": false
+        "marketplace_seller": false,
+        "ai_cited_lists": false
       },
       "disabled_products_with_services": 0
     }

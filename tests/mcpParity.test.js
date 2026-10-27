@@ -12,7 +12,7 @@ const API_KEY_PLACEHOLDER = '<API_KEY-1>';
 const PRODUCT_ID = 'aaaaaaaa-0000-4000-8000-000000000001';
 const SECOND_ID = 'bbbbbbbb-0000-4000-8000-000000000002';
 const THIRD_ID = 'cccccccc-0000-4000-8000-000000000003';
-const COMMAND_GROUP_COUNT = 15;
+const COMMAND_GROUP_COUNT = 16;
 
 const CASES = [
   { fixture: 'auth/whoami', tool: 'auth_whoami', args: {} },
@@ -127,6 +127,16 @@ const CASES = [
     fixture: 'marketplaceBuyer/target-pages-add-with-source',
     tool: 'marketplace_buyer_target_pages_add',
     args: { product_id: PRODUCT_ID, urls: ['https://example.com/features'], source: 'discovered' },
+  },
+  {
+    fixture: 'aiCitedLists/questions-add',
+    tool: 'ai_cited_lists_questions_add',
+    args: { product_id: PRODUCT_ID, question: 'What is the best CRM for startups?' },
+  },
+  {
+    fixture: 'aiCitedLists/citations-summary-weeks-12',
+    tool: 'ai_cited_lists_citations_summary',
+    args: { product_id: PRODUCT_ID, weeks: 12 },
   },
   {
     fixture: 'marketplaceBuyer/change-plan-cancel-with-confirm-subscription-id',

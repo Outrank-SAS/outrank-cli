@@ -1,6 +1,6 @@
 {
   "name": "outrank-cli",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "mcpName": "so.outrank/outrank",
   "description": "Agent-first CLI and MCP server for the Outrank agent API",
   "type": "module",

@@ -1,0 +1,9 @@
+{
+  "sender_name": "Ada Lovelace",
+  "sender_title": "Founder",
+  "postal_address": "1 Main St, Austin, TX 78701",
+  "outrank_answers_replies": true,
+  "blocked_sites": ["competitor.example", "spam.example"],
+  "entry_mode": "custom",
+  "custom_entry": { "markdown": "**Acme** is the analytics tool for privacy-first teams." }
+}

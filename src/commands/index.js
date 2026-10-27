@@ -1,3 +1,4 @@
+import { aiCitedListsGroup } from './aiCitedLists.js';
 import { articlesGroup } from './articles.js';
 import { authGroup } from './auth.js';
 import { billingGroup } from './billing.js';
@@ -19,4 +20,5 @@ export const registry = createRegistry([
   improvementsGroup,
   productsGroup,
   marketplaceGroup,
+  aiCitedListsGroup,
 ]);

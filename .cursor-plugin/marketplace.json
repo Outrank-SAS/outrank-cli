@@ -3,7 +3,7 @@
   "owner": { "name": "Outrank", "email": "support@outrank.so" },
   "metadata": {
     "description": "Outrank's hosted MCP server for SEO keywords, articles, publishing, Search Console and backlinks.",
-    "version": "0.10.0"
+    "version": "0.11.0"
   },
   "plugins": [
     {
