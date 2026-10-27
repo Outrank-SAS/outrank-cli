@@ -34,7 +34,8 @@
       "flows": {
         "articles": true,
         "marketplace_buyer": false,
-        "marketplace_seller": true
+        "marketplace_seller": true,
+        "ai_cited_lists": false
       },
       "disabled_products_with_services": 1
     }

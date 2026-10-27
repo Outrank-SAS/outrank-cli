@@ -1,0 +1,1076 @@
+{
+  "help": {
+    "argv": [
+      "ai-cited-lists",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli ai-cited-lists status <product-id>\\n  outrank-cli ai-cited-lists overview <product-id>\\n  outrank-cli ai-cited-lists lists list <product-id> [--view all|to_send|skipped]\\n  outrank-cli ai-cited-lists lists skip <product-id> <list-id>\\n  outrank-cli ai-cited-lists lists unskip <product-id> <list-id>\\n  outrank-cli ai-cited-lists outreach <product-id>\\n  outrank-cli ai-cited-lists offers get <product-id> <offer-id>\\n  outrank-cli ai-cited-lists offers withdraw <product-id> <offer-id>\\n  outrank-cli ai-cited-lists wins get <product-id> <offer-id>\\n  outrank-cli ai-cited-lists questions list <product-id>\\n  outrank-cli ai-cited-lists questions add <product-id> --question \\\"<text>\\\"\\n  outrank-cli ai-cited-lists questions edit <product-id> <question-id> --question \\\"<text>\\\"\\n  outrank-cli ai-cited-lists questions remove <product-id> <question-id>\\n  outrank-cli ai-cited-lists settings get <product-id>\\n  outrank-cli ai-cited-lists settings update <product-id> --json <object>\\n  outrank-cli ai-cited-lists mailbox get <product-id>\\n  outrank-cli ai-cited-lists mailbox connect <product-id> [--email <address>]\\n  outrank-cli ai-cited-lists mailbox poll <product-id> --attempt-id <attempt-id>\\n  outrank-cli ai-cited-lists mailbox domain-check <product-id>\\n  outrank-cli ai-cited-lists mailbox inbox-test <product-id>\\n  outrank-cli ai-cited-lists mailbox filter-test <product-id>\\n  outrank-cli ai-cited-lists mailbox dkim-selector <product-id> --selector <name> | --reset\\n  outrank-cli ai-cited-lists mailbox disconnect <product-id>\\n  outrank-cli ai-cited-lists top-up-consent get <product-id>\\n  outrank-cli ai-cited-lists top-up-consent confirm <product-id>\\n  outrank-cli ai-cited-lists entry generate <product-id>\\n  outrank-cli ai-cited-lists setup finish <product-id>\\n  outrank-cli ai-cited-lists citations summary <product-id> [--weeks 4|12]\\n  outrank-cli ai-cited-lists citations check <product-id>\\n\\nJSON Input:\\n  Use one of: --json '<object>', --json-file payload.json, or --json-stdin\\n\\nNotes:\\n  AI-Cited Lists is part of the Backlinks Enterprise plan: Outrank asks ChatGPT the product's buyer questions\\n  several times a week, finds the \\\"best of\\\" lists it cites, and emails each list's owner from the customer's own\\n  Google mailbox with a paid offer for the #1 or #2 spot. Credits are charged only once the owner has placed\\n  the product (top-up-consent get shows the prices); a short balance is covered by an automatic credit-pack\\n  purchase that an organization admin confirms once with top-up-consent confirm. Sending needs a connected\\n  mailbox with four green checks, the sender details and that consent: status lists what is still missing.\\n  mailbox connect returns a connect_url the human opens in a browser; entry generate takes a few minutes.\\n\\nExamples:\\n  outrank-cli ai-cited-lists status <UUID-1>\\n  outrank-cli ai-cited-lists lists list <UUID-1> --view to_send\\n  outrank-cli ai-cited-lists lists skip <UUID-1> <UUID-1>\\n  outrank-cli ai-cited-lists questions add <UUID-1> --question \\\"What is the best privacy-friendly analytics tool?\\\"\\n  outrank-cli ai-cited-lists settings update <UUID-1> --json '{\\\"sender_name\\\":\\\"Ada Lovelace\\\",\\\"sender_title\\\":\\\"Founder\\\",\\\"postal_address\\\":\\\"1 Main St, Austin, TX 78701\\\"}'\\n  outrank-cli ai-cited-lists mailbox connect <UUID-1> --email ada@acme.com\\n  outrank-cli ai-cited-lists mailbox poll <UUID-1> --attempt-id <attempt-id>\\n  outrank-cli ai-cited-lists top-up-consent confirm <UUID-1>\\n  outrank-cli ai-cited-lists citations summary <UUID-1> --weeks 12\"\n  },\n  \"agent_guidance\": \"Start with status: it says whether the product is on the Enterprise plan and what the outreach setup still needs (mailbox, sender details, top-up consent). Then overview, lists, outreach, offers, wins, questions, settings, mailbox, top-up-consent, entry, setup or citations.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-subgroup": {
+    "argv": [
+      "ai-cited-lists",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown ai-cited-lists sub-noun: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli ai-cited-lists --help` to see the available AI-Cited Lists commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "mailbox-unknown-action": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "nonsense",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown mailbox action: nonsense.\"\n  },\n  \"agent_guidance\": \"Use: ai-cited-lists mailbox get|connect|poll|domain-check|inbox-test|filter-test|dkim-selector|disconnect.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "status": {
+    "argv": [
+      "ai-cited-lists",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-missing-id": {
+    "argv": [
+      "ai-cited-lists",
+      "status"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "status-no-key": {
+    "argv": [
+      "ai-cited-lists",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "status-not-found": {
+    "argv": [
+      "ai-cited-lists",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-non-json": {
+    "argv": [
+      "ai-cited-lists",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_UPSTREAM_ERROR\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/status\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-network-error": {
+    "argv": [
+      "ai-cited-lists",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "overview": {
+    "argv": [
+      "ai-cited-lists",
+      "overview",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/overview",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "lists-list": {
+    "argv": [
+      "ai-cited-lists",
+      "lists",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/lists",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "lists-list-view-to-send": {
+    "argv": [
+      "ai-cited-lists",
+      "lists",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--view",
+      "to_send"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/lists?view=to_send",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "lists-list-view-invalid": {
+    "argv": [
+      "ai-cited-lists",
+      "lists",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--view",
+      "later"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--view must be one of: all, to_send, skipped.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "lists-skip": {
+    "argv": [
+      "ai-cited-lists",
+      "lists",
+      "skip",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/lists/bbbbbbbb-0000-4000-8000-000000000002/skip",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "lists-skip-missing-list-id": {
+    "argv": [
+      "ai-cited-lists",
+      "lists",
+      "skip",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <list-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "lists-unskip": {
+    "argv": [
+      "ai-cited-lists",
+      "lists",
+      "unskip",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/lists/bbbbbbbb-0000-4000-8000-000000000002/unskip",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "outreach": {
+    "argv": [
+      "ai-cited-lists",
+      "outreach",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/outreach",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "offers-get": {
+    "argv": [
+      "ai-cited-lists",
+      "offers",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/offers/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "offers-get-missing-offer-id": {
+    "argv": [
+      "ai-cited-lists",
+      "offers",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <offer-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "offers-withdraw": {
+    "argv": [
+      "ai-cited-lists",
+      "offers",
+      "withdraw",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/offers/bbbbbbbb-0000-4000-8000-000000000002/withdraw",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "wins-get": {
+    "argv": [
+      "ai-cited-lists",
+      "wins",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/wins/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "questions-list": {
+    "argv": [
+      "ai-cited-lists",
+      "questions",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/questions",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "questions-add": {
+    "argv": [
+      "ai-cited-lists",
+      "questions",
+      "add",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--question",
+      "What is the best CRM for startups?"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/questions",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "question": "What is the best CRM for startups?"
+        }
+      }
+    ]
+  },
+  "questions-add-missing-question": {
+    "argv": [
+      "ai-cited-lists",
+      "questions",
+      "add",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --question <text>.\"\n  },\n  \"agent_guidance\": \"Pass the buyer question as text, e.g. `--question \\\"What is the best CRM?\\\"`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "questions-edit": {
+    "argv": [
+      "ai-cited-lists",
+      "questions",
+      "edit",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--question",
+      "What is the best CRM for startups?"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/questions/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "question": "What is the best CRM for startups?"
+        }
+      }
+    ]
+  },
+  "questions-remove": {
+    "argv": [
+      "ai-cited-lists",
+      "questions",
+      "remove",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/questions/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "settings-get": {
+    "argv": [
+      "ai-cited-lists",
+      "settings",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "settings-update-inline": {
+    "argv": [
+      "ai-cited-lists",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"sender_name\":\"Ada Lovelace\",\"sender_title\":\"Founder\",\"allow_second_position\":false}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "sender_name": "Ada Lovelace",
+          "sender_title": "Founder",
+          "allow_second_position": false
+        }
+      }
+    ]
+  },
+  "settings-update-json-file": {
+    "argv": [
+      "ai-cited-lists",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json-file",
+      "tests/golden/fixtures/payloads/ai-cited-lists-settings-update.json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "sender_name": "Ada Lovelace",
+          "sender_title": "Founder",
+          "postal_address": "1 Main St, Austin, TX 78701",
+          "outrank_answers_replies": true,
+          "blocked_sites": [
+            "competitor.example",
+            "spam.example"
+          ],
+          "entry_mode": "custom",
+          "custom_entry": {
+            "markdown": "**Acme** is the analytics tool for privacy-first teams."
+          }
+        }
+      }
+    ]
+  },
+  "settings-update-no-json-source": {
+    "argv": [
+      "ai-cited-lists",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "settings-update-invalid-entry-mode": {
+    "argv": [
+      "ai-cited-lists",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"entry_mode\":\"manual\"}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--json.entry_mode must be one of: generated, custom.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "settings-update-blurb-null": {
+    "argv": [
+      "ai-cited-lists",
+      "settings",
+      "update",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"listing_blurb\":null}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/settings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "listing_blurb": null
+        }
+      }
+    ]
+  },
+  "mailbox-get": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "mailbox-connect": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "connect",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox/connect",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
+  },
+  "mailbox-connect-email": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "connect",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--email",
+      "ada@acme.example"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox/connect",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "email": "ada@acme.example"
+        }
+      }
+    ]
+  },
+  "mailbox-poll": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "poll",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--attempt-id",
+      "attempt-123"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox/connect?attempt_id=attempt-123",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "mailbox-poll-missing-attempt": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "poll",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --attempt-id <attempt-id>.\"\n  },\n  \"agent_guidance\": \"Pass the attempt_id returned by `ai-cited-lists mailbox connect`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "mailbox-domain-check": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "domain-check",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox/domain-check",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "mailbox-inbox-test": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "inbox-test",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox/inbox-test",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "mailbox-filter-test": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "filter-test",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox/filter-test",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "mailbox-dkim-selector": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "dkim-selector",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--selector",
+      "google2026"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox/dkim-selector",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "selector": "google2026"
+        }
+      }
+    ]
+  },
+  "mailbox-dkim-selector-reset": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "dkim-selector",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--reset"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "PATCH",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox/dkim-selector",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "selector": null
+        }
+      }
+    ]
+  },
+  "mailbox-dkim-selector-missing-choice": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "dkim-selector",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Pass exactly one of --selector or --reset.\"\n  },\n  \"agent_guidance\": \"Pass `--selector <name>` to set the Workspace DKIM selector, or `--reset` to go back to the default.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "mailbox-dkim-selector-both": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "dkim-selector",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--selector",
+      "google2026",
+      "--reset"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Pass exactly one of --selector or --reset.\"\n  },\n  \"agent_guidance\": \"Pass `--selector <name>` to set the Workspace DKIM selector, or `--reset` to go back to the default.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "mailbox-disconnect": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "disconnect",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "top-up-consent-get": {
+    "argv": [
+      "ai-cited-lists",
+      "top-up-consent",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/top-up-consent",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "top-up-consent-confirm": {
+    "argv": [
+      "ai-cited-lists",
+      "top-up-consent",
+      "confirm",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/top-up-consent",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "accepted": true
+        }
+      }
+    ]
+  },
+  "entry-generate": {
+    "argv": [
+      "ai-cited-lists",
+      "entry",
+      "generate",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/entry/base",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "entry-generate-gateway-502": {
+    "argv": [
+      "ai-cited-lists",
+      "entry",
+      "generate",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/entry/base\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli ai-cited-lists settings get until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/entry/base",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "setup-finish": {
+    "argv": [
+      "ai-cited-lists",
+      "setup",
+      "finish",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/setup/finish",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "citations-summary": {
+    "argv": [
+      "ai-cited-lists",
+      "citations",
+      "summary",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-citations/summary",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "citations-summary-weeks-12": {
+    "argv": [
+      "ai-cited-lists",
+      "citations",
+      "summary",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--weeks",
+      "12"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-citations/summary?weeks=12",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "citations-summary-weeks-invalid": {
+    "argv": [
+      "ai-cited-lists",
+      "citations",
+      "summary",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--weeks",
+      "8"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--weeks must be one of: 4, 12.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "citations-check": {
+    "argv": [
+      "ai-cited-lists",
+      "citations",
+      "check",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-citations/check",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  }
+}

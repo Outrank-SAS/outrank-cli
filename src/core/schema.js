@@ -83,7 +83,7 @@ const parseInteger = (value, label) => {
   return Number(value);
 };
 
-const parseScalar = (field, value, label) => {
+const parseScalar = (field, value, label, { coerceEnumText = false } = {}) => {
   if (field.kind === FieldKind.STRING) {
     if (typeof value !== 'string') throw usageError(`${label} must be a string.`);
     return value;
@@ -111,8 +111,11 @@ const parseScalar = (field, value, label) => {
     throw usageError(`${label} must be true or false.`);
   }
   if (field.kind === FieldKind.ENUM) {
-    if (!field.values.includes(value)) throw usageError(`${label} must be one of: ${field.values.join(', ')}.`);
-    return value;
+    const match = field.values.find(
+      (candidate) => candidate === value || (coerceEnumText && String(candidate) === value),
+    );
+    if (match === undefined) throw usageError(`${label} must be one of: ${field.values.join(', ')}.`);
+    return match;
   }
   if (field.kind === FieldKind.OBJECT) {
     if (!isPlainObject(value)) throw usageError(`${label} must be a JSON object.`);
@@ -139,11 +142,11 @@ const splitListValues = (field, value, splitLists) => {
   return rawItems.flatMap((item) => (typeof item === 'string' ? item.split(field.split) : [item]));
 };
 
-const parseList = (field, value, label, splitLists) => {
+const parseList = (field, value, label, splitLists, coerceEnumText) => {
   const items = splitListValues(field, value, splitLists)
     .map((item) => (typeof item === 'string' ? item.trim() : item))
     .filter((item) => item !== '');
-  return items.map((item) => parseScalar(field.item, item, label));
+  return items.map((item) => parseScalar(field.item, item, label, { coerceEnumText }));
 };
 
 const withFieldGuidance = (field, run) => {
@@ -157,11 +160,11 @@ const withFieldGuidance = (field, run) => {
   }
 };
 
-export const parseFieldValue = (field, value, label, { splitLists = true } = {}) =>
+export const parseFieldValue = (field, value, label, { splitLists = true, coerceEnumText = false } = {}) =>
   withFieldGuidance(field, () => {
     if (value === '') throw usageError(`${label} requires a value.`);
-    if (field.kind === FieldKind.LIST) return parseList(field, value, label, splitLists);
-    return parseScalar(field, value, label);
+    if (field.kind === FieldKind.LIST) return parseList(field, value, label, splitLists, coerceEnumText);
+    return parseScalar(field, value, label, { coerceEnumText });
   });
 
 const missingPropertyError = (property, label) => {
@@ -202,7 +205,11 @@ const missingFieldError = (field, name, missingMessage) => {
 
 const cloneDefault = (value) => (value !== null && typeof value === 'object' ? structuredClone(value) : value);
 
-export const validateInput = (fields, raw, { labelOf = (name) => name, missingOf, splitLists = true } = {}) => {
+export const validateInput = (
+  fields,
+  raw,
+  { labelOf = (name) => name, missingOf, splitLists = true, coerceEnumText = false } = {},
+) => {
   const missingMessage = missingOf ?? ((name) => `Missing required input: ${labelOf(name)}.`);
   const result = {};
   for (const [name, field] of Object.entries(fields)) {
@@ -212,7 +219,7 @@ export const validateInput = (fields, raw, { labelOf = (name) => name, missingOf
       if (field.defaultValue !== undefined) result[name] = cloneDefault(field.defaultValue);
       continue;
     }
-    const parsed = parseFieldValue(field, value, labelOf(name), { splitLists });
+    const parsed = parseFieldValue(field, value, labelOf(name), { splitLists, coerceEnumText });
     if (field.kind === FieldKind.LIST && field.isRequired && parsed.length === 0) {
       throw missingFieldError(field, name, missingMessage);
     }
@@ -239,6 +246,9 @@ const boundedNumber = (schema, field) => {
   return bounded;
 };
 
+const zodEnum = (z, values) =>
+  values.every((value) => typeof value === 'string') ? z.enum(values) : z.literal(values);
+
 const zodScalar = (z, field, options = {}) => {
   const { jsonAsObject = false, inBody = false } = options;
   if (field.kind === FieldKind.STRING) return inBody ? z.string() : z.string().min(1);
@@ -246,7 +256,7 @@ const zodScalar = (z, field, options = {}) => {
   if (field.kind === FieldKind.INT) return boundedNumber(z.number().int(), field);
   if (field.kind === FieldKind.NUMBER) return boundedNumber(z.number(), field);
   if (field.kind === FieldKind.BOOL) return z.boolean();
-  if (field.kind === FieldKind.ENUM) return z.enum(field.values);
+  if (field.kind === FieldKind.ENUM) return zodEnum(z, field.values);
   if (field.kind === FieldKind.OBJECT) {
     if (!field.properties) return z.object({}).passthrough();
     const propertyOptions = { ...options, inBody: true, jsonAsObject: false };

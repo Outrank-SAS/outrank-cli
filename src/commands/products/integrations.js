@@ -1,7 +1,15 @@
 import { usageError } from '../../core/errors.js';
 import { oneOf, string, uuid } from '../../core/schema.js';
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from '../registry.js';
-import { PRODUCT_CLI, productInput, productParams, withProduct } from './shared.js';
+import {
+  ATTEMPT_ID_PLACEHOLDERS,
+  PRODUCT_CLI,
+  attemptIdInput,
+  attemptIdQuery,
+  productInput,
+  productParams,
+  withProduct,
+} from './shared.js';
 
 const INTEGRATIONS_USAGE = `Usage:
   outrank-cli products integrations providers
@@ -92,12 +100,9 @@ const INTEGRATION_PATH = '/products/{productId}/integrations/{integrationId}';
 const CONNECT_PATH = '/products/{productId}/integrations/connect/{provider}';
 const PROVIDER_PRODUCT_CLI = { positionals: ['provider', 'productId'] };
 const INTEGRATION_CLI = withProduct(['integrationId']);
-const ATTEMPT_ID_PLACEHOLDERS = { attemptId: '<attempt-id>' };
-const ATTEMPT_ID_REQUIRED = {
-  guidance:
-    'Run `outrank-cli products integrations poll <provider> <product-id> --attempt-id <attempt-id>` after ' +
-    'connect starts.',
-};
+const ATTEMPT_ID_GUIDANCE =
+  'Run `outrank-cli products integrations poll <provider> <product-id> --attempt-id <attempt-id>` after ' +
+  'connect starts.';
 const SENSITIVE_BODY = { sensitiveBody: true };
 
 const providerInput = (providers) => ({ provider: oneOf(providers).required(), ...productInput() });
@@ -147,14 +152,14 @@ const poll = defineCommand({
   summary: 'Poll an OAuth connect attempt until the handoff completes.',
   kind: CommandKind.READ,
   toolsets: TOOLSETS,
-  input: { ...providerInput(CONNECT_PROVIDERS), attemptId: string().required(ATTEMPT_ID_REQUIRED) },
+  input: { ...providerInput(CONNECT_PROVIDERS), ...attemptIdInput(ATTEMPT_ID_GUIDANCE) },
   cli: { ...PROVIDER_PRODUCT_CLI, placeholders: ATTEMPT_ID_PLACEHOLDERS },
   run: (input, ctx) =>
     ctx.http({
       method: 'GET',
       path: CONNECT_PATH,
       pathParams: providerParams(input),
-      query: { attempt_id: input.attemptId },
+      query: attemptIdQuery(input),
     }),
 });
 

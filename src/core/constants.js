@@ -66,6 +66,10 @@ export const BLOG_REDIRECT_GONE_STATUS_CODE = 410;
 export const BLOG_REDIRECT_STATUS_CODES = Object.freeze([301, 302, BLOG_REDIRECT_GONE_STATUS_CODE]);
 export const BLOG_WEBHOOK_EVENTS = Object.freeze(['subscriber.created']);
 
+export const AI_CITATIONS_PERIOD_WEEKS = Object.freeze([4, 12]);
+export const AI_CITED_LISTS_LIST_VIEWS = Object.freeze(['all', 'to_send', 'skipped']);
+export const AI_CITED_LISTS_ENTRY_MODES = Object.freeze(['generated', 'custom']);
+
 export const BILLING_MIN_ADDITIONAL_PRODUCTS = 1;
 export const BILLING_MAX_ADDITIONAL_PRODUCTS = 30;
 export const BILLING_MIN_CONFIRM_CHARGE_CENTS = 0;

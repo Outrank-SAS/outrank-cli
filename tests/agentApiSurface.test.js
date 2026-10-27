@@ -30,7 +30,15 @@ const PATH_SEPARATOR = '/';
 const PARAM_SEGMENT_PATTERN = /^\{[^}]+\}$/;
 const COMMIT_PATTERN = /^[0-9a-f]{40}$/;
 const PLACEHOLDER_PATTERN = /^(?:<[^>]+>|\{[^}]+\})$/;
-const SERVER_ROUTES_WITHOUT_TOOL = Object.freeze([]);
+const KNOWLEDGE_ROUTES_PENDING_CLI = Object.freeze([
+  'GET /products/{id}/knowledge/facts',
+  'GET /products/{id}/knowledge/sources',
+  'POST /products/{id}/knowledge/sources',
+  'GET /products/{id}/knowledge/sources/{sourceId}',
+  'DELETE /products/{id}/knowledge/sources/{sourceId}',
+]);
+const SERVER_ROUTES_WITHOUT_TOOL = KNOWLEDGE_ROUTES_PENDING_CLI;
+const ROUTE_KEY_SEPARATOR = ' ';
 const NO_UPLOADS = Object.freeze({ dir: null, problem: null });
 const SERVER_CHECKOUT = '/server-checkout';
 const STUB_COMMIT = '0123456789abcdef0123456789abcdef01234567';
@@ -65,7 +73,18 @@ const isInstanceOf = (concrete, general) => {
   );
 };
 
-const routeKey = ({ method, path: template }) => `${method} ${template}`;
+const routeKey = ({ method, path: template }) => `${method}${ROUTE_KEY_SEPARATOR}${template}`;
+
+const mentionsRouteWithoutTool = (mention) =>
+  SERVER_ROUTES_WITHOUT_TOOL.some((key) => {
+    const [method, template] = key.split(ROUTE_KEY_SEPARATOR);
+    const templateSegments = segmentsOf(template);
+    return (
+      mention.methods.every((mentioned) => mentioned === undefined || mentioned === method) &&
+      templateSegments.length === mention.segments.length &&
+      templateSegments.every((segment, position) => isParam(segment) || segment === mention.segments[position])
+    );
+  });
 
 const toolsetsServing = (serverTemplate) => [
   ...new Set(
@@ -211,7 +230,8 @@ test('every route mention in the server guidance resolves to a tool reference', 
   for (const { text, route } of surface.guidanceMentions) {
     const toolsets = route ? toolsetsServing(route) : [];
     const rewritten = rewriteGuidanceText(index, text, { toolsets });
-    if (findRouteMentions(rewritten).length > 0) unresolved.push(`${route ?? '(helper)'}: ${text}`);
+    const remaining = findRouteMentions(rewritten).filter((mention) => !mentionsRouteWithoutTool(mention));
+    if (remaining.length > 0) unresolved.push(`${route ?? '(helper)'}: ${text}`);
   }
   assert.deepEqual(unresolved, []);
 });

@@ -29,6 +29,9 @@ const FIELD_HINTS = Object.freeze({
   targetId: 'Linking target id (UUID) from products_linking_targets_list.',
   backlinkId: 'Backlink id (UUID) from products_backlinks_earned or products_backlinks_unverified.',
   targetPageId: 'Target page id (UUID) from marketplace_buyer_target_pages_list.',
+  listId: 'Cited list id (UUID) from ai_cited_lists_lists_list.',
+  offerId: 'Offer id (UUID) from ai_cited_lists_outreach or ai_cited_lists_overview (wins).',
+  questionId: 'Buyer question id (UUID) from ai_cited_lists_questions_list.',
   attemptId: 'attempt_id returned by the matching connect call.',
   limit: 'Page size.',
   offset: 'Zero-based offset; pass next_offset from the previous page.',
@@ -45,7 +48,7 @@ const longRunningWarning = (spec) =>
 const mcpFlag = (spec, flag) => Boolean(spec.mcp) && typeof spec.mcp === 'object' && spec.mcp[flag] === true;
 
 const kindWarning = (spec) => {
-  if (spec.kind === CommandKind.MONEY) return MONEY_WARNING;
+  if (spec.kind === CommandKind.MONEY) return TOOL_NOTES[spec.id]?.moneyWarning ?? MONEY_WARNING;
   if (spec.kind === CommandKind.DESTRUCTIVE) return DESTRUCTIVE_WARNING;
   return undefined;
 };

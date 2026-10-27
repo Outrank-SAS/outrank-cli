@@ -115,6 +115,21 @@ const SHAPED_BODIES = Object.freeze({
   products_blog_snippets_update: { required: [], properties: ['name', 'kind', 'content', 'placement', 'isActive'] },
   products_blog_webhooks_create: { required: ['url'], properties: ['url', 'events'] },
   products_blog_webhooks_update: { required: [], properties: ['url', 'events', 'isActive', 'rotateSecret'] },
+  ai_cited_lists_settings_update: {
+    required: [],
+    properties: [
+      'sender_name',
+      'sender_title',
+      'postal_address',
+      'outrank_answers_replies',
+      'outreach_paused',
+      'allow_second_position',
+      'listing_blurb',
+      'blocked_sites',
+      'entry_mode',
+      'custom_entry',
+    ],
+  },
 });
 const UNTRUSTED_TEXT_FIELD = 'untrusted_counterparty_text';
 const ARTICLE_MARKDOWN = '# Title\n\nBody.';

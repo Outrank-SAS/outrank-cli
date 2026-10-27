@@ -30,13 +30,15 @@
         "improvements": "full",
         "marketplace-buyer": "full",
         "marketplace-seller": "full",
-        "blog": "full"
+        "blog": "full",
+        "ai-cited-lists": "full"
       },
       "unverified_toolsets": {},
       "flows": {
         "articles": true,
         "marketplace_buyer": true,
-        "marketplace_seller": true
+        "marketplace_seller": true,
+        "ai_cited_lists": true
       },
       "disabled_products_with_services": 0
     }

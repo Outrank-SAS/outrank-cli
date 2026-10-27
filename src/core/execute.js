@@ -50,7 +50,8 @@ const mergeBody = (spec, input, body) => {
 };
 
 export const executeCommand = async ({ spec, raw, loadBody = async () => undefined, ctx, labels = {} }) => {
-  const validation = { ...labels, splitLists: ctx.surface !== Surface.MCP };
+  const fromText = ctx.surface !== Surface.MCP;
+  const validation = { ...labels, splitLists: fromText, coerceEnumText: fromText };
   try {
     const { bodyField, rest } = splitBodyField(spec.input);
     const input = validateInput(rest, raw, validation);

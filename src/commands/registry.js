@@ -23,6 +23,7 @@ export const Toolset = Object.freeze({
   MARKETPLACE_BUYER: 'marketplace-buyer',
   BILLING: 'billing',
   BLOG: 'blog',
+  AI_CITED_LISTS: 'ai-cited-lists',
 });
 
 export const BodyMode = Object.freeze({

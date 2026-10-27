@@ -10,7 +10,13 @@ import { readWhoamiFixture, respondWith, withMcp } from './helpers/mcpHarness.js
 
 const PRODUCT_ID = 'aaaaaaaa-0000-4000-8000-000000000001';
 const ORGANIZATION_ID = '00000000-0000-4000-8000-000000000001';
-const ALL_PROMPTS = ['onboard_product', 'plan_keywords', 'improve_declining_articles', 'setup_publishing_integration'];
+const ALL_PROMPTS = [
+  'onboard_product',
+  'plan_keywords',
+  'improve_declining_articles',
+  'setup_ai_cited_lists',
+  'setup_publishing_integration',
+];
 const TOOL_TOKEN_PATTERN = /\b[a-z]+(?:_[a-z]+)+\b/g;
 const NOT_TOOL_TOKENS = new Set([
   'product_id',
@@ -31,6 +37,8 @@ const NOT_TOOL_TOKENS = new Set([
   'api_key',
   'access_token',
   'publishing_days',
+  'address_mismatch',
+  'access_lost',
 ]);
 const LIST_CHANGED_METHODS = ['notifications/tools/list_changed', 'notifications/prompts/list_changed'];
 const MIN_TOOLS_PER_PROMPT = 5;
@@ -40,7 +48,7 @@ const TOOL_NAMES = new Set(
 );
 const FULL_SELECTION = {
   readOnly: false,
-  enabled: { core: 'full', keywords: 'full', improvements: 'full', integrations: 'full' },
+  enabled: { core: 'full', keywords: 'full', improvements: 'full', integrations: 'full', 'ai-cited-lists': 'full' },
 };
 
 const toolTokensOf = (text) =>
@@ -53,6 +61,7 @@ test('every tool named in a prompt exists, and every prompt names at least five 
     onboard_product: { brief: 'A bakery site' },
     plan_keywords: { product_id: PRODUCT_ID, days: '14' },
     improve_declining_articles: { product_id: PRODUCT_ID },
+    setup_ai_cited_lists: { product_id: PRODUCT_ID },
     setup_publishing_integration: { product_id: PRODUCT_ID, provider: 'notion' },
   };
   for (const name of PROMPT_NAMES) {
@@ -67,7 +76,7 @@ test('prompts follow the enabled toolsets and disappear in read-only mode', () =
   const partial = { ...FULL_SELECTION, enabled: { ...FULL_SELECTION.enabled, improvements: 'read' } };
   assert.deepEqual(
     listPrompts(partial).map((prompt) => prompt.name),
-    ['onboard_product', 'plan_keywords', 'setup_publishing_integration'],
+    ['onboard_product', 'plan_keywords', 'setup_ai_cited_lists', 'setup_publishing_integration'],
   );
   assert.deepEqual(listPrompts({ ...partial, readOnly: true }), []);
   assert.throws(

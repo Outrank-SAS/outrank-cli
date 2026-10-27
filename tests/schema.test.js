@@ -129,6 +129,20 @@ const SHAPED_BODY = object().shape({
 
 const shaped = (body, labels) => validateInput({ body: SHAPED_BODY }, { body }, labels);
 
+test('a numeric enum accepts its numbers as numbers or digits and the zod schema lists them as literals', async () => {
+  const fields = { weeks: oneOf([4, 12]) };
+  const fromText = { ...CLI_LABELS, coerceEnumText: true };
+  assert.deepEqual(validateInput(fields, { weeks: '12' }, fromText), { weeks: 12 });
+  assert.deepEqual(validateInput(fields, { weeks: 4 }, fromText), { weeks: 4 });
+  throwsUsage(() => validateInput(fields, { weeks: '8' }, fromText), /--weeks must be one of: 4, 12\./);
+  throwsUsage(() => validateInput(fields, { weeks: 8 }, fromText), /--weeks must be one of: 4, 12\./);
+  throwsUsage(() => validateInput(fields, { weeks: '12' }, CLI_LABELS), /--weeks must be one of: 4, 12\./);
+  const schema = await toZodSchema(fields);
+  assert.equal(schema.safeParse({ weeks: 12 }).success, true);
+  assert.equal(schema.safeParse({ weeks: 8 }).success, false);
+  assert.equal(schema.safeParse({ weeks: '12' }).success, false);
+});
+
 test('a shaped object checks the declared properties, keeps unknown ones and accepts empty or null text', () => {
   const body = { name: 'A', count: 3, score: 0.5, tags: ['x', ' y '], status: 'live', note: null, extra: { k: 1 } };
   assert.deepEqual(shaped(body, CLI_LABELS).body, { ...body, tags: ['x', 'y'] });

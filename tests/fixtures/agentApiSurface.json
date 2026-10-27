@@ -1,6 +1,6 @@
 {
   "apiBasePath": "/api/agent/v1",
-  "sourceCommit": "fcb397322ba8143b9a4fc2598e88d69e0dabad78",
+  "sourceCommit": "b36d9076f6b0c3c00ceb00f87d61260517d52d0f",
   "sourceDirty": false,
   "routes": [
     {
@@ -218,6 +218,122 @@
     {
       "method": "DELETE",
       "path": "/marketplace/target-pages/{targetPageId}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-citations/check"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-citations/summary"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/entry/base"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/lists/{listId}/skip"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/lists/{listId}/unskip"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/lists"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/mailbox/connect"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/mailbox/connect"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/ai-cited-lists/mailbox/dkim-selector"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/mailbox/domain-check"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/mailbox/filter-test"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/mailbox/inbox-test"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/mailbox"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/ai-cited-lists/mailbox"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/offers/{offerId}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/offers/{offerId}/withdraw"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/outreach"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/overview"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/ai-cited-lists/questions/{questionId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/ai-cited-lists/questions/{questionId}"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/questions"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/questions"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/products/{id}/ai-cited-lists/settings"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/setup/finish"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/status"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/top-up-consent"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/ai-cited-lists/top-up-consent"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/ai-cited-lists/wins/{offerId}"
     },
     {
       "method": "POST",
@@ -614,6 +730,26 @@
     {
       "method": "POST",
       "path": "/products/{id}/integrations"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/knowledge/facts"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/knowledge/sources/{sourceId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/{id}/knowledge/sources/{sourceId}"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/knowledge/sources"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/knowledge/sources"
     },
     {
       "method": "POST",
@@ -1252,6 +1388,194 @@
     {
       "text": "GET /api/agent/v1/products/<productId>/marketplace/seller/placements",
       "route": "/marketplace/placements/{placementId}/regenerate"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-citations/summary",
+      "route": "/products/{id}/ai-citations/check"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/lists",
+      "route": "/products/{id}/ai-citations/check"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-citations/check",
+      "route": "/products/{id}/ai-citations/summary"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/settings",
+      "route": "/products/{id}/ai-cited-lists/entry/base"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/lists/<list_id>/unskip",
+      "route": "/products/{id}/ai-cited-lists/lists/{listId}/skip"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/lists",
+      "route": "/products/{id}/ai-cited-lists/lists/{listId}/skip"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/lists",
+      "route": "/products/{id}/ai-cited-lists/lists/{listId}/unskip"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/lists/<list_id>/skip",
+      "route": "/products/{id}/ai-cited-lists/lists"
+    },
+    {
+      "text": ".../unskip",
+      "route": "/products/{id}/ai-cited-lists/lists"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect?attempt_id=<attempt_id>",
+      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
+      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/status",
+      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
+    },
+    {
+      "text": "/api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
+      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/filter-test",
+      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/domain-check",
+      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/inbox-test",
+      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/mailbox",
+      "route": "/products/{id}/ai-cited-lists/mailbox/dkim-selector"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<id>/ai-cited-lists/mailbox/dkim-selector",
+      "route": "/products/{id}/ai-cited-lists/mailbox/domain-check"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/mailbox",
+      "route": "/products/{id}/ai-cited-lists/mailbox/filter-test"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/mailbox",
+      "route": "/products/{id}/ai-cited-lists/mailbox/inbox-test"
+    },
+    {
+      "text": "POST .../mailbox/filter-test",
+      "route": "/products/{id}/ai-cited-lists/mailbox"
+    },
+    {
+      "text": "POST .../mailbox/inbox-test",
+      "route": "/products/{id}/ai-cited-lists/mailbox"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/domain-check",
+      "route": "/products/{id}/ai-cited-lists/mailbox"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<id>/ai-cited-lists/mailbox/dkim-selector",
+      "route": "/products/{id}/ai-cited-lists/mailbox"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
+      "route": "/products/{id}/ai-cited-lists/mailbox"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
+      "route": "/products/{id}/ai-cited-lists/mailbox"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/offers/<offer_id>/withdraw",
+      "route": "/products/{id}/ai-cited-lists/offers/{offerId}"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/outreach",
+      "route": "/products/{id}/ai-cited-lists/offers/{offerId}/withdraw"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/offers/<offer_id>",
+      "route": "/products/{id}/ai-cited-lists/outreach"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/offers/<offer_id>/withdraw",
+      "route": "/products/{id}/ai-cited-lists/outreach"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<id>/ai-cited-lists/settings",
+      "route": "/products/{id}/ai-cited-lists/outreach"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/wins/<offer_id>",
+      "route": "/products/{id}/ai-cited-lists/overview"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/questions",
+      "route": "/products/{id}/ai-cited-lists/questions/{questionId}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/questions",
+      "route": "/products/{id}/ai-cited-lists/questions"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<id>/ai-cited-lists/questions/<question_id>",
+      "route": "/products/{id}/ai-cited-lists/questions"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/questions",
+      "route": "/products/{id}/ai-cited-lists/questions"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/status",
+      "route": "/products/{id}/ai-cited-lists/settings"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/status",
+      "route": "/products/{id}/ai-cited-lists/setup/finish"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/overview",
+      "route": "/products/{id}/ai-cited-lists/status"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/lists",
+      "route": "/products/{id}/ai-cited-lists/status"
+    },
+    {
+      "text": "/api/agent/v1/products/<id>/ai-cited-lists/outreach",
+      "route": "/products/{id}/ai-cited-lists/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-citations/check",
+      "route": "/products/{id}/ai-cited-lists/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
+      "route": "/products/{id}/ai-cited-lists/status"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/mailbox",
+      "route": "/products/{id}/ai-cited-lists/status"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<id>/ai-cited-lists/settings",
+      "route": "/products/{id}/ai-cited-lists/status"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/top-up-consent",
+      "route": "/products/{id}/ai-cited-lists/status"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/status",
+      "route": "/products/{id}/ai-cited-lists/top-up-consent"
     },
     {
       "text": "GET /api/agent/v1/products",
@@ -1918,6 +2242,26 @@
       "route": "/products/{id}/integrations"
     },
     {
+      "text": "POST /api/agent/v1/products/<interpolated>/knowledge/sources",
+      "route": "/products/{id}/knowledge/facts"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/knowledge/facts?cursor=<interpolated>",
+      "route": "/products/{id}/knowledge/facts"
+    },
+    {
+      "text": "/api/agent/v1/products/<interpolated>/knowledge/sources",
+      "route": "/products/{id}/knowledge/sources"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/knowledge/sources/<sourceId>",
+      "route": "/products/{id}/knowledge/sources"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/knowledge/sources?cursor=<interpolated>",
+      "route": "/products/{id}/knowledge/sources"
+    },
+    {
       "text": "PATCH /api/agent/v1/products/<interpolated>/linking/sources",
       "route": "/products/{id}/linking/detect"
     },
@@ -2350,6 +2694,30 @@
       "route": "/subscription/status"
     },
     {
+      "text": "GET /api/agent/v1/products",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/mailbox",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
+      "route": null
+    },
+    {
+      "text": "DELETE /api/agent/v1/products/<id>/ai-cited-lists/questions/<question_id>",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/questions",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/offers/<offer_id>",
+      "route": null
+    },
+    {
       "text": "POST /api/agent/v1/products",
       "route": null
     },
@@ -2363,10 +2731,6 @@
     },
     {
       "text": "PUT /api/agent/v1/articles/<id>/content",
-      "route": null
-    },
-    {
-      "text": "GET /api/agent/v1/products",
       "route": null
     },
     {
@@ -2406,11 +2770,23 @@
       "route": null
     },
     {
+      "text": "/api/agent/v1/products/<id>/knowledge/sources",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/knowledge/facts",
+      "route": null
+    },
+    {
       "text": "GET /api/agent/v1/products/<id>/blog",
       "route": null
     },
     {
       "text": "POST /api/agent/v1/products/<id>/blog/posts",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/status",
       "route": null
     },
     {
@@ -2454,6 +2830,14 @@
       "route": null
     },
     {
+      "text": "DELETE /api/agent/v1/products/<id>/knowledge/sources/<sourceId>",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/knowledge/sources/<interpolated>",
+      "route": null
+    },
+    {
       "text": "PATCH /api/agent/v1/products/<interpolated>/linking/sources",
       "route": null
     },
@@ -2462,7 +2846,7 @@
       "route": null
     },
     {
-      "text": "GET /api/agent/v1/products/<interpolated>/linking/targets",
+      "text": "/api/agent/v1/products/<interpolated>/linking/targets",
       "route": null
     },
     {
@@ -2483,6 +2867,10 @@
     },
     {
       "text": "DELETE /api/agent/v1/products/<interpolated>/linking/targets/<targetId>",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/linking/targets",
       "route": null
     },
     {
@@ -2543,6 +2931,14 @@
     },
     {
       "text": "POST /api/agent/v1/products/<id>/blog",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/entry/base",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/top-up-consent",
       "route": null
     }
   ]
