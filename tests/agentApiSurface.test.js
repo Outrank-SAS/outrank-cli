@@ -37,7 +37,8 @@ const KNOWLEDGE_ROUTES_PENDING_CLI = Object.freeze([
   'GET /products/{id}/knowledge/sources/{sourceId}',
   'DELETE /products/{id}/knowledge/sources/{sourceId}',
 ]);
-const SERVER_ROUTES_WITHOUT_TOOL = KNOWLEDGE_ROUTES_PENDING_CLI;
+const ROUTES_KEPT_FOR_OLDER_CLIENTS = Object.freeze(['GET /products/{id}/ai-cited-lists/mailbox/connect']);
+const SERVER_ROUTES_WITHOUT_TOOL = [...KNOWLEDGE_ROUTES_PENDING_CLI, ...ROUTES_KEPT_FOR_OLDER_CLIENTS];
 const ROUTE_KEY_SEPARATOR = ' ';
 const NO_UPLOADS = Object.freeze({ dir: null, problem: null });
 const SERVER_CHECKOUT = '/server-checkout';

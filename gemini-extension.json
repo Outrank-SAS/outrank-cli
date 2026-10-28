@@ -1,6 +1,6 @@
 {
   "name": "outrank",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Plan SEO keywords, write and publish articles to your site, and read Search Console and backlink data with Outrank.",
   "mcpServers": {
     "outrank": {

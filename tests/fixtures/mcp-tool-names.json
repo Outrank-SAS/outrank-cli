@@ -12,7 +12,6 @@
   "ai_cited_lists_mailbox_filter_test",
   "ai_cited_lists_mailbox_get",
   "ai_cited_lists_mailbox_inbox_test",
-  "ai_cited_lists_mailbox_poll",
   "ai_cited_lists_offers_get",
   "ai_cited_lists_offers_withdraw",
   "ai_cited_lists_outreach",

@@ -115,6 +115,7 @@ const SHAPED_BODIES = Object.freeze({
   products_blog_snippets_update: { required: [], properties: ['name', 'kind', 'content', 'placement', 'isActive'] },
   products_blog_webhooks_create: { required: ['url'], properties: ['url', 'events'] },
   products_blog_webhooks_update: { required: [], properties: ['url', 'events', 'isActive', 'rotateSecret'] },
+  ai_cited_lists_mailbox_connect: { required: ['email', 'app_password'], properties: ['email', 'app_password'] },
   ai_cited_lists_settings_update: {
     required: [],
     properties: [

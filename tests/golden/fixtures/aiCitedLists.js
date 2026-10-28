@@ -70,13 +70,17 @@ export default [
   },
 
   { name: 'mailbox-get', argv: ['ai-cited-lists', 'mailbox', 'get', PRODUCT_ID] },
-  { name: 'mailbox-connect', argv: ['ai-cited-lists', 'mailbox', 'connect', PRODUCT_ID] },
   {
-    name: 'mailbox-connect-email',
-    argv: ['ai-cited-lists', 'mailbox', 'connect', PRODUCT_ID, '--email', 'ada@acme.example'],
+    name: 'mailbox-connect',
+    argv: ['ai-cited-lists', 'mailbox', 'connect', PRODUCT_ID, '--json-stdin'],
+    stdin: '{"email":"ada@acme.example","app_password":"abcd efgh ijkl mnop"}',
   },
-  { name: 'mailbox-poll', argv: ['ai-cited-lists', 'mailbox', 'poll', PRODUCT_ID, '--attempt-id', ATTEMPT_ID] },
-  { name: 'mailbox-poll-missing-attempt', argv: ['ai-cited-lists', 'mailbox', 'poll', PRODUCT_ID] },
+  { name: 'mailbox-connect-no-json-source', argv: ['ai-cited-lists', 'mailbox', 'connect', PRODUCT_ID] },
+  {
+    name: 'mailbox-connect-missing-app-password',
+    argv: ['ai-cited-lists', 'mailbox', 'connect', PRODUCT_ID, '--json', '{"email":"ada@acme.example"}'],
+  },
+  { name: 'mailbox-poll-removed', argv: ['ai-cited-lists', 'mailbox', 'poll', PRODUCT_ID, '--attempt-id', ATTEMPT_ID] },
   { name: 'mailbox-domain-check', argv: ['ai-cited-lists', 'mailbox', 'domain-check', PRODUCT_ID] },
   { name: 'mailbox-inbox-test', argv: ['ai-cited-lists', 'mailbox', 'inbox-test', PRODUCT_ID] },
   { name: 'mailbox-filter-test', argv: ['ai-cited-lists', 'mailbox', 'filter-test', PRODUCT_ID] },

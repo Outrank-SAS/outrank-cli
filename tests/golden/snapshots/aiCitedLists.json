@@ -5,7 +5,7 @@
       "--help"
     ],
     "exitCode": 0,
-    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli ai-cited-lists status <product-id>\\n  outrank-cli ai-cited-lists overview <product-id>\\n  outrank-cli ai-cited-lists lists list <product-id> [--view all|to_send|skipped]\\n  outrank-cli ai-cited-lists lists skip <product-id> <list-id>\\n  outrank-cli ai-cited-lists lists unskip <product-id> <list-id>\\n  outrank-cli ai-cited-lists outreach <product-id>\\n  outrank-cli ai-cited-lists offers get <product-id> <offer-id>\\n  outrank-cli ai-cited-lists offers withdraw <product-id> <offer-id>\\n  outrank-cli ai-cited-lists wins get <product-id> <offer-id>\\n  outrank-cli ai-cited-lists questions list <product-id>\\n  outrank-cli ai-cited-lists questions add <product-id> --question \\\"<text>\\\"\\n  outrank-cli ai-cited-lists questions edit <product-id> <question-id> --question \\\"<text>\\\"\\n  outrank-cli ai-cited-lists questions remove <product-id> <question-id>\\n  outrank-cli ai-cited-lists settings get <product-id>\\n  outrank-cli ai-cited-lists settings update <product-id> --json <object>\\n  outrank-cli ai-cited-lists mailbox get <product-id>\\n  outrank-cli ai-cited-lists mailbox connect <product-id> [--email <address>]\\n  outrank-cli ai-cited-lists mailbox poll <product-id> --attempt-id <attempt-id>\\n  outrank-cli ai-cited-lists mailbox domain-check <product-id>\\n  outrank-cli ai-cited-lists mailbox inbox-test <product-id>\\n  outrank-cli ai-cited-lists mailbox filter-test <product-id>\\n  outrank-cli ai-cited-lists mailbox dkim-selector <product-id> --selector <name> | --reset\\n  outrank-cli ai-cited-lists mailbox disconnect <product-id>\\n  outrank-cli ai-cited-lists top-up-consent get <product-id>\\n  outrank-cli ai-cited-lists top-up-consent confirm <product-id>\\n  outrank-cli ai-cited-lists entry generate <product-id>\\n  outrank-cli ai-cited-lists setup finish <product-id>\\n  outrank-cli ai-cited-lists citations summary <product-id> [--weeks 4|12]\\n  outrank-cli ai-cited-lists citations check <product-id>\\n\\nJSON Input:\\n  Use one of: --json '<object>', --json-file payload.json, or --json-stdin\\n\\nNotes:\\n  AI-Cited Lists is part of the Backlinks Enterprise plan: Outrank asks ChatGPT the product's buyer questions\\n  several times a week, finds the \\\"best of\\\" lists it cites, and emails each list's owner from the customer's own\\n  Google mailbox with a paid offer for the #1 or #2 spot. Credits are charged only once the owner has placed\\n  the product (top-up-consent get shows the prices); a short balance is covered by an automatic credit-pack\\n  purchase that an organization admin confirms once with top-up-consent confirm. Sending needs a connected\\n  mailbox with four green checks, the sender details and that consent: status lists what is still missing.\\n  mailbox connect returns a connect_url the human opens in a browser; entry generate takes a few minutes.\\n\\nExamples:\\n  outrank-cli ai-cited-lists status <UUID-1>\\n  outrank-cli ai-cited-lists lists list <UUID-1> --view to_send\\n  outrank-cli ai-cited-lists lists skip <UUID-1> <UUID-1>\\n  outrank-cli ai-cited-lists questions add <UUID-1> --question \\\"What is the best privacy-friendly analytics tool?\\\"\\n  outrank-cli ai-cited-lists settings update <UUID-1> --json '{\\\"sender_name\\\":\\\"Ada Lovelace\\\",\\\"sender_title\\\":\\\"Founder\\\",\\\"postal_address\\\":\\\"1 Main St, Austin, TX 78701\\\"}'\\n  outrank-cli ai-cited-lists mailbox connect <UUID-1> --email ada@acme.com\\n  outrank-cli ai-cited-lists mailbox poll <UUID-1> --attempt-id <attempt-id>\\n  outrank-cli ai-cited-lists top-up-consent confirm <UUID-1>\\n  outrank-cli ai-cited-lists citations summary <UUID-1> --weeks 12\"\n  },\n  \"agent_guidance\": \"Start with status: it says whether the product is on the Enterprise plan and what the outreach setup still needs (mailbox, sender details, top-up consent). Then overview, lists, outreach, offers, wins, questions, settings, mailbox, top-up-consent, entry, setup or citations.\"\n}\n",
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli ai-cited-lists status <product-id>\\n  outrank-cli ai-cited-lists overview <product-id>\\n  outrank-cli ai-cited-lists lists list <product-id> [--view all|to_send|skipped]\\n  outrank-cli ai-cited-lists lists skip <product-id> <list-id>\\n  outrank-cli ai-cited-lists lists unskip <product-id> <list-id>\\n  outrank-cli ai-cited-lists outreach <product-id>\\n  outrank-cli ai-cited-lists offers get <product-id> <offer-id>\\n  outrank-cli ai-cited-lists offers withdraw <product-id> <offer-id>\\n  outrank-cli ai-cited-lists wins get <product-id> <offer-id>\\n  outrank-cli ai-cited-lists questions list <product-id>\\n  outrank-cli ai-cited-lists questions add <product-id> --question \\\"<text>\\\"\\n  outrank-cli ai-cited-lists questions edit <product-id> <question-id> --question \\\"<text>\\\"\\n  outrank-cli ai-cited-lists questions remove <product-id> <question-id>\\n  outrank-cli ai-cited-lists settings get <product-id>\\n  outrank-cli ai-cited-lists settings update <product-id> --json <object>\\n  outrank-cli ai-cited-lists mailbox get <product-id>\\n  outrank-cli ai-cited-lists mailbox connect <product-id> --json-stdin\\n  outrank-cli ai-cited-lists mailbox domain-check <product-id>\\n  outrank-cli ai-cited-lists mailbox inbox-test <product-id>\\n  outrank-cli ai-cited-lists mailbox filter-test <product-id>\\n  outrank-cli ai-cited-lists mailbox dkim-selector <product-id> --selector <name> | --reset\\n  outrank-cli ai-cited-lists mailbox disconnect <product-id>\\n  outrank-cli ai-cited-lists top-up-consent get <product-id>\\n  outrank-cli ai-cited-lists top-up-consent confirm <product-id>\\n  outrank-cli ai-cited-lists entry generate <product-id>\\n  outrank-cli ai-cited-lists setup finish <product-id>\\n  outrank-cli ai-cited-lists citations summary <product-id> [--weeks 4|12]\\n  outrank-cli ai-cited-lists citations check <product-id>\\n\\nJSON Input:\\n  Use one of: --json '<object>', --json-file payload.json, or --json-stdin\\n\\nNotes:\\n  AI-Cited Lists is part of the Backlinks Enterprise plan: Outrank asks ChatGPT the product's buyer questions\\n  several times a week, finds the \\\"best of\\\" lists it cites, and emails each list's owner from the customer's own\\n  Google mailbox with a paid offer for the #1 or #2 spot. Credits are charged only once the owner has placed\\n  the product (top-up-consent get shows the prices); a short balance is covered by an automatic credit-pack\\n  purchase that an organization admin confirms once with top-up-consent confirm. Sending needs a connected\\n  mailbox with four green checks, the sender details and that consent: status lists what is still missing.\\n  mailbox connect takes {\\\"email\\\",\\\"app_password\\\"}: the Google app password the human created at\\n  https://myaccount.google.com/apppasswords. Pass it with --json-stdin so it stays out of the shell history.\\n  entry generate takes a few minutes.\\n\\nExamples:\\n  outrank-cli ai-cited-lists status <UUID-1>\\n  outrank-cli ai-cited-lists lists list <UUID-1> --view to_send\\n  outrank-cli ai-cited-lists lists skip <UUID-1> <UUID-1>\\n  outrank-cli ai-cited-lists questions add <UUID-1> --question \\\"What is the best privacy-friendly analytics tool?\\\"\\n  outrank-cli ai-cited-lists settings update <UUID-1> --json '{\\\"sender_name\\\":\\\"Ada Lovelace\\\",\\\"sender_title\\\":\\\"Founder\\\",\\\"postal_address\\\":\\\"1 Main St, Austin, TX 78701\\\"}'\\n  echo '{\\\"email\\\":\\\"ada@acme.com\\\",\\\"app_password\\\":\\\"abcd efgh ijkl mnop\\\"}' | outrank-cli ai-cited-lists mailbox connect <UUID-1> --json-stdin\\n  outrank-cli ai-cited-lists top-up-consent confirm <UUID-1>\\n  outrank-cli ai-cited-lists citations summary <UUID-1> --weeks 12\"\n  },\n  \"agent_guidance\": \"Start with status: it says whether the product is on the Enterprise plan and what the outreach setup still needs (mailbox, sender details, top-up consent). Then overview, lists, outreach, offers, wins, questions, settings, mailbox, top-up-consent, entry, setup or citations.\"\n}\n",
     "stderr": "",
     "requests": []
   },
@@ -27,7 +27,7 @@
       "aaaaaaaa-0000-4000-8000-000000000001"
     ],
     "exitCode": 1,
-    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown mailbox action: nonsense.\"\n  },\n  \"agent_guidance\": \"Use: ai-cited-lists mailbox get|connect|poll|domain-check|inbox-test|filter-test|dkim-selector|disconnect.\"\n}\n",
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown mailbox action: nonsense.\"\n  },\n  \"agent_guidance\": \"Use: ai-cited-lists mailbox get|connect|domain-check|inbox-test|filter-test|dkim-selector|disconnect.\"\n}\n",
     "stderr": "",
     "requests": []
   },
@@ -641,32 +641,8 @@
       "ai-cited-lists",
       "mailbox",
       "connect",
-      "aaaaaaaa-0000-4000-8000-000000000001"
-    ],
-    "exitCode": 0,
-    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
-    "stderr": "",
-    "requests": [
-      {
-        "method": "POST",
-        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox/connect",
-        "headers": {
-          "Accept": "application/json",
-          "Authorization": "Bearer <API_KEY-1>",
-          "Content-Type": "application/json"
-        },
-        "body": {}
-      }
-    ]
-  },
-  "mailbox-connect-email": {
-    "argv": [
-      "ai-cited-lists",
-      "mailbox",
-      "connect",
       "aaaaaaaa-0000-4000-8000-000000000001",
-      "--email",
-      "ada@acme.example"
+      "--json-stdin"
     ],
     "exitCode": 0,
     "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
@@ -681,12 +657,39 @@
           "Content-Type": "application/json"
         },
         "body": {
-          "email": "ada@acme.example"
+          "email": "ada@acme.example",
+          "app_password": "abcd efgh ijkl mnop"
         }
       }
     ]
   },
-  "mailbox-poll": {
+  "mailbox-connect-no-json-source": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "connect",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Provide one of: --json, --json-file, or --json-stdin.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "mailbox-connect-missing-app-password": {
+    "argv": [
+      "ai-cited-lists",
+      "mailbox",
+      "connect",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--json",
+      "{\"email\":\"ada@acme.example\"}"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required field: --json.app_password.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "mailbox-poll-removed": {
     "argv": [
       "ai-cited-lists",
       "mailbox",
@@ -695,29 +698,8 @@
       "--attempt-id",
       "attempt-123"
     ],
-    "exitCode": 0,
-    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
-    "stderr": "",
-    "requests": [
-      {
-        "method": "GET",
-        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/ai-cited-lists/mailbox/connect?attempt_id=attempt-123",
-        "headers": {
-          "Accept": "application/json",
-          "Authorization": "Bearer <API_KEY-1>"
-        }
-      }
-    ]
-  },
-  "mailbox-poll-missing-attempt": {
-    "argv": [
-      "ai-cited-lists",
-      "mailbox",
-      "poll",
-      "aaaaaaaa-0000-4000-8000-000000000001"
-    ],
     "exitCode": 1,
-    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --attempt-id <attempt-id>.\"\n  },\n  \"agent_guidance\": \"Pass the attempt_id returned by `ai-cited-lists mailbox connect`.\"\n}\n",
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown mailbox action: poll.\"\n  },\n  \"agent_guidance\": \"Use: ai-cited-lists mailbox get|connect|domain-check|inbox-test|filter-test|dkim-selector|disconnect.\"\n}\n",
     "stderr": "",
     "requests": []
   },
