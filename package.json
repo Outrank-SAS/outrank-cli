@@ -12,8 +12,8 @@
     "LICENSE"
   ],
   "bin": {
-    "outrank-cli": "./bin/outrank-cli.js",
-    "outrank-mcp": "./bin/outrank-mcp.js"
+    "outrank-cli": "bin/outrank-cli.js",
+    "outrank-mcp": "bin/outrank-mcp.js"
   },
   "scripts": {
     "start": "node ./src/index.js",
