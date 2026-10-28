@@ -3,10 +3,7 @@ import { Surface } from '../core/context.js';
 import { usageError } from '../core/errors.js';
 import { bool, list, object, oneOf, string, uuid } from '../core/schema.js';
 import {
-  ATTEMPT_ID_PLACEHOLDERS,
   PRODUCT_CLI,
-  attemptIdInput,
-  attemptIdQuery,
   productInput,
   productParams,
   productParamsWith,
@@ -15,6 +12,10 @@ import {
 import { BodyMode, CommandKind, Toolset, defineCommand, defineGroup } from './registry.js';
 import { subGroup } from './subGroup.js';
 
+const MAILBOX_EMAIL_HINT = 'Gmail or Google Workspace address that sends the offers.';
+const APP_PASSWORD_HINT =
+  'Google app password created for that address at https://myaccount.google.com/apppasswords (16 letters; ' +
+  'spaces are ignored). Never repeat it back or store it.';
 const SENDER_NAME_HINT = 'Name that signs the outreach emails.';
 const SENDER_TITLE_HINT = 'Job title under the signature.';
 const POSTAL_ADDRESS_HINT = 'Company postal address printed in every email (required by anti-spam law).';
@@ -26,6 +27,11 @@ const BLOCKED_SITES_HINT = 'Hosts never to contact.';
 const ENTRY_MODE_HINT = 'generated uses the entry Outrank wrote; custom uses custom_entry.';
 const CUSTOM_ENTRY_HINT = 'Entry written by the customer; links may only point to the product site.';
 const CUSTOM_ENTRY_MARKDOWN_HINT = 'The entry text as markdown.';
+
+const MAILBOX_CONNECT_BODY = object().shape({
+  email: string().required().describe(MAILBOX_EMAIL_HINT),
+  app_password: string().required().describe(APP_PASSWORD_HINT),
+});
 
 const SETTINGS_BODY = object().shape({
   sender_name: string().describe(SENDER_NAME_HINT),
@@ -61,8 +67,7 @@ export const AI_CITED_LISTS_HELP = `Usage:
   outrank-cli ai-cited-lists settings get <product-id>
   outrank-cli ai-cited-lists settings update <product-id> --json <object>
   outrank-cli ai-cited-lists mailbox get <product-id>
-  outrank-cli ai-cited-lists mailbox connect <product-id> [--email <address>]
-  outrank-cli ai-cited-lists mailbox poll <product-id> --attempt-id <attempt-id>
+  outrank-cli ai-cited-lists mailbox connect <product-id> --json-stdin
   outrank-cli ai-cited-lists mailbox domain-check <product-id>
   outrank-cli ai-cited-lists mailbox inbox-test <product-id>
   outrank-cli ai-cited-lists mailbox filter-test <product-id>
@@ -85,7 +90,9 @@ Notes:
   the product (top-up-consent get shows the prices); a short balance is covered by an automatic credit-pack
   purchase that an organization admin confirms once with top-up-consent confirm. Sending needs a connected
   mailbox with four green checks, the sender details and that consent: status lists what is still missing.
-  mailbox connect returns a connect_url the human opens in a browser; entry generate takes a few minutes.
+  mailbox connect takes {"email","app_password"}: the Google app password the human created at
+  https://myaccount.google.com/apppasswords. Pass it with --json-stdin so it stays out of the shell history.
+  entry generate takes a few minutes.
 
 Examples:
   outrank-cli ai-cited-lists status 00000000-0000-0000-0000-000000000000
@@ -93,8 +100,7 @@ Examples:
   outrank-cli ai-cited-lists lists skip 00000000-0000-0000-0000-000000000000 00000000-0000-0000-0000-000000000000
   outrank-cli ai-cited-lists questions add 00000000-0000-0000-0000-000000000000 --question "What is the best privacy-friendly analytics tool?"
   outrank-cli ai-cited-lists settings update 00000000-0000-0000-0000-000000000000 --json '{"sender_name":"Ada Lovelace","sender_title":"Founder","postal_address":"1 Main St, Austin, TX 78701"}'
-  outrank-cli ai-cited-lists mailbox connect 00000000-0000-0000-0000-000000000000 --email ada@acme.com
-  outrank-cli ai-cited-lists mailbox poll 00000000-0000-0000-0000-000000000000 --attempt-id <attempt-id>
+  echo '{"email":"ada@acme.com","app_password":"abcd efgh ijkl mnop"}' | outrank-cli ai-cited-lists mailbox connect 00000000-0000-0000-0000-000000000000 --json-stdin
   outrank-cli ai-cited-lists top-up-consent confirm 00000000-0000-0000-0000-000000000000
   outrank-cli ai-cited-lists citations summary 00000000-0000-0000-0000-000000000000 --weeks 12
 `;
@@ -123,8 +129,7 @@ const SETTINGS_HELP = `Usage:
 `;
 const MAILBOX_HELP = `Usage:
   outrank-cli ai-cited-lists mailbox get <product-id>
-  outrank-cli ai-cited-lists mailbox connect <product-id> [--email <address>]
-  outrank-cli ai-cited-lists mailbox poll <product-id> --attempt-id <attempt-id>
+  outrank-cli ai-cited-lists mailbox connect <product-id> --json-stdin
   outrank-cli ai-cited-lists mailbox domain-check <product-id>
   outrank-cli ai-cited-lists mailbox inbox-test <product-id>
   outrank-cli ai-cited-lists mailbox filter-test <product-id>
@@ -157,7 +162,6 @@ const POLL_SETTINGS_GET = 'ai-cited-lists.settings.get';
 const QUESTION_REQUIRED = {
   guidance: 'Pass the buyer question as text, e.g. `--question "What is the best CRM?"`.',
 };
-const ATTEMPT_ID_GUIDANCE = 'Pass the attempt_id returned by `ai-cited-lists mailbox connect`.';
 const DKIM_SELECTOR_WORDING = Object.freeze({
   [Surface.CLI]: {
     message: 'Pass exactly one of --selector or --reset.',
@@ -482,7 +486,7 @@ const mailboxGet = defineCommand({
 
 const mailboxDisconnect = defineCommand({
   id: `${GROUP_ID}.mailbox.disconnect`,
-  summary: 'Disconnect the Google mailbox and revoke its token.',
+  summary: 'Disconnect the Google mailbox and delete its stored app password.',
   kind: CommandKind.DESTRUCTIVE,
   toolsets: TOOLSETS,
   input: productInput(),
@@ -497,33 +501,20 @@ const mailboxDisconnect = defineCommand({
 
 const mailboxConnect = defineCommand({
   id: `${GROUP_ID}.mailbox.connect`,
-  summary: 'Start the Google mailbox connection: returns a connect_url for the human and an attempt_id to poll.',
+  summary: 'Connect the Google mailbox that sends the offers with its address and a Google app password.',
   kind: CommandKind.WRITE,
   toolsets: TOOLSETS,
-  input: { ...productInput(), email: string() },
-  cli: { ...PRODUCT_CLI, placeholders: { email: '<address>' } },
+  input: productInput(),
+  cli: PRODUCT_CLI,
+  mcp: { sensitiveBody: true },
+  body: BodyMode.JSON,
+  bodyField: MAILBOX_CONNECT_BODY,
   run: (input, ctx) =>
     ctx.http({
       method: 'POST',
       path: `${BASE_PATH}/mailbox/connect`,
       pathParams: productParams(input),
-      body: { email: input.email },
-    }),
-});
-
-const mailboxPoll = defineCommand({
-  id: `${GROUP_ID}.mailbox.poll`,
-  summary: 'Poll a mailbox connection attempt until Google consent completed.',
-  kind: CommandKind.READ,
-  toolsets: TOOLSETS,
-  input: { ...productInput(), ...attemptIdInput(ATTEMPT_ID_GUIDANCE) },
-  cli: { ...PRODUCT_CLI, placeholders: ATTEMPT_ID_PLACEHOLDERS },
-  run: (input, ctx) =>
-    ctx.http({
-      method: 'GET',
-      path: `${BASE_PATH}/mailbox/connect`,
-      pathParams: productParams(input),
-      query: attemptIdQuery(input),
+      body: input.body,
     }),
 });
 
@@ -720,11 +711,10 @@ export const aiCitedListsGroup = defineGroup({
     subGroup({
       id: `${GROUP_ID}.mailbox`,
       usage: MAILBOX_HELP,
-      actions: 'get|connect|poll|domain-check|inbox-test|filter-test|dkim-selector|disconnect',
+      actions: 'get|connect|domain-check|inbox-test|filter-test|dkim-selector|disconnect',
       children: [
         mailboxGet,
         mailboxConnect,
-        mailboxPoll,
         mailboxDomainCheck,
         mailboxInboxTest,
         mailboxFilterTest,

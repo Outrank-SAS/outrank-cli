@@ -274,17 +274,13 @@ export const TOOL_NOTES = Object.freeze({
   },
   'ai-cited-lists.mailbox.connect': {
     note:
-      'Admin-only and needs the top-up consent. Give connect_url to the user, then poll ai_cited_lists_mailbox_poll ' +
-      'with attempt_id until status is completed, failed or expired, then follow the poll agent_guidance: it ' +
-      'depends on data.outcome (address_mismatch: sign in with the pinned address; access_lost: check ' +
-      'ai_cited_lists_status first) and on data.mailbox.connected.',
-    fields: {
-      email:
-        'Google address to pin (optional): the consent screen pre-selects it and only that address can finish the ' +
-        'connection, so a leaked link cannot bind another mailbox.',
-    },
+      'Admin-only and needs the top-up consent. Ask the user for the Gmail or Google Workspace address and a Google ' +
+      'app password created for it at https://myaccount.google.com/apppasswords (2-Step Verification must be on). ' +
+      'The call checks the login with Google and connects at once; on an error, tell the user the error.message ' +
+      '(a regular password, a wrong app password, app passwords turned off by a Workspace admin, or too many ' +
+      'attempts). Never repeat the app password back or keep it.',
+    body: 'Fields (all required): email, app_password.',
   },
-  'ai-cited-lists.mailbox.poll': { fields: { attemptId: 'attempt_id returned by ai_cited_lists_mailbox_connect.' } },
   'ai-cited-lists.mailbox.dkim-selector': {
     note: 'Pass exactly one of selector or reset.',
     fields: {

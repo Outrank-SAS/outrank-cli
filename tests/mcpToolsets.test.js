@@ -7,7 +7,7 @@ import { registry } from '../src/commands/index.js';
 import { toolName } from '../src/commands/registry.js';
 import { readWhoamiFixture } from './helpers/mcpHarness.js';
 
-const ALL_TOOL_COUNT = 245;
+const ALL_TOOL_COUNT = 244;
 const CORE_TOOL_COUNT = 16;
 const ENTRY_POINT_COUNT = 17;
 const BRAND_NEW_TOOL_COUNT = CORE_TOOL_COUNT + ENTRY_POINT_COUNT;
@@ -17,7 +17,7 @@ const SELLER_ONLY_TOOL_COUNT = 81;
 const BASIC_PLAN_TOOL_COUNT = 110;
 const READ_ONLY_ARTICLES_TOOL_COUNT = 75;
 const SELLER_WITH_ARTICLES_TOOL_COUNT = 143;
-const READ_ONLY_ALL_TOOL_COUNT = 105;
+const READ_ONLY_ALL_TOOL_COUNT = 104;
 const KEYWORDS_AND_ARTICLES_TOOL_COUNT = 28;
 const IMPROVEMENTS_PREFIX = 'improvements_';
 const IMPROVEMENTS_TOOL_COUNT = 16;
@@ -26,8 +26,8 @@ const BLOG_TOOL_COUNT = 59;
 const BLOG_READ_TOOL_COUNT = 20;
 const BLOG_ONLY_TOOL_COUNT = BRAND_NEW_TOOL_COUNT + BLOG_TOOL_COUNT;
 const AI_CITED_LISTS_PREFIX = 'ai_cited_lists_';
-const AI_CITED_LISTS_TOOL_COUNT = 29;
-const AI_CITED_LISTS_READ_TOOL_COUNT = 12;
+const AI_CITED_LISTS_TOOL_COUNT = 28;
+const AI_CITED_LISTS_READ_TOOL_COUNT = 11;
 const AI_CITED_LISTS_ENTRY_POINT_COUNT = 1;
 const AI_CITED_LISTS_ONLY_TOOL_COUNT =
   BRAND_NEW_TOOL_COUNT + AI_CITED_LISTS_TOOL_COUNT - AI_CITED_LISTS_ENTRY_POINT_COUNT;
@@ -116,7 +116,7 @@ test('a read-only ai-cited-lists grant exposes only its reads', () => {
   const names = namesOf(select({ entitlements: withToolsets({ 'ai-cited-lists': 'read' }) }));
   assert.equal(names.filter((name) => name.startsWith(AI_CITED_LISTS_PREFIX)).length, AI_CITED_LISTS_READ_TOOL_COUNT);
   assert.equal(names.includes('ai_cited_lists_overview'), true);
-  assert.equal(names.includes('ai_cited_lists_mailbox_poll'), true);
+  assert.equal(names.includes('ai_cited_lists_mailbox_get'), true);
   assert.equal(names.includes('ai_cited_lists_lists_skip'), false);
 });
 

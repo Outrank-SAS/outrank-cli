@@ -135,11 +135,10 @@ const setupAiCitedListsText = (productId) =>
     '2. Top-up consent: read the terms with ai_cited_lists_top_up_consent_get, explain that a verified spot costs ' +
       'credits and that a short balance triggers a credit-pack purchase on the card on file, and call ' +
       'ai_cited_lists_top_up_consent_confirm only after the user agrees in their own words.',
-    '3. Mailbox: ai_cited_lists_mailbox_connect returns a connect_url the user opens in a browser to allow sending ' +
-      'from their Google mailbox; poll ai_cited_lists_mailbox_poll with the attempt id until status is completed, ' +
-      'failed or expired. On failed, tell the user data.outcome; on either, follow the poll guidance (for ' +
-      'address_mismatch, they sign in with the pinned address; for access_lost, check ai_cited_lists_status) ' +
-      'before any fresh connect. Once completed, ' +
+    '3. Mailbox: ask the user for the Gmail or Google Workspace address and a Google app password created for it ' +
+      'at https://myaccount.google.com/apppasswords, then call ai_cited_lists_mailbox_connect with the address and ' +
+      'that app password; on an error, tell the user the error message. Never repeat the app password back. Once ' +
+      'connected, ' +
       'ai_cited_lists_mailbox_get shows the four checks (connection, domain, reply filter, inbox test). Fix them ' +
       'with ai_cited_lists_mailbox_domain_check, ai_cited_lists_mailbox_filter_test (after the user created the ' +
       'Gmail forwarding filter) and ai_cited_lists_mailbox_inbox_test.',

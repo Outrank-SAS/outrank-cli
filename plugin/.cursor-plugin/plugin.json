@@ -1,7 +1,7 @@
 {
   "name": "outrank",
   "displayName": "Outrank",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Plan SEO keywords, write and publish articles to your site, refresh declining pages and read Search Console, backlink and internal-linking data, through Outrank's hosted MCP server.",
   "author": { "name": "Outrank", "email": "support@outrank.so" },
   "homepage": "https://www.outrank.so/docs/mcp",

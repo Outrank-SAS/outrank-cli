@@ -1,6 +1,6 @@
 {
   "apiBasePath": "/api/agent/v1",
-  "sourceCommit": "b36d9076f6b0c3c00ceb00f87d61260517d52d0f",
+  "sourceCommit": "d9aae8abba039a55b19c794478bdc9d2a4e45cc3",
   "sourceDirty": false,
   "routes": [
     {
@@ -1426,22 +1426,6 @@
       "route": "/products/{id}/ai-cited-lists/lists"
     },
     {
-      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect?attempt_id=<attempt_id>",
-      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
-    },
-    {
-      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
-      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
-    },
-    {
-      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/status",
-      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
-    },
-    {
-      "text": "/api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
-      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
-    },
-    {
       "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/filter-test",
       "route": "/products/{id}/ai-cited-lists/mailbox/connect"
     },
@@ -1486,11 +1470,11 @@
       "route": "/products/{id}/ai-cited-lists/mailbox"
     },
     {
-      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
+      "text": "POST .../mailbox/connect",
       "route": "/products/{id}/ai-cited-lists/mailbox"
     },
     {
-      "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
       "route": "/products/{id}/ai-cited-lists/mailbox"
     },
     {
