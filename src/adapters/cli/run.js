@@ -8,7 +8,8 @@ import {
   optionField,
   toKebabCase,
 } from '../../commands/registry.js';
-import { Surface, createCommandContext, loadContext } from '../../core/context.js';
+import { refreshProfileToken } from '../../core/browserLogin.js';
+import { ContextSource, Surface, createCommandContext, loadContext } from '../../core/context.js';
 import { USAGE_GUIDANCE, cliSuccess, toErrorEnvelope, usageError } from '../../core/errors.js';
 import { executeCommand } from '../../core/execute.js';
 import { readImageUpload, readTextFile } from '../../core/files.js';
@@ -114,6 +115,10 @@ const runCommand = async (registry, spec, rest) => {
     enforceAllowlist: !spec.offline,
     allowUnknownProfile: spec.allowUnknownProfile,
   });
+  if (resolved.source?.apiKey === ContextSource.PROFILE && !spec.offline) {
+    const refreshed = await refreshProfileToken({ profile: resolved.profile.name, baseUrl: resolved.baseUrl });
+    if (refreshed) resolved.apiKey = refreshed;
+  }
   const ctx = createCommandContext({ resolved, registry, surface: Surface.CLI, cwd, usageGuidance: USAGE_GUIDANCE });
   const loadBody = async () => (hasJsonSource(parsed.jsonSources) ? readJsonBody(parsed.jsonSources) : undefined);
   return executeCommand({ spec, raw, loadBody, ctx, labels: buildLabels(spec) });

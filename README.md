@@ -73,7 +73,10 @@ The CLI reads credentials in this order of precedence:
 Pick one. For interactive use on your own machine, `auth login` is simplest. For CI / ephemeral environments, prefer the env var.
 
 ```bash
-# One-time persistent setup
+# Sign in through the browser, so no key is ever pasted (also what an AI assistant should use)
+outrank-cli auth login --browser
+
+# Or store an API key once
 outrank-cli auth login outr_live_xxx
 outrank-cli auth status     # confirms the key is stored
 outrank-cli auth whoami     # round-trips it against the server
@@ -290,7 +293,7 @@ Tools that take a JSON `body` describe its fields in their description; `product
 Generated from the command registry with `npm run docs:tools`. The registry is checked against the Outrank server's route list in `tests/fixtures/agentApiSurface.json`, refreshed from a checkout of the Outrank app with `npm run surface:extract -- <path-to-outrank-repo>`: a server route without a tool, a tool without a server route, a guidance sentence naming an endpoint the server cannot map to a tool, or a rewritten argument the named tool would refuse fails the tests. The fixture records the server commit and, as `sourceDirty`, whether that checkout had uncommitted changes in the files it reads; extract again from a clean checkout before a release. To see whether the fixture is stale, run `node scripts/extractAgentApiSurface.js --check <path-to-outrank-repo>`, or run the tests with `OUTRANK_SERVER_DIR=<path-to-outrank-repo>`: both list the routes and guidance mentions that differ, and without the variable that one test is skipped. Kinds: `read` changes nothing; `write` changes Outrank or the connected site; `destructive` deletes or cannot be undone; `money` changes what the organization pays; `local` makes no request. Tools marked ★ are always listed in `auto` mode.
 
 <!-- mcp-tools:start -->
-244 tools.
+246 tools.
 
 | Tool | CLI command | Kind | Toolset | What it does |
 | --- | --- | --- | --- | --- |
@@ -466,6 +469,8 @@ Generated from the command registry with `npm run docs:tools`. The registry is c
 | `products_blog_webhooks_update` | `products blog webhooks update` | destructive | blog | Change one webhook of the blog from a JSON body. |
 | `products_blog_webhooks_delete` | `products blog webhooks delete` | destructive | blog | Delete one webhook of the blog. |
 | `products_blog_webhooks_test` | `products blog webhooks test` | write | blog | Send a test event to one webhook and report the response status. |
+| `marketplace_seller_add_site` ★ | `marketplace seller add-site` | write | marketplace-seller | Add a site to sell on and get its product id. Use this instead of creating a product. |
+| `marketplace_seller_connect_blog` ★ | `marketplace seller connect-blog` | write | marketplace-seller | Create or reuse the hosted Outrank Blog and connect it for marketplace placements (admin only). |
 | `marketplace_seller_status` ★ | `marketplace seller status` | read | marketplace-seller | Show the seller onboarding and enrollment status of a product. |
 | `marketplace_seller_onboard` ★ | `marketplace seller onboard` | write | marketplace-seller | Run the seller onboarding orchestrator: status, auto-adopt CMS, Stripe Express, eligibility. |
 | `marketplace_seller_eligibility` ★ | `marketplace seller eligibility` | read | marketplace-seller | Read the marketplace seller eligibility of a product. |

@@ -22,8 +22,8 @@ import {
   withMcp,
 } from './helpers/mcpHarness.js';
 
-const ALL_TOOL_COUNT = 244;
-const FALLBACK_TOOL_COUNT = 33;
+const ALL_TOOL_COUNT = 246;
+const FALLBACK_TOOL_COUNT = 35;
 const KEYWORDS_TOOL_COUNT = 12;
 const READ_ONLY_ALL_TOOL_COUNT = 104;
 const TOOL_NAME_PATTERN = /^[a-zA-Z0-9_-]{1,64}$/;

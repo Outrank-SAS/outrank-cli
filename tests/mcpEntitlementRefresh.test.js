@@ -6,8 +6,8 @@ import { registry } from '../src/commands/index.js';
 import { CommandKind } from '../src/commands/registry.js';
 import { WHOAMI_PATHNAME, jsonResponse, readWhoamiFixture, respondWith, withMcp } from './helpers/mcpHarness.js';
 
-const BRAND_NEW_TOOL_COUNT = 33;
-const MIXED_TOOL_COUNT = 244;
+const BRAND_NEW_TOOL_COUNT = 35;
+const MIXED_TOOL_COUNT = 246;
 const PRODUCT_ID = 'aaaaaaaa-0000-4000-8000-000000000001';
 const CREATE_BODY = {
   name: 'Example',

@@ -7,16 +7,16 @@ import { registry } from '../src/commands/index.js';
 import { toolName } from '../src/commands/registry.js';
 import { readWhoamiFixture } from './helpers/mcpHarness.js';
 
-const ALL_TOOL_COUNT = 244;
+const ALL_TOOL_COUNT = 246;
 const CORE_TOOL_COUNT = 16;
-const ENTRY_POINT_COUNT = 17;
+const ENTRY_POINT_COUNT = 19;
 const BRAND_NEW_TOOL_COUNT = CORE_TOOL_COUNT + ENTRY_POINT_COUNT;
-const SUBSCRIBED_NO_PRODUCT_TOOL_COUNT = 34;
-const BUYER_ONLY_TOOL_COUNT = 57;
-const SELLER_ONLY_TOOL_COUNT = 81;
-const BASIC_PLAN_TOOL_COUNT = 110;
-const READ_ONLY_ARTICLES_TOOL_COUNT = 75;
-const SELLER_WITH_ARTICLES_TOOL_COUNT = 143;
+const SUBSCRIBED_NO_PRODUCT_TOOL_COUNT = 36;
+const BUYER_ONLY_TOOL_COUNT = 59;
+const SELLER_ONLY_TOOL_COUNT = 83;
+const BASIC_PLAN_TOOL_COUNT = 112;
+const READ_ONLY_ARTICLES_TOOL_COUNT = 77;
+const SELLER_WITH_ARTICLES_TOOL_COUNT = 145;
 const READ_ONLY_ALL_TOOL_COUNT = 104;
 const KEYWORDS_AND_ARTICLES_TOOL_COUNT = 28;
 const IMPROVEMENTS_PREFIX = 'improvements_';
@@ -47,7 +47,9 @@ const ENTRY_POINT_TOOLS = [
   'marketplace_buyer_status',
   'marketplace_buyer_subscribe_quote',
   'marketplace_buyer_subscription',
+  'marketplace_seller_add_site',
   'marketplace_seller_complete_onboarding',
+  'marketplace_seller_connect_blog',
   'marketplace_seller_eligibility',
   'marketplace_seller_eligibility_recheck',
   'marketplace_seller_integrations_status',

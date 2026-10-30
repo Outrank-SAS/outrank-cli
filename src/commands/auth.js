@@ -7,9 +7,11 @@ import {
   loadProfiles,
   redactApiKey,
   storeProfileAuth,
+  storeProfileOauth,
 } from '../core/config.js';
 import { ContextSource, Surface, normalizeBaseUrl } from '../core/context.js';
 import { cliSuccess, usageError } from '../core/errors.js';
+import { runBrowserLogin } from '../core/browserLogin.js';
 import { assertHeaderSafeApiKey, requestAgentApi } from '../core/http.js';
 import { profileSelectedByEnvHint } from '../core/profileSelection.js';
 import { bool, string } from '../core/schema.js';
@@ -17,6 +19,7 @@ import { CommandKind, Toolset, defineCommand, defineGroup } from './registry.js'
 
 export const AUTH_HELP = `Usage:
   outrank-cli auth login <api-key> [--profile <name>] [--default] [--base-url <url>] [--no-verify]
+  outrank-cli auth login --browser [--profile <name>] [--default] [--base-url <url>]
   outrank-cli auth whoami
   outrank-cli auth status
   outrank-cli auth profiles
@@ -103,18 +106,32 @@ const renderSource = (source, envIgnored) => (envIgnored ? `${source}${ENV_IGNOR
 
 const login = defineCommand({
   id: 'auth.login',
-  summary: 'Store an API key in a profile and optionally verify it immediately.',
+  summary: 'Sign in through the browser, or store an API key in a profile and optionally verify it immediately.',
   kind: CommandKind.LOCAL,
   toolsets: [Toolset.CORE],
   mcp: false,
   allowUnknownProfile: true,
-  input: { apiKey: string(), noVerify: bool(), makeDefault: bool() },
+  input: { apiKey: string(), noVerify: bool(), makeDefault: bool(), browser: bool() },
   cli: {
     positionals: ['apiKey'],
     placeholders: { apiKey: '<api-key>' },
-    options: { 'no-verify': 'noVerify', default: 'makeDefault' },
+    options: { 'no-verify': 'noVerify', default: 'makeDefault', browser: 'browser' },
   },
   run: async (input, ctx) => {
+    if (input.browser) {
+      const { accessToken, oauth } = await runBrowserLogin({ baseUrl: ctx.baseUrl });
+      const saved = await storeProfileOauth({
+        profile: ctx.profile.name,
+        accessToken,
+        oauth,
+        baseUrl: ctx.baseUrl,
+        makeDefault: input.makeDefault,
+      });
+      return cliSuccess(
+        { stored: { profile: saved.profile, is_default: saved.isDefault, browser_login: true } },
+        saved.isDefault ? LOGIN_SAVED_GUIDANCE : loginSavedToProfileGuidance(saved.profile),
+      );
+    }
     const apiKey = input.apiKey ?? (ctx.source.apiKey === ContextSource.FLAG ? ctx.apiKey : undefined);
     if (!apiKey) throw usageError('Missing API key.', LOGIN_MISSING_KEY_GUIDANCE);
     assertHeaderSafeApiKey(apiKey);
