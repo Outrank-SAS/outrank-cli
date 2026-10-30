@@ -43,8 +43,13 @@ const STRIPE_ONBOARDING_HOST = 'connect.stripe.com';
 const HTTPS_PROTOCOL = 'https:';
 const ADOPT_FALLBACK_MESSAGE = 'the existing integration could not be reused';
 const STRIPE_FALLBACK_MESSAGE = 'the Stripe Express account could not be created';
+const PAYOUT_STEP_GUIDANCE =
+  'Payouts step: the human adds their registered business details and a PayPal account on the dashboard Payouts ' +
+  'page. There is no agent command for this, and onboarding can finish before it is done';
 
 const SELLER_USAGE = `Usage:
+  outrank-cli marketplace seller add-site --url <site-url>
+  outrank-cli marketplace seller connect-blog <product-id>
   outrank-cli marketplace seller status <product-id> [--refresh-stripe]
   outrank-cli marketplace seller onboard <product-id> [--country <ISO2>]
   outrank-cli marketplace seller eligibility <product-id> [--refresh]
@@ -93,7 +98,7 @@ const PLACEMENTS_USAGE = `Usage:
 
 const DECLINE_ACTION = 'decline';
 const SELLER_GUIDANCE =
-  'Choose a seller subcommand: status, onboard, eligibility, settings, integrations, stripe, complete-onboarding, ' +
+  'Choose a seller subcommand: add-site, connect-blog, status, onboard, eligibility, settings, integrations, stripe, complete-onboarding, ' +
   'placements, earnings, content-history.';
 
 const INTEGRATION_PLACEHOLDERS = { integrationId: '<integration-id>', integrationType: '<platform>' };
@@ -173,10 +178,9 @@ const stepFailure = (step, completedSteps, actions, error) =>
     { step, completed_steps: completedSteps, actions, ...(error?.details ?? {}) },
   );
 
-const describeRemainingSteps = ({ ctx, productId, country, flags }) => {
+const describeRemainingSteps = ({ ctx, productId, flags }) => {
   const remaining = [];
   const ref = (id, args) => ctx.ref(id, args);
-  const stripeOnboard = (extra = {}) => ref('marketplace.seller.stripe.onboard', { productId, ...extra });
 
   if (!flags.gscConnected) {
     remaining.push(
@@ -204,40 +208,9 @@ const describeRemainingSteps = ({ ctx, productId, country, flags }) => {
             'the products integrations commands, then claim it for the marketplace',
     );
   }
-  if (!flags.stripeAccountConnected) {
-    if (flags.stripeFailureMessage) {
-      remaining.push(
-        `Payouts step: Stripe Express onboarding failed (${flags.stripeFailureMessage}) — resolve that, then run ` +
-          stripeOnboard({ country }),
-      );
-    } else if (country) {
-      remaining.push(
-        `Payouts step: Stripe Express could not be created yet — finish the earlier steps, then run ${stripeOnboard({
-          country,
-        })}`,
-      );
-    } else {
-      remaining.push(
-        'Payouts step: ask the human for the two-letter country of their payout bank account, then run ' +
-          `${stripeOnboard({ country: '<ISO2>' })} (or re-run this command with the country)`,
-      );
-    }
-  } else if (flags.stripeOnboardingUrl) {
-    remaining.push(
-      `Payouts step: the Stripe Express account is ready — the human must open ${flags.stripeOnboardingUrl} in a ` +
-        'browser and finish identity and bank details',
-    );
-  } else if (!flags.payoutsEnabled) {
-    remaining.push(
-      `Payouts step: Stripe onboarding looks unfinished — get a fresh link with ${stripeOnboard(
-        country ? { country } : {},
-      )} and have the human complete it`,
-    );
+  if (!flags.payoutsEnabled) {
+    remaining.push(PAYOUT_STEP_GUIDANCE);
   }
-  remaining.push(
-    `Finish with ${ref('marketplace.seller.complete-onboarding', { productId })}, then re-check ` +
-      `${ref('marketplace.seller.status', { productId })}`,
-  );
   return remaining;
 };
 
@@ -324,7 +297,7 @@ const runOnboard = async (input, ctx) => {
     ? ` Eligibility (${quoteServerText(eligibilityResult.agent_guidance, '')}).`
     : '';
 
-  const remaining = describeRemainingSteps({ ctx, productId, country, flags });
+  const remaining = describeRemainingSteps({ ctx, productId, flags });
   const actionsNote =
     actions.length > 0
       ? `Automatic actions taken: ${actions
@@ -586,6 +559,18 @@ const contentHistory = defineCommand({
     }),
 });
 
+const addSite = defineCommand({
+  id: 'marketplace.seller.add-site',
+  summary: 'Add a site to sell on and get its product id. Use this instead of creating a product.',
+  kind: CommandKind.WRITE,
+  toolsets: TOOLSETS,
+  entryPoint: true,
+  input: { url: string().required(REQUIRED_OPTION) },
+  cli: { options: { url: 'url' }, placeholders: { url: '<site-url>' } },
+  run: (input, ctx) =>
+    ctx.http({ method: 'POST', path: '/marketplace/seller/sites', body: { url: input.url } }),
+});
+
 export const sellerGroup = defineGroup({
   id: 'marketplace.seller',
   help: { usage: SELLER_USAGE, guidance: SELLER_GUIDANCE },
@@ -594,6 +579,13 @@ export const sellerGroup = defineGroup({
     guidance: MARKETPLACE_UNKNOWN_GUIDANCE,
   }),
   children: [
+    addSite,
+    sellerPost({
+      id: 'connect-blog',
+      summary: 'Create or reuse the hosted Outrank Blog and connect it for marketplace placements (admin only).',
+      suffix: '/outrank-blog',
+      entryPoint: true,
+    }),
     status,
     onboard,
     eligibilityGroup,

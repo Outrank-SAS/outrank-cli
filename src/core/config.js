@@ -25,6 +25,7 @@ const PRINTABLE_ASCII_PATTERN = /^[\x20-\x7e]$/;
 const TRUNCATION_MARK = '...';
 export const API_KEY_FIELD = 'apiKey';
 export const BASE_URL_FIELD = 'baseUrl';
+export const OAUTH_FIELD = 'oauth';
 const DEFAULT_PROFILE_FIELD = 'defaultProfile';
 const PROFILES_FIELD = 'profiles';
 const PROFILE_FIELDS = Object.freeze([API_KEY_FIELD, BASE_URL_FIELD]);
@@ -239,8 +240,35 @@ export const saveProfiles = async (raw, state) => {
 
 const hasStoredApiKey = (profiles) => Object.values(profiles).some((profile) => isSet(profile[API_KEY_FIELD]));
 
-export const storeProfileAuth = async ({ profile, apiKey, baseUrl, makeDefault = false }) => {
+const withoutStoredOauth = (raw, profile) => {
+  const entry = ownEntry(ownEntry(raw, PROFILES_FIELD), profile);
+  if (!isPlainObject(entry) || !Object.hasOwn(entry, OAUTH_FIELD)) return raw;
+  return { ...raw, [PROFILES_FIELD]: { ...raw[PROFILES_FIELD], [profile]: omitField(entry, OAUTH_FIELD) } };
+};
+
+export const readRawProfile = (raw, profile) => {
+  const entry = ownEntry(ownEntry(raw, PROFILES_FIELD), profile);
+  return isPlainObject(entry) ? entry : null;
+};
+
+export const storeProfileOauth = async ({ profile, accessToken, oauth, baseUrl, makeDefault = false }) => {
   const raw = await loadConfig();
+  const state = readProfiles(raw);
+  const stored = { ...(ownEntry(state.profiles, profile) ?? {}), [API_KEY_FIELD]: accessToken };
+  if (baseUrl) stored[BASE_URL_FIELD] = baseUrl;
+  const profiles = { ...state.profiles, [profile]: stored };
+  const defaultProfile = makeDefault || !hasStoredApiKey(state.profiles) ? profile : state.defaultProfile;
+  const rawProfiles = ownEntry(raw, PROFILES_FIELD) ?? {};
+  const rawWithOauth = {
+    ...raw,
+    [PROFILES_FIELD]: { ...rawProfiles, [profile]: { ...ownEntry(rawProfiles, profile), [OAUTH_FIELD]: oauth } },
+  };
+  await saveProfiles(rawWithOauth, { defaultProfile, profiles });
+  return { profile, isDefault: defaultProfile === profile, stored };
+};
+
+export const storeProfileAuth = async ({ profile, apiKey, baseUrl, makeDefault = false }) => {
+  const raw = withoutStoredOauth(await loadConfig(), profile);
   const state = readProfiles(raw);
   const stored = { ...(ownEntry(state.profiles, profile) ?? {}), [API_KEY_FIELD]: apiKey };
   if (baseUrl) stored[BASE_URL_FIELD] = baseUrl;
@@ -251,7 +279,7 @@ export const storeProfileAuth = async ({ profile, apiKey, baseUrl, makeDefault =
 };
 
 export const clearProfileAuth = async ({ profile }) => {
-  const raw = await loadConfig();
+  const raw = withoutStoredOauth(await loadConfig(), profile);
   const state = readProfiles(raw);
   const entry = ownEntry(state.profiles, profile);
   if (!entry || !isSet(entry[API_KEY_FIELD])) return { ...state, removed: false };

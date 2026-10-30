@@ -1,6 +1,6 @@
 {
   "apiBasePath": "/api/agent/v1",
-  "sourceCommit": "d9aae8abba039a55b19c794478bdc9d2a4e45cc3",
+  "sourceCommit": "e9ec72e4444ff9c2e8cc2bb512997d91648e999b",
   "sourceDirty": false,
   "routes": [
     {
@@ -210,6 +210,10 @@
     {
       "method": "POST",
       "path": "/marketplace/placements/{placementId}/regenerate"
+    },
+    {
+      "method": "POST",
+      "path": "/marketplace/seller/sites"
     },
     {
       "method": "PATCH",
@@ -880,6 +884,10 @@
       "path": "/products/{id}/marketplace/seller/integrations"
     },
     {
+      "method": "POST",
+      "path": "/products/{id}/marketplace/seller/outrank-blog"
+    },
+    {
       "method": "GET",
       "path": "/products/{id}/marketplace/seller/placements"
     },
@@ -1390,6 +1398,18 @@
       "route": "/marketplace/placements/{placementId}/regenerate"
     },
     {
+      "text": "POST /api/agent/v1/products/<interpolated>/marketplace/seller/outrank-blog",
+      "route": "/marketplace/seller/sites"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/marketplace/seller/status",
+      "route": "/marketplace/seller/sites"
+    },
+    {
+      "text": "PATCH /api/agent/v1/marketplace/target-pages/<targetPageId>",
+      "route": "/marketplace/target-pages/{targetPageId}"
+    },
+    {
       "text": "GET /api/agent/v1/products/<id>/ai-citations/summary",
       "route": "/products/{id}/ai-citations/check"
     },
@@ -1426,15 +1446,15 @@
       "route": "/products/{id}/ai-cited-lists/lists"
     },
     {
-      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/filter-test",
-      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
-    },
-    {
       "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/domain-check",
       "route": "/products/{id}/ai-cited-lists/mailbox/connect"
     },
     {
       "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/inbox-test",
+      "route": "/products/{id}/ai-cited-lists/mailbox/connect"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/filter-test",
       "route": "/products/{id}/ai-cited-lists/mailbox/connect"
     },
     {
@@ -1446,6 +1466,10 @@
       "route": "/products/{id}/ai-cited-lists/mailbox/domain-check"
     },
     {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/inbox-test",
+      "route": "/products/{id}/ai-cited-lists/mailbox/domain-check"
+    },
+    {
       "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/mailbox",
       "route": "/products/{id}/ai-cited-lists/mailbox/filter-test"
     },
@@ -1454,11 +1478,11 @@
       "route": "/products/{id}/ai-cited-lists/mailbox/inbox-test"
     },
     {
-      "text": "POST .../mailbox/filter-test",
+      "text": "POST .../mailbox/inbox-test",
       "route": "/products/{id}/ai-cited-lists/mailbox"
     },
     {
-      "text": "POST .../mailbox/inbox-test",
+      "text": "POST .../mailbox/filter-test",
       "route": "/products/{id}/ai-cited-lists/mailbox"
     },
     {
@@ -2490,6 +2514,10 @@
       "route": "/products/{id}/marketplace/seller/integrations"
     },
     {
+      "text": "POST /api/agent/v1/products/<interpolated>/blog/domain",
+      "route": "/products/{id}/marketplace/seller/outrank-blog"
+    },
+    {
       "text": "POST /api/agent/v1/marketplace/placements/<placementId>/approve",
       "route": "/products/{id}/marketplace/seller/placements"
     },
@@ -2687,6 +2715,10 @@
     },
     {
       "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/connect",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/ai-cited-lists/mailbox/domain-check",
       "route": null
     },
     {
@@ -2923,6 +2955,10 @@
     },
     {
       "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/top-up-consent",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/marketplace/seller/sites",
       "route": null
     }
   ]

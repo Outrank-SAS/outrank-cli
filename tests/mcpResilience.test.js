@@ -14,8 +14,8 @@ import {
   withMcp,
 } from './helpers/mcpHarness.js';
 
-const ALL_TOOL_COUNT = 244;
-const FALLBACK_TOOL_COUNT = 33;
+const ALL_TOOL_COUNT = 246;
+const FALLBACK_TOOL_COUNT = 35;
 const PRODUCT_ID = 'aaaaaaaa-0000-4000-8000-000000000001';
 const SECOND_ID = 'bbbbbbbb-0000-4000-8000-000000000002';
 const SHORT_TIMEOUT_MS = 40;

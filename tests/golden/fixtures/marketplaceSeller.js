@@ -386,6 +386,11 @@ export default [
     responses: [NOT_FOUND_RESPONSE],
   },
 
+  { name: 'add-site-basic', argv: ['marketplace', 'seller', 'add-site', '--url', 'example.com'] },
+  { name: 'add-site-missing-url', argv: ['marketplace', 'seller', 'add-site'] },
+  { name: 'connect-blog-basic', argv: ['marketplace', 'seller', 'connect-blog', PRODUCT_ID] },
+  { name: 'connect-blog-missing-product-id', argv: ['marketplace', 'seller', 'connect-blog'] },
+
   { name: 'complete-onboarding-basic', argv: ['marketplace', 'seller', 'complete-onboarding', PRODUCT_ID] },
   { name: 'complete-onboarding-missing-product-id', argv: ['marketplace', 'seller', 'complete-onboarding'] },
 
