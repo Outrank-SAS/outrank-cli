@@ -561,7 +561,7 @@ const contentHistory = defineCommand({
 
 const addSite = defineCommand({
   id: 'marketplace.seller.add-site',
-  summary: 'Add a site to sell on and get its product id. Use this instead of creating a product.',
+  summary: 'Add a site to sell on and get its product id, without creating a regular product.',
   kind: CommandKind.WRITE,
   toolsets: TOOLSETS,
   entryPoint: true,
