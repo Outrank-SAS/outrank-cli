@@ -52,22 +52,25 @@ const blockedEnvelope = (spec, selection) =>
 
 const elapsedSeconds = (startedAt) => Math.round((Date.now() - startedAt) / MILLISECONDS_PER_SECOND);
 
-export const buildToolDefinition = (spec, uploads) => {
-  const input = buildToolInput({ z, spec, describeField, uploads });
+export const buildToolDefinition = (spec, uploads, surface = null) => {
+  const input = buildToolInput({ z, spec, describeField: surface?.describeField ?? describeField, uploads });
+  const meta = surface?.toolMeta?.(spec);
   return {
     input,
     tool: {
       name: toolName(spec.id),
-      title: toolTitle(spec),
-      description: describeTool(spec),
+      title: surface?.toolTitle?.(spec) ?? toolTitle(spec),
+      description: surface?.describeTool?.(spec) ?? describeTool(spec),
       inputSchema: input.inputSchema,
-      annotations: toolAnnotations(spec),
+      annotations: surface?.toolAnnotations?.(spec) ?? toolAnnotations(spec),
+      ...(meta ? { _meta: meta } : {}),
     },
   };
 };
 
 export const createMcpServer = async ({
   registry,
+  guidanceRegistry = registry,
   version,
   options,
   env,
@@ -75,6 +78,7 @@ export const createMcpServer = async ({
   context,
   whoami,
   remote = false,
+  surface = null,
   timeouts = {},
   logger = createLogger(),
   throttle,
@@ -86,8 +90,10 @@ export const createMcpServer = async ({
     : { dir: options.uploadDir, problem: options.uploadDirProblem ?? null };
   let server = null;
 
+  const isExposed = (spec) => spec.mcp !== false && (surface === null || surface.exposes(spec));
+
   const definitionFor = (spec) => {
-    if (!definitions.has(spec.id)) definitions.set(spec.id, buildToolDefinition(spec, uploads));
+    if (!definitions.has(spec.id)) definitions.set(spec.id, buildToolDefinition(spec, uploads, surface));
     return definitions.get(spec.id);
   };
 
@@ -101,7 +107,7 @@ export const createMcpServer = async ({
     });
   };
 
-  const guidance = await createGuidanceRewriter(registry);
+  const guidance = await createGuidanceRewriter(guidanceRegistry);
   for (const { id, reason } of unexpectedProbeFailures(guidance.index)) {
     logger.always('route_probe_failed', { command: id, reason });
   }
@@ -188,10 +194,12 @@ export const createMcpServer = async ({
   const callTool = async (params, extra) => {
     const startedAt = Date.now();
     const found = registry.byToolName.get(params.name);
-    const spec = found && found.mcp !== false ? found : undefined;
+    const spec = found && isExposed(found) ? found : undefined;
     const envelope = await runTool(spec, params.name, params.arguments, extra);
     logToolCall({ spec, params, envelope, startedAt });
-    return toToolResult(guidance.rewrite(envelope, spec), { spec, organization: session.organization() });
+    const rewritten = guidance.rewrite(envelope, spec);
+    if (surface) return toToolResult(surface.sanitizeEnvelope(rewritten), { spec, hideOrganization: true });
+    return toToolResult(rewritten, { spec, organization: session.organization() });
   };
 
   const asProtocolError = (run) => {
@@ -206,8 +214,10 @@ export const createMcpServer = async ({
   server = new Server(
     { name: MCP_SERVER_NAME, version },
     {
-      capabilities: { tools: { listChanged: true }, prompts: { listChanged: true }, resources: {} },
-      instructions: buildInstructions({ session, version, remote }),
+      capabilities: surface
+        ? { tools: {}, resources: {} }
+        : { tools: { listChanged: true }, prompts: { listChanged: true }, resources: {} },
+      instructions: surface?.instructions ?? buildInstructions({ session, version, remote }),
     },
   );
   server.onerror = (error) => {
@@ -217,16 +227,25 @@ export const createMcpServer = async ({
     session.shutdown();
   };
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
-    tools: session.selection().tools.map((spec) => definitionFor(spec).tool),
+    tools: session
+      .selection()
+      .tools.filter(isExposed)
+      .map((spec) => definitionFor(spec).tool),
   }));
   server.setRequestHandler(CallToolRequestSchema, async (request, extra) => callTool(request.params, extra));
-  server.setRequestHandler(ListPromptsRequestSchema, async () => ({ prompts: listPrompts(session.selection()) }));
-  server.setRequestHandler(GetPromptRequestSchema, async (request) =>
-    asProtocolError(() => getPrompt(session.selection(), request.params.name, request.params.arguments)),
-  );
-  server.setRequestHandler(ListResourcesRequestSchema, async () => ({ resources: listResources() }));
+  if (!surface) {
+    server.setRequestHandler(ListPromptsRequestSchema, async () => ({ prompts: listPrompts(session.selection()) }));
+    server.setRequestHandler(GetPromptRequestSchema, async (request) =>
+      asProtocolError(() => getPrompt(session.selection(), request.params.name, request.params.arguments)),
+    );
+  }
+  server.setRequestHandler(ListResourcesRequestSchema, async () => ({
+    resources: surface ? surface.listResources() : listResources(),
+  }));
   server.setRequestHandler(ReadResourceRequestSchema, async (request) =>
-    asProtocolError(() => readResource(session, request.params.uri)),
+    asProtocolError(() =>
+      surface ? surface.readResource(request.params.uri) : readResource(session, request.params.uri),
+    ),
   );
 
   return { server, session };
