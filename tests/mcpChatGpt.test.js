@@ -104,6 +104,24 @@ test('openWorldHint is true only for tools that reach the web, a CMS, Google or 
   });
 });
 
+test('destructiveHint is true for tools that overwrite, cancel, delete or publish', async () => {
+  await withSurface({}, async ({ client }) => {
+    const { tools } = await client.listTools();
+    const destructive = tools.filter((tool) => tool.annotations.destructiveHint).map((tool) => tool.name).sort();
+    assert.deepEqual(destructive, [
+      'articles_start',
+      'improvements_candidates_schedule',
+      'keywords_bulk_reschedule',
+      'keywords_delete',
+      'keywords_update',
+      'marketplace_buyer_target_pages_pause',
+    ]);
+    for (const tool of tools) {
+      if (tool.annotations.readOnlyHint) assert.equal(tool.annotations.destructiveHint, false, tool.name);
+    }
+  });
+});
+
 test('no pricing, subscription or checkout text anywhere the model or a reviewer can read', async () => {
   await withSurface({}, async ({ client }) => {
     const { tools } = await client.listTools();

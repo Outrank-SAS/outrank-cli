@@ -31,8 +31,8 @@ export const CHATGPT_TOOLS = Object.freeze({
   'keywords.suggest': { title: 'Suggest keywords', openWorld: true },
   'keywords.bulk-process': { title: 'Look up keyword metrics', openWorld: true },
   'keywords.add': { title: 'Add keywords to plan', openWorld: false },
-  'keywords.update': { title: 'Update planned keyword', openWorld: false },
-  'keywords.bulk-reschedule': { title: 'Reschedule keywords', openWorld: false },
+  'keywords.update': { title: 'Update planned keyword', openWorld: false, destructive: true },
+  'keywords.bulk-reschedule': { title: 'Reschedule keywords', openWorld: false, destructive: true },
   'keywords.delete': { title: 'Remove planned keyword', openWorld: false },
   'articles.list': { title: 'List articles', openWorld: false },
   'articles.get': { title: 'Get article', openWorld: false },
@@ -40,6 +40,7 @@ export const CHATGPT_TOOLS = Object.freeze({
   [START_COMMAND_ID]: {
     title: 'Start article',
     openWorld: true,
+    destructive: true,
     description:
       'Starts writing the article of a keyword on the plan and returns at once. A keyword scheduled for today is ' +
       'also published to the connected CMS when it is done; a later one is prepared ahead of its date. Confirm with ' +
@@ -54,7 +55,7 @@ export const CHATGPT_TOOLS = Object.freeze({
       'seconds, and a ready answer carries the article title and its link. Call it again while it is not ready.',
   },
   'improvements.candidates.list': { title: 'List articles to improve', openWorld: false },
-  'improvements.candidates.schedule': { title: 'Schedule article improvement', openWorld: true },
+  'improvements.candidates.schedule': { title: 'Schedule article improvement', openWorld: true, destructive: true },
   'improvements.tasks.list': { title: 'List scheduled improvements', openWorld: false },
   'improvements.executions.list': { title: 'List finished improvements', openWorld: false },
   'improvements.executions.get': { title: 'Get improvement result', openWorld: false },
@@ -73,6 +74,7 @@ export const CHATGPT_TOOLS = Object.freeze({
   'marketplace.buyer.target-pages.pause': {
     title: 'Pause backlink target page',
     openWorld: false,
+    destructive: true,
     description: 'Stops directing new backlinks to a target page. The page stays on the list.',
   },
   'marketplace.buyer.target-pages.activate': {
@@ -97,6 +99,8 @@ const TOOL_MENTION_PATTERN =
 const ROUTE_MENTION_PATTERN = /\/api\/agent\/|outrank-cli|--[a-z]/;
 const SENTENCE_BOUNDARY = /(?<=[.!?])\s+/;
 const SENTENCE_JOINER = ' ';
+const MAX_URI_CHARS = 200;
+const MAX_SCANNED_VALUE_CHARS = 2_048;
 
 const COMMERCE_ERROR_CODES = Object.freeze([
   'SUBSCRIPTION_REQUIRED',
@@ -108,9 +112,7 @@ const COMMERCE_ERROR_CODES = Object.freeze([
   'TOP_UP_CONSENT_REQUIRED',
 ]);
 export const UNAVAILABLE_MESSAGE = 'This is not available on this Outrank account right now.';
-export const UNAVAILABLE_GUIDANCE =
-  'Tell the user this is not active on their Outrank account and that they can review their account at outrank.so. ' +
-  'Do not retry.';
+export const UNAVAILABLE_GUIDANCE = 'Tell the user this feature is not active on their Outrank account. Do not retry.';
 const FALLBACK_ERROR_MESSAGE = 'Outrank could not complete this request.';
 const FALLBACK_GUIDANCE = 'Tell the user what happened in plain words.';
 const DEFAULT_SUCCESS_GUIDANCE = 'Report the result to the user.';
@@ -134,7 +136,7 @@ export const scrubText = (text) =>
 const isPlainObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 
 const isCommerceValue = (key, value) =>
-  COMMERCE_KEY_PATTERN.test(key) || (typeof value === 'string' && value.length < 2048 && COMMERCE_URL_PATTERN.test(value));
+  COMMERCE_KEY_PATTERN.test(key) || (typeof value === 'string' && value.length < MAX_SCANNED_VALUE_CHARS && COMMERCE_URL_PATTERN.test(value));
 
 export const scrubData = (value) => {
   if (Array.isArray(value)) return value.map(scrubData);
@@ -180,7 +182,7 @@ const isReadOnly = (spec) => spec.kind === CommandKind.READ || spec.kind === Com
 const toolAnnotations = (spec) => ({
   title: CHATGPT_TOOLS[spec.id].title,
   readOnlyHint: isReadOnly(spec),
-  destructiveHint: spec.kind === CommandKind.DESTRUCTIVE || spec.kind === CommandKind.MONEY,
+  destructiveHint: CHATGPT_TOOLS[spec.id].destructive === true || spec.kind === CommandKind.DESTRUCTIVE,
   idempotentHint: isReadOnly(spec),
   openWorldHint: CHATGPT_TOOLS[spec.id].openWorld,
 });
@@ -200,7 +202,7 @@ const articleCardResource = () => ({
 });
 
 const readResource = (uri) => {
-  if (uri !== ARTICLE_CARD_URI) throw Object.assign(new Error(`Unknown resource: ${String(uri).slice(0, 200)}`), {});
+  if (uri !== ARTICLE_CARD_URI) throw new Error(`Unknown resource: ${String(uri).slice(0, MAX_URI_CHARS)}`);
   return {
     contents: [
       { uri, mimeType: ARTICLE_CARD_MIME_TYPE, text: ARTICLE_CARD_HTML, _meta: ARTICLE_CARD_RESOURCE_META },
