@@ -70,8 +70,9 @@ export const sanitizeEnvelope = (envelope, spec) => {
   return { ...envelope, data: wrapUntrustedFields(visible, untrustedFields(spec), untrustedWhen(spec)) };
 };
 
-export const toToolResult = (envelope, { spec, organization } = {}) => {
-  const payload = { ...sanitizeEnvelope(envelope, spec), organization: organization ?? null };
+export const toToolResult = (envelope, { spec, organization, hideOrganization = false } = {}) => {
+  const sanitized = sanitizeEnvelope(envelope, spec);
+  const payload = hideOrganization ? sanitized : { ...sanitized, organization: organization ?? null };
   return {
     content: [{ type: TEXT_CONTENT_TYPE, text: JSON.stringify(payload) }],
     structuredContent: payload,
