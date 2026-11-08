@@ -928,15 +928,23 @@ This makes the CLI easier for AI agents to drive reliably.
 
 ## Using the agent skill (`SKILL.md`)
 
-`SKILL.md` ships alongside this CLI as a Claude Code skill. It tells an AI agent how to drive `outrank-cli` end-to-end — when to inspect before writing, how to interpret `agent_guidance`, the new-product preflight, the GSC flow, the linking flow, keyword/article rules, and how to handle 401/402/403/409 errors.
+[`skills/outrank/SKILL.md`](skills/outrank/SKILL.md) ships alongside this CLI as a Claude Code skill. It tells an AI agent how to drive `outrank-cli` end-to-end — when to inspect before writing, how to interpret `agent_guidance`, the new-product preflight, the GSC flow, the linking flow, keyword/article rules, and how to handle 401/402/403/409 errors.
 
 You do not need it if you are using the CLI by hand from a terminal. You want it when you are letting an AI assistant operate the CLI for you. With the [MCP server](#mcp-server) connected, the skill is optional: it adds workflow guidance on top of the tools and tells the assistant to use them instead of the terminal.
 
-### Claude Code
+### Any agent, with the skills CLI
+
+```bash
+npx skills add Outrank-SAS/outrank-cli
+```
+
+This installs the `outrank` skill for Claude Code, Codex, Cursor, Gemini CLI and the other agents the [skills CLI](https://skills.sh/outrank-sas/outrank-cli/outrank) supports. Then connect the [MCP server](#mcp-server), or install the CLI and set an API key as below.
+
+### Claude Code, by hand
 
 1. Install `outrank-cli` globally so the agent can call it: `npm install -g outrank-cli`.
 2. Make `SKILL.md` available to Claude Code as a skill. Either:
-   - **Project-scoped** — copy `SKILL.md` into `.claude/skills/outrank/SKILL.md` inside the project you want the agent to work in, or
+   - **Project-scoped** — copy `skills/outrank/SKILL.md` into `.claude/skills/outrank/SKILL.md` inside the project you want the agent to work in, or
    - **User-scoped** — copy it into `~/.claude/skills/outrank/SKILL.md` (Windows: `C:\Users\<you>\.claude\skills\outrank\SKILL.md`) so it is available in every Claude Code session.
 3. Provide the API key once via env var or `outrank-cli auth login` (see [Auth](#auth)).
 4. In Claude Code, ask the agent to do something Outrank-shaped (e.g. "list my products", "create a new product for example.com", "regenerate next week's keyword plan"). The skill's `description` triggers it automatically; Claude will run `outrank-cli` commands and follow the rules in `SKILL.md`.
@@ -951,5 +959,5 @@ You do not need it if you are using the CLI by hand from a terminal. You want it
 
 ### Updating the skill
 
-The CLI and `SKILL.md` are versioned together. When you upgrade `outrank-cli`, also refresh the copy of `SKILL.md` in your `.claude/skills/...` directory from the installed package (`<global node_modules>/outrank-cli/SKILL.md`) or from this repo.
+The CLI and `SKILL.md` are versioned together. When you upgrade `outrank-cli`, also refresh the copy of `SKILL.md` in your `.claude/skills/...` directory from the installed package (`<global node_modules>/outrank-cli/skills/outrank/SKILL.md`), with `npx skills update`, or from this repo.
 
