@@ -31,14 +31,16 @@
         "marketplace-buyer": "full",
         "marketplace-seller": "full",
         "blog": "full",
-        "ai-cited-lists": "full"
+        "ai-cited-lists": "full",
+        "free-tools": "full"
       },
       "unverified_toolsets": {},
       "flows": {
         "articles": true,
         "marketplace_buyer": true,
         "marketplace_seller": true,
-        "ai_cited_lists": true
+        "ai_cited_lists": true,
+        "free_tools": true
       },
       "disabled_products_with_services": 0
     }

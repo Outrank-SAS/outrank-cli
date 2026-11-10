@@ -23,7 +23,7 @@ import {
   withMcp,
 } from './helpers/mcpHarness.js';
 
-const EXPECTED_ROUTE_COUNT = 239;
+const EXPECTED_ROUTE_COUNT = 255;
 const ORCHESTRATOR_ID = 'marketplace.seller.onboard';
 const BROKEN_COMMAND_ID = 'products.broken-probe';
 const BROKEN_PROBE_REASON = 'run() threw: probe failure';
@@ -383,6 +383,26 @@ test('literal provider segments map to the provider tools', () => {
   assert.equal(
     rewrite('POST /api/agent/v1/integration-providers/wordpress-plugin/validate'),
     'products_integrations_validate {"provider":"wordpress-plugin"}',
+  );
+});
+
+test('free-tools literal segments map to their own tools, not to the tool id of free_tools_get', () => {
+  assert.equal(
+    rewrite('GET /api/agent/v1/products/<id>/free-tools/keywords?view=all'),
+    'free_tools_keywords_list {"product_id":"<id>","view":"all"}',
+  );
+  assert.equal(rewrite('GET /api/agent/v1/products/<id>/free-tools/status'), 'free_tools_status {"product_id":"<id>"}');
+  assert.equal(
+    rewrite('GET /api/agent/v1/products/<id>/free-tools/<toolId>'),
+    'free_tools_get {"product_id":"<id>","tool_id":"<toolId>"}',
+  );
+  assert.equal(
+    rewrite('POST /api/agent/v1/products/<id>/free-tools/<toolId>/messages'),
+    'free_tools_edit {"product_id":"<id>","tool_id":"<toolId>"}',
+  );
+  assert.equal(
+    rewrite('GET /api/agent/v1/products/<id>/free-tools/<toolId>/preview?wake=true'),
+    'free_tools_preview {"product_id":"<id>","tool_id":"<toolId>","wake":true}',
   );
 });
 

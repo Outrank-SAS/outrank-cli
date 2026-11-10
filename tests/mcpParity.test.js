@@ -12,7 +12,11 @@ const API_KEY_PLACEHOLDER = '<API_KEY-1>';
 const PRODUCT_ID = 'aaaaaaaa-0000-4000-8000-000000000001';
 const SECOND_ID = 'bbbbbbbb-0000-4000-8000-000000000002';
 const THIRD_ID = 'cccccccc-0000-4000-8000-000000000003';
-const COMMAND_GROUP_COUNT = 16;
+const COMMAND_GROUP_COUNT = 17;
+const TINY_PNG_NAME = 'tiny.png';
+const TINY_PNG_BASE64 = fs
+  .readFileSync(path.join(REPO_ROOT, 'tests', 'golden', 'fixtures', 'payloads', TINY_PNG_NAME))
+  .toString('base64');
 
 const CASES = [
   { fixture: 'auth/whoami', tool: 'auth_whoami', args: {} },
@@ -142,6 +146,61 @@ const CASES = [
     fixture: 'marketplaceBuyer/change-plan-cancel-with-confirm-subscription-id',
     tool: 'marketplace_buyer_change_plan',
     args: { product_id: PRODUCT_ID, action: 'cancel_subscription', confirm_subscription_id: 'sub_123' },
+  },
+  {
+    fixture: 'freeTools/keywords-add-repeated-with-comma',
+    tool: 'free_tools_keywords_add',
+    args: { product_id: PRODUCT_ID, keywords: ['mortgage calculator', 'loan calculator, uk'] },
+  },
+  {
+    fixture: 'freeTools/keywords-generate',
+    tool: 'free_tools_keywords_generate',
+    args: { product_id: PRODUCT_ID, count: 10, source: 'competitors' },
+  },
+  {
+    fixture: 'freeTools/keywords-delete',
+    tool: 'free_tools_keywords_delete',
+    args: { product_id: PRODUCT_ID, keyword_ids: [SECOND_ID, THIRD_ID] },
+  },
+  {
+    fixture: 'freeTools/create',
+    tool: 'free_tools_create',
+    args: { product_id: PRODUCT_ID, keyword_id: THIRD_ID },
+  },
+  {
+    fixture: 'freeTools/list-paged',
+    tool: 'free_tools_list',
+    args: { product_id: PRODUCT_ID, limit: 20, offset: 20 },
+  },
+  {
+    fixture: 'freeTools/edit-with-attachments',
+    tool: 'free_tools_edit',
+    args: {
+      product_id: PRODUCT_ID,
+      tool_id: SECOND_ID,
+      prompt: 'Add a copy-to-clipboard button for the results',
+      attachment_ids: [THIRD_ID, SECOND_ID],
+    },
+  },
+  {
+    fixture: 'freeTools/preview-wake',
+    tool: 'free_tools_preview',
+    args: { product_id: PRODUCT_ID, tool_id: SECOND_ID, wake: true },
+  },
+  {
+    fixture: 'freeTools/rollback',
+    tool: 'free_tools_rollback',
+    args: { product_id: PRODUCT_ID, tool_id: SECOND_ID },
+  },
+  {
+    fixture: 'freeTools/attachments-add',
+    tool: 'free_tools_attachments_add',
+    args: { product_id: PRODUCT_ID, tool_id: SECOND_ID, file_base64: TINY_PNG_BASE64, file_name: TINY_PNG_NAME },
+  },
+  {
+    fixture: 'freeTools/attachments-remove',
+    tool: 'free_tools_attachments_remove',
+    args: { product_id: PRODUCT_ID, tool_id: SECOND_ID, attachment_id: THIRD_ID },
   },
 ];
 

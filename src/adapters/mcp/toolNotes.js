@@ -34,6 +34,8 @@ const BLOG_PAGE_BODY =
   'Fields: title, slug, content (markdown), seoTitle, seoDescription, status (draft | published), showInNav, ' +
   'position, layout (default | wide).';
 const BLOG_CATEGORY_BODY = 'Fields: name, slug, description, seoTitle, seoDescription, position.';
+const FREE_TOOL_STATES = 'building | stalled | failed | draft | published | published_with_draft | incomplete';
+const GENERATION_PLAN_NOTE = 'On the Hosting plan it returns FREE_TOOLS_GENERATION_PLAN_REQUIRED.';
 const BLOG_AUTHOR_BODY =
   'Fields: name, slug, avatarUrl, bio, jobTitle, websiteUrl, social ({ x | linkedin | github | ...: https URL }), ' +
   'isDefault.';
@@ -296,6 +298,106 @@ export const TOOL_NOTES = Object.freeze({
   'ai-cited-lists.citations.summary': { fields: { weeks: '4 or 12.' } },
   'ai-cited-lists.citations.check': {
     note: 'Idempotent: fresh data or a running check returns has_data or in_progress without starting anything.',
+  },
+  'free-tools.status': {
+    note:
+      'data.subscription is null on a product without a Free Tools Builder plan; the human subscribes in the ' +
+      'dashboard at data.links.subscribe_url. data.subscription.can_build is false on the Hosting plan, while past ' +
+      'due or outside the paid period. data.planner.available_slots says how many keywords the planner still takes.',
+  },
+  'free-tools.keywords.list': {
+    note:
+      'Each keyword has scheduled_for (the day Outrank builds its tool on its own), state (scheduled until a tool ' +
+      `exists, then the tool state: ${FREE_TOOL_STATES}), can_build_now and tool { id, state, live_url }. ` +
+      'buildability_warning names keywords the AI judged hard to turn into a working tool.',
+    fields: { view: 'upcoming (default, what the dashboard planner shows) | all.' },
+  },
+  'free-tools.keywords.add': {
+    note:
+      'Schedules the keywords one week apart on the product generation day, after the last planned keyword, as the ' +
+      'dashboard does. The planner holds at most 24 upcoming keywords (data.planner.available_slots in ' +
+      'free_tools_status); duplicates of planned keywords are refused, and so is any add while keyword research ' +
+      'runs (CONFLICT with details.keyword_research running).',
+    fields: { keywords: 'Keyword texts, one tool each, for example "mortgage calculator".' },
+  },
+  'free-tools.keywords.generate': {
+    note:
+      'The Generate Keywords action of the dashboard planner: AI research from the competitors and target audiences ' +
+      'of the product, and the keywords it finds are scheduled at once. status running means the research goes on ' +
+      'and the keywords appear in free_tools_keywords_list within minutes; a call while research still runs is ' +
+      'refused with CONFLICT (details.keyword_research running).',
+    fields: {
+      count: 'How many keywords to generate, at most data.planner.available_slots of free_tools_status.',
+      source: 'competitors | audiences | both (default both).',
+    },
+  },
+  'free-tools.keywords.delete': {
+    note:
+      'Deleted keywords cannot be restored, and the remaining keywords are rescheduled. Needs an active Free Tools ' +
+      'plan (Hosting included). A keyword with a running, saved or published tool is refused with CONFLICT.',
+    fields: { keywordIds: 'Planned keyword ids from free_tools_keywords_list.' },
+  },
+  'free-tools.create': {
+    note:
+      'The Generate button of the dashboard planner: builds the tool of a planned keyword now instead of on its ' +
+      'scheduled day, or retries a failed or stalled first build. The first version goes live as soon as it is ' +
+      'built, as in the dashboard. It returns status completed with the tool, or ' +
+      'status building after about 3.5 minutes while the build goes on. A keyword whose tool is still building ' +
+      'returns FREE_TOOLS_TOOL_BUSY, one that already has a tool returns CONFLICT, and a trial plan builds one tool ' +
+      `(LIMIT_REACHED). ${GENERATION_PLAN_NOTE}`,
+    fields: { keywordId: 'Planned keyword id from free_tools_keywords_list.' },
+  },
+  'free-tools.list': {
+    note: `Most recently updated first. state is ${FREE_TOOL_STATES}; live_url is set once a version is live.`,
+  },
+  'free-tools.get': {
+    note:
+      'state building means a build or edit run is in progress, and stalled that a run stopped moving for 15 ' +
+      'minutes. has_unpublished_changes, can_publish, can_discard and can_rollback say which of free_tools_publish, ' +
+      'free_tools_discard and free_tools_rollback apply.',
+  },
+  'free-tools.history': {
+    note:
+      'Oldest first. Assistant messages carry reply, suggestions and design_directions whose prompt can be sent back ' +
+      'verbatim with free_tools_edit; asks_question true means the builder waits for an answer before it changes ' +
+      'anything.',
+  },
+  'free-tools.edit': {
+    note:
+      'The chat of the dashboard builder. The change lands in a draft; the live tool stays the same until ' +
+      'free_tools_publish. The call waits about 3.5 minutes: run.status running means the builder is still working ' +
+      '(free_tools_get shows state building until it finishes, then free_tools_history has the reply), and a change ' +
+      'sent meanwhile returns FREE_TOOLS_TOOL_BUSY. reply.suggestions and reply.design_directions carry prompts ' +
+      `that can be sent back verbatim. ${GENERATION_PLAN_NOTE}`,
+    fields: {
+      prompt: 'The change in plain words, at most 4000 characters.',
+      attachmentIds: 'At most 4 attachment ids from free_tools_attachments_add.',
+    },
+  },
+  'free-tools.preview': {
+    note:
+      'Returns preview_url of the current draft, or null with a reason while the preview sandbox sleeps. wake true ' +
+      'starts the sandbox, which takes up to about four minutes. The link is temporary and shows unpublished ' +
+      'changes; live_url in free_tools_get is the public page.',
+    fields: { wake: 'true starts the preview sandbox when it sleeps.' },
+  },
+  'free-tools.publish': {
+    note:
+      'Makes the current draft the live version at live_url. status pending means the builder accepted the publish ' +
+      `but did not confirm it in time; free_tools_get shows the outcome. ${GENERATION_PLAN_NOTE}`,
+  },
+  'free-tools.discard': {
+    note:
+      'Deletes the unpublished changes and resets the draft to the live version; discarded changes cannot be ' +
+      'restored. status pending means the builder did not confirm in time; free_tools_get shows the outcome.',
+  },
+  'free-tools.rollback': {
+    note:
+      'Replaces the live version with the previous published one (previous_version in free_tools_get). Works only ' +
+      `while has_unpublished_changes is false. ${GENERATION_PLAN_NOTE}`,
+  },
+  'free-tools.attachments.add': {
+    note: 'Takes png, jpeg, webp or gif up to 3 MB. attachment.id goes into attachment_ids of free_tools_edit.',
   },
   'products.list': { fields: { status: 'active | disabled.' } },
   'products.get': { note: 'Returns the General settings and services [{ service, status }] of the product.' },

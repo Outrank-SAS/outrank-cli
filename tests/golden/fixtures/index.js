@@ -15,6 +15,7 @@ import marketplaceSeller from './marketplaceSeller.js';
 import marketplaceNotifications from './marketplaceNotifications.js';
 import marketplaceBuyer from './marketplaceBuyer.js';
 import aiCitedLists from './aiCitedLists.js';
+import freeTools from './freeTools.js';
 import root from './root.js';
 import { DEFAULT_CONFIG, OK_RESPONSE } from './shared.js';
 
@@ -37,6 +38,7 @@ export const FIXTURE_GROUPS = {
   marketplaceNotifications,
   marketplaceBuyer,
   aiCitedLists,
+  freeTools,
 };
 
 export * from './shared.js';

@@ -15,6 +15,7 @@ const ALL_PROMPTS = [
   'plan_keywords',
   'improve_declining_articles',
   'setup_ai_cited_lists',
+  'build_free_tool',
   'setup_publishing_integration',
 ];
 const TOOL_TOKEN_PATTERN = /\b[a-z]+(?:_[a-z]+)+\b/g;
@@ -48,7 +49,14 @@ const TOOL_NAMES = new Set(
 );
 const FULL_SELECTION = {
   readOnly: false,
-  enabled: { core: 'full', keywords: 'full', improvements: 'full', integrations: 'full', 'ai-cited-lists': 'full' },
+  enabled: {
+    core: 'full',
+    keywords: 'full',
+    improvements: 'full',
+    integrations: 'full',
+    'ai-cited-lists': 'full',
+    'free-tools': 'full',
+  },
 };
 
 const toolTokensOf = (text) =>
@@ -62,6 +70,7 @@ test('every tool named in a prompt exists, and every prompt names at least five 
     plan_keywords: { product_id: PRODUCT_ID, days: '14' },
     improve_declining_articles: { product_id: PRODUCT_ID },
     setup_ai_cited_lists: { product_id: PRODUCT_ID },
+    build_free_tool: { product_id: PRODUCT_ID },
     setup_publishing_integration: { product_id: PRODUCT_ID, provider: 'notion' },
   };
   for (const name of PROMPT_NAMES) {
@@ -76,7 +85,7 @@ test('prompts follow the enabled toolsets and disappear in read-only mode', () =
   const partial = { ...FULL_SELECTION, enabled: { ...FULL_SELECTION.enabled, improvements: 'read' } };
   assert.deepEqual(
     listPrompts(partial).map((prompt) => prompt.name),
-    ['onboard_product', 'plan_keywords', 'setup_ai_cited_lists', 'setup_publishing_integration'],
+    ['onboard_product', 'plan_keywords', 'setup_ai_cited_lists', 'build_free_tool', 'setup_publishing_integration'],
   );
   assert.deepEqual(listPrompts({ ...partial, readOnly: true }), []);
   assert.throws(

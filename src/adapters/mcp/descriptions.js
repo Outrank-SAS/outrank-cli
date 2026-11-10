@@ -26,6 +26,8 @@ const FIELD_HINTS = Object.freeze({
   listId: 'Cited list id (UUID) from ai_cited_lists_lists_list.',
   offerId: 'Offer id (UUID) from ai_cited_lists_outreach or ai_cited_lists_overview (wins).',
   questionId: 'Buyer question id (UUID) from ai_cited_lists_questions_list.',
+  toolId: 'Free tool id (UUID) from free_tools_list or the tool of free_tools_keywords_list.',
+  attachmentId: 'Builder attachment id (UUID) from free_tools_attachments_add.',
   attemptId: 'attempt_id returned by the matching connect call.',
   limit: 'Page size.',
   offset: 'Zero-based offset; pass next_offset from the previous page.',

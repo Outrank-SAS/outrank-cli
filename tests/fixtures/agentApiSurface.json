@@ -1,6 +1,6 @@
 {
   "apiBasePath": "/api/agent/v1",
-  "sourceCommit": "e9ec72e4444ff9c2e8cc2bb512997d91648e999b",
+  "sourceCommit": "9a62cf248c1b9293c55a8446e124a88c23fda7e8",
   "sourceDirty": false,
   "routes": [
     {
@@ -66,6 +66,10 @@
     {
       "method": "POST",
       "path": "/articles"
+    },
+    {
+      "method": "POST",
+      "path": "/articles/start"
     },
     {
       "method": "GET",
@@ -620,6 +624,70 @@
       "path": "/products/{id}/competitors"
     },
     {
+      "method": "DELETE",
+      "path": "/products/{id}/free-tools/{toolId}/attachments/{attachmentId}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/free-tools/{toolId}/attachments"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/free-tools/{toolId}/discard"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/free-tools/{toolId}/messages"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/free-tools/{toolId}/messages"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/free-tools/{toolId}/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/free-tools/{toolId}/publish"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/free-tools/{toolId}/rollback"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/free-tools/{toolId}"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/free-tools/keywords/bulk-delete"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/free-tools/keywords/generate"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/free-tools/keywords"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/free-tools/keywords"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/free-tools"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/free-tools"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/free-tools/status"
+    },
+    {
       "method": "GET",
       "path": "/products/{id}/gsc/accounts"
     },
@@ -1124,6 +1192,10 @@
     {
       "text": "POST /api/agent/v1/articles/<interpolated>/publish",
       "route": "/articles"
+    },
+    {
+      "text": "GET /api/agent/v1/keywords/<interpolated>",
+      "route": "/articles/start"
     },
     {
       "text": "GET /api/agent/v1/products/<product_id>/improvements/candidates",
@@ -1860,6 +1932,66 @@
     {
       "text": "GET /api/agent/v1/products/<interpolated>/competitors",
       "route": "/products/{id}/competitors"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools/<interpolated>/messages",
+      "route": "/products/{id}/free-tools/{toolId}/attachments"
+    },
+    {
+      "text": "DELETE /api/agent/v1/products/<interpolated>/free-tools/<interpolated>/attachments/<attachmentId>",
+      "route": "/products/{id}/free-tools/{toolId}/attachments"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/<interpolated>/messages",
+      "route": "/products/{id}/free-tools/{toolId}/messages"
+    },
+    {
+      "text": "/api/agent/v1/products/<interpolated>/free-tools/<interpolated>",
+      "route": "/products/{id}/free-tools/{toolId}/preview"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/keywords?view=all",
+      "route": "/products/{id}/free-tools/keywords/bulk-delete"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/keywords",
+      "route": "/products/{id}/free-tools/keywords/bulk-delete"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/keywords",
+      "route": "/products/{id}/free-tools/keywords/generate"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools",
+      "route": "/products/{id}/free-tools/keywords/generate"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools/keywords/bulk-delete",
+      "route": "/products/{id}/free-tools/keywords/generate"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/<toolId>",
+      "route": "/products/{id}/free-tools/keywords"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools",
+      "route": "/products/{id}/free-tools/keywords"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools/keywords/bulk-delete",
+      "route": "/products/{id}/free-tools/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/keywords",
+      "route": "/products/{id}/free-tools/keywords"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/keywords",
+      "route": "/products/{id}/free-tools"
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools",
+      "route": "/products/{id}/free-tools/status"
     },
     {
       "text": "GET /api/agent/v1/products",
@@ -2766,6 +2898,10 @@
       "route": null
     },
     {
+      "text": "GET /api/agent/v1/products/<id>/free-tools/status",
+      "route": null
+    },
+    {
       "text": "GET/PATCH /api/agent/v1/products/<id>",
       "route": null
     },
@@ -2803,6 +2939,74 @@
     },
     {
       "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/status",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/free-tools",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/free-tools",
+      "route": null
+    },
+    {
+      "text": "DELETE /api/agent/v1/products/<id>/free-tools/<toolId>/attachments/<attachmentId>",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/free-tools/keywords",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<id>/free-tools/<toolId>/messages",
+      "route": null
+    },
+    {
+      "text": "/api/agent/v1/products/<interpolated>/free-tools/status",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/keywords",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools/keywords",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools/keywords/generate",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools/<interpolated>/messages",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/<interpolated>/preview",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools/<interpolated>/publish",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/<interpolated>",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/<interpolated>/messages",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/free-tools/<interpolated>/discard",
       "route": null
     },
     {
@@ -2955,6 +3159,10 @@
     },
     {
       "text": "GET /api/agent/v1/products/<id>/ai-cited-lists/top-up-consent",
+      "route": null
+    },
+    {
+      "text": "GET /api/agent/v1/products/<id>/free-tools/<toolId>",
       "route": null
     },
     {
