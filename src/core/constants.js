@@ -70,6 +70,11 @@ export const AI_CITATIONS_PERIOD_WEEKS = Object.freeze([4, 12]);
 export const AI_CITED_LISTS_LIST_VIEWS = Object.freeze(['all', 'to_send', 'skipped']);
 export const AI_CITED_LISTS_ENTRY_MODES = Object.freeze(['generated', 'custom']);
 
+export const FREE_TOOLS_KEYWORD_VIEWS = Object.freeze(['upcoming', 'all']);
+export const FREE_TOOLS_KEYWORD_SOURCES = Object.freeze(['competitors', 'audiences', 'both']);
+export const FREE_TOOLS_KEYWORDS_GENERATE_MIN_COUNT = 5;
+export const FREE_TOOLS_KEYWORDS_GENERATE_MAX_COUNT = 24;
+
 export const BILLING_MIN_ADDITIONAL_PRODUCTS = 1;
 export const BILLING_MAX_ADDITIONAL_PRODUCTS = 30;
 export const BILLING_MIN_CONFIRM_CHARGE_CENTS = 0;

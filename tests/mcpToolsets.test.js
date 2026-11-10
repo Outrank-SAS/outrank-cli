@@ -7,17 +7,17 @@ import { registry } from '../src/commands/index.js';
 import { toolName } from '../src/commands/registry.js';
 import { readWhoamiFixture } from './helpers/mcpHarness.js';
 
-const ALL_TOOL_COUNT = 246;
+const ALL_TOOL_COUNT = 262;
 const CORE_TOOL_COUNT = 16;
-const ENTRY_POINT_COUNT = 19;
+const ENTRY_POINT_COUNT = 20;
 const BRAND_NEW_TOOL_COUNT = CORE_TOOL_COUNT + ENTRY_POINT_COUNT;
-const SUBSCRIBED_NO_PRODUCT_TOOL_COUNT = 36;
-const BUYER_ONLY_TOOL_COUNT = 59;
-const SELLER_ONLY_TOOL_COUNT = 83;
-const BASIC_PLAN_TOOL_COUNT = 112;
-const READ_ONLY_ARTICLES_TOOL_COUNT = 77;
-const SELLER_WITH_ARTICLES_TOOL_COUNT = 145;
-const READ_ONLY_ALL_TOOL_COUNT = 104;
+const SUBSCRIBED_NO_PRODUCT_TOOL_COUNT = 37;
+const BUYER_ONLY_TOOL_COUNT = 60;
+const SELLER_ONLY_TOOL_COUNT = 84;
+const BASIC_PLAN_TOOL_COUNT = 113;
+const READ_ONLY_ARTICLES_TOOL_COUNT = 78;
+const SELLER_WITH_ARTICLES_TOOL_COUNT = 146;
+const READ_ONLY_ALL_TOOL_COUNT = 110;
 const KEYWORDS_AND_ARTICLES_TOOL_COUNT = 28;
 const IMPROVEMENTS_PREFIX = 'improvements_';
 const IMPROVEMENTS_TOOL_COUNT = 16;
@@ -31,6 +31,18 @@ const AI_CITED_LISTS_READ_TOOL_COUNT = 11;
 const AI_CITED_LISTS_ENTRY_POINT_COUNT = 1;
 const AI_CITED_LISTS_ONLY_TOOL_COUNT =
   BRAND_NEW_TOOL_COUNT + AI_CITED_LISTS_TOOL_COUNT - AI_CITED_LISTS_ENTRY_POINT_COUNT;
+const FREE_TOOLS_PREFIX = 'free_tools_';
+const FREE_TOOLS_TOOL_COUNT = 16;
+const FREE_TOOLS_ENTRY_POINT_COUNT = 1;
+const FREE_TOOLS_ONLY_TOOL_COUNT = BRAND_NEW_TOOL_COUNT + FREE_TOOLS_TOOL_COUNT - FREE_TOOLS_ENTRY_POINT_COUNT;
+const FREE_TOOLS_READ_TOOLS = [
+  'free_tools_get',
+  'free_tools_history',
+  'free_tools_keywords_list',
+  'free_tools_list',
+  'free_tools_preview',
+  'free_tools_status',
+];
 const IMPROVEMENTS_READ_TOOLS = [
   'improvements_candidates_list',
   'improvements_executions_get',
@@ -42,6 +54,7 @@ const ENTRY_POINT_TOOLS = [
   'ai_cited_lists_status',
   'billing_portal_url',
   'billing_purchase_products_quote',
+  'free_tools_status',
   'marketplace_buyer_billing_status',
   'marketplace_buyer_checkout',
   'marketplace_buyer_status',
@@ -97,11 +110,33 @@ test('a brand-new organization gets the core tools and every setup entry point, 
     'billing',
     'blog',
     'ai-cited-lists',
+    'free-tools',
   ]);
   assert.equal(names.some((name) => name.startsWith(BLOG_PREFIX)), false);
   assert.deepEqual(
     names.filter((name) => name.startsWith(AI_CITED_LISTS_PREFIX)),
     ['ai_cited_lists_status'],
+  );
+  assert.deepEqual(
+    names.filter((name) => name.startsWith(FREE_TOOLS_PREFIX)),
+    ['free_tools_status'],
+  );
+});
+
+test('an organization granted free-tools gets every Free Tools Builder tool on top of core', () => {
+  const names = namesOf(select({ entitlements: withToolsets({ 'free-tools': 'full' }) }));
+  assert.equal(names.length, FREE_TOOLS_ONLY_TOOL_COUNT);
+  assert.equal(names.filter((name) => name.startsWith(FREE_TOOLS_PREFIX)).length, FREE_TOOLS_TOOL_COUNT);
+  assert.equal(names.includes('free_tools_edit'), true);
+  assert.equal(names.includes('free_tools_rollback'), true);
+  assert.equal(names.includes('articles_list'), false);
+});
+
+test('a read-only free-tools grant exposes only the reads of the builder', () => {
+  const names = namesOf(select({ entitlements: withToolsets({ 'free-tools': 'read' }) }));
+  assert.deepEqual(
+    names.filter((name) => name.startsWith(FREE_TOOLS_PREFIX)),
+    FREE_TOOLS_READ_TOOLS,
   );
 });
 

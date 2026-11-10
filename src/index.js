@@ -27,6 +27,7 @@ Groups:
   improvements Discover, brief, schedule, run, review, and publish article improvements for existing posts.
   marketplace Seller onboarding, eligibility, placements, earnings, Stripe payouts, and buyer setup for the Outrank Marketplace.
   ai-cited-lists AI-Cited Lists (Backlinks Enterprise): ChatGPT-cited lists, offers to their owners, won spots, outreach setup.
+  free-tools  Free Tools Builder: plan tool keywords, build free tools, edit them with the AI builder, preview, publish, roll back.
   subscription Inspect plan, trial, quota, and add-on status.
   usage       Inspect current usage and quota consumption.
   billing     Product-slot purchase flows.
@@ -71,6 +72,8 @@ Examples:
   outrank-cli marketplace seller placements list <product-id> --status needs_approval
   outrank-cli ai-cited-lists status <product-id>
   outrank-cli ai-cited-lists lists list <product-id> --view to_send
+  outrank-cli free-tools status <product-id>
+  outrank-cli free-tools edit <product-id> <tool-id> --prompt "Add a copy-to-clipboard button for the results"
 `;
 
 const main = async () => {

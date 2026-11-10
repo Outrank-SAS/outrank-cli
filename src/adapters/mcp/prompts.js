@@ -152,6 +152,27 @@ const setupAiCitedListsText = (productId) =>
       'ai_cited_lists_lists_skip. Report what ChatGPT said; never promise mentions.',
   ].join('\n');
 
+const buildFreeToolText = (productId) =>
+  [
+    `Build and publish a free tool for product ${productId} with the Free Tools Builder.`,
+    `1. free_tools_status {"product_id":"${productId}"}: it shows the plan (Generation builds and edits tools, ` +
+      'Hosting only keeps existing ones live), the tool counts and the free planner slots. Without a plan, give ' +
+      'the user the subscribe link from the result and stop.',
+    `2. free_tools_list {"product_id":"${productId}"} and free_tools_keywords_list show the existing tools and the ` +
+      'planned keywords. Agree with the user which tool to build or change.',
+    '3. A new tool needs a planned keyword: add it with free_tools_keywords_add (or research ideas with ' +
+      'free_tools_keywords_generate), then build it now with free_tools_create. Its first version goes live on the ' +
+      "product's site as soon as it is built, as in the dashboard, so confirm the keyword with the user first. The " +
+      'build takes minutes: when it reports building, follow free_tools_keywords_list instead of calling it again.',
+    '4. Change a tool with free_tools_edit, one clear request at a time (free_tools_attachments_add uploads a ' +
+      'screenshot or mockup first). When the builder asks a question or offers suggestions, put them to the user ' +
+      'and send the chosen prompt back. When the run is still going, follow free_tools_get, then read ' +
+      'free_tools_history.',
+    '5. Show the user the draft with free_tools_preview (wake it if it sleeps) and iterate until they are happy.',
+    '6. Publish only after the user approves: free_tools_publish makes the draft live. free_tools_discard drops an ' +
+      "unwanted draft and free_tools_rollback restores the previous live version; both need the user's go-ahead.",
+  ].join('\n');
+
 const providerHints = Object.freeze({
   'wordpress-plugin': 'start with products_integrations_prepare: it returns the token the user pastes into the plugin.',
   'wordpress-com': 'products_integrations_connect, the user opens connect_url, then products_integrations_poll.',
@@ -227,6 +248,13 @@ const PROMPT_DEFINITIONS = Object.freeze([
     toolset: Toolset.AI_CITED_LISTS,
     arguments: [productIdArgument],
     render: (args) => setupAiCitedListsText(readProductId(args)),
+  },
+  {
+    name: 'build_free_tool',
+    description: 'Build a free tool for a keyword, refine it with the AI builder, preview it and publish it.',
+    toolset: Toolset.FREE_TOOLS,
+    arguments: [productIdArgument],
+    render: (args) => buildFreeToolText(readProductId(args)),
   },
   {
     name: 'setup_publishing_integration',

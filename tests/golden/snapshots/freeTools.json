@@ -1,0 +1,1000 @@
+{
+  "help": {
+    "argv": [
+      "free-tools",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli free-tools status <product-id>\\n  outrank-cli free-tools keywords list <product-id> [--view upcoming|all]\\n  outrank-cli free-tools keywords add <product-id> --keyword \\\"<text>\\\" [--keyword \\\"<text>\\\" ...]\\n  outrank-cli free-tools keywords generate <product-id> --count <n> [--source competitors|audiences|both]\\n  outrank-cli free-tools keywords delete <product-id> --keyword-ids <id,id,...>\\n  outrank-cli free-tools create <product-id> <keyword-id>\\n  outrank-cli free-tools list <product-id> [--limit <n>] [--offset <n>]\\n  outrank-cli free-tools get <product-id> <tool-id>\\n  outrank-cli free-tools history <product-id> <tool-id>\\n  outrank-cli free-tools edit <product-id> <tool-id> --prompt \\\"<text>\\\" [--attachment-ids <id,id,...>]\\n  outrank-cli free-tools preview <product-id> <tool-id> [--wake]\\n  outrank-cli free-tools publish <product-id> <tool-id>\\n  outrank-cli free-tools discard <product-id> <tool-id>\\n  outrank-cli free-tools rollback <product-id> <tool-id>\\n  outrank-cli free-tools attachments add <product-id> <tool-id> --file <path>\\n  outrank-cli free-tools attachments remove <product-id> <tool-id> <attachment-id>\\n\\nNotes:\\n  Free Tools Builder makes small interactive web pages (calculators, checkers, generators) for keywords and hosts\\n  them on the product's site. Each planned keyword gets its tool built on its scheduled day; create builds one now.\\n  edit sends a change request to the AI builder: the change lands in a draft that goes live only with publish,\\n  and discard throws the draft away. rollback puts the previous published version back live.\\n  create, keywords generate, edit, publish, discard, rollback and preview --wake can take minutes. When one of\\n  them reports that it is still running, follow it with keywords list or get instead of starting it again.\\n  Building, editing, publishing and rollback need the Generation plan; the Hosting plan keeps existing tools live.\\n\\nExamples:\\n  outrank-cli free-tools status <UUID-1>\\n  outrank-cli free-tools keywords add <UUID-1> --keyword \\\"mortgage calculator\\\"\\n  outrank-cli free-tools create <UUID-1> <UUID-2>\\n  outrank-cli free-tools edit <UUID-1> <UUID-3> --prompt \\\"Add a copy-to-clipboard button for the results\\\"\\n  outrank-cli free-tools preview <UUID-1> <UUID-3> --wake\\n  outrank-cli free-tools publish <UUID-1> <UUID-3>\"\n  },\n  \"agent_guidance\": \"Start with status: it says whether the product has the Free Tools Builder plan and how many planner slots are free. Then keywords, create, list, get, history, edit, preview, publish, discard, rollback or attachments.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-command": {
+    "argv": [
+      "free-tools",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown free-tools command: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli free-tools --help` to see the available Free Tools Builder commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "keywords-unknown-action": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "nonsense",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown keywords action: nonsense.\"\n  },\n  \"agent_guidance\": \"Use: free-tools keywords list|add|generate|delete.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "keywords-help": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli free-tools keywords list <product-id> [--view upcoming|all]\\n  outrank-cli free-tools keywords add <product-id> --keyword \\\"<text>\\\" [--keyword \\\"<text>\\\" ...]\\n  outrank-cli free-tools keywords generate <product-id> --count <n> [--source competitors|audiences|both]\\n  outrank-cli free-tools keywords delete <product-id> --keyword-ids <id,id,...>\"\n  },\n  \"agent_guidance\": \"Use: free-tools keywords list|add|generate|delete.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "attachments-help": {
+    "argv": [
+      "free-tools",
+      "attachments",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli free-tools attachments add <product-id> <tool-id> --file <path>\\n  outrank-cli free-tools attachments remove <product-id> <tool-id> <attachment-id>\"\n  },\n  \"agent_guidance\": \"Use: free-tools attachments add|remove.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "status": {
+    "argv": [
+      "free-tools",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-missing-id": {
+    "argv": [
+      "free-tools",
+      "status"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <product-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "status-no-key": {
+    "argv": [
+      "free-tools",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "status-not-found": {
+    "argv": [
+      "free-tools",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-non-json": {
+    "argv": [
+      "free-tools",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_UPSTREAM_ERROR\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/status\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The CLI expects the agent API to return JSON. Check the base URL and server deployment.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "status-network-error": {
+    "argv": [
+      "free-tools",
+      "status",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\"\n  },\n  \"agent_guidance\": \"The CLI could not reach https://www.outrank.so. Confirm OUTRANK_BASE_URL, the user's network, and the Outrank deployment, then retry.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/status",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "keywords-list": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/keywords",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "keywords-list-view-all": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--view",
+      "all"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/keywords?view=all",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "keywords-list-view-invalid": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--view",
+      "past"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--view must be one of: upcoming, all.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "keywords-add": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "add",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--keyword",
+      "mortgage calculator"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/keywords",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keywords": [
+            "mortgage calculator"
+          ]
+        }
+      }
+    ]
+  },
+  "keywords-add-repeated-with-comma": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "add",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--keyword",
+      "mortgage calculator",
+      "--keyword",
+      "loan calculator, uk"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/keywords",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keywords": [
+            "mortgage calculator",
+            "loan calculator, uk"
+          ]
+        }
+      }
+    ]
+  },
+  "keywords-add-missing-keyword": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "add",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --keyword <text>.\"\n  },\n  \"agent_guidance\": \"Pass each keyword with --keyword, e.g. `--keyword \\\"mortgage calculator\\\"`; repeat it for more.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "keywords-generate": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "generate",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "10",
+      "--source",
+      "competitors"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/keywords/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "count": 10,
+          "source": "competitors"
+        }
+      }
+    ]
+  },
+  "keywords-generate-default-source": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "generate",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "5"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/keywords/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "count": 5
+        }
+      }
+    ]
+  },
+  "keywords-generate-missing-count": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "generate",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --count <n>.\"\n  },\n  \"agent_guidance\": \"Pass how many keywords to generate with `--count <n>` (5-24, within the free planner slots shown by `free-tools status`).\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "keywords-generate-count-too-high": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "generate",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "25"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--count must be <= 24.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "keywords-generate-invalid-source": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "generate",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "5",
+      "--source",
+      "gsc"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--source must be one of: competitors, audiences, both.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "keywords-generate-gateway-timeout": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "generate",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--count",
+      "5"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 504 without an error envelope.\",\n    \"details\": {\n      \"status\": 504,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/keywords/generate\",\n      \"body\": \"<html>Gateway timeout</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli free-tools keywords list until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/keywords/generate",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "count": 5
+        }
+      }
+    ]
+  },
+  "keywords-delete": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--keyword-ids",
+      "bbbbbbbb-0000-4000-8000-000000000002,cccccccc-0000-4000-8000-000000000003"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/keywords/bulk-delete",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword_ids": [
+            "bbbbbbbb-0000-4000-8000-000000000002",
+            "cccccccc-0000-4000-8000-000000000003"
+          ]
+        }
+      }
+    ]
+  },
+  "keywords-delete-missing-ids": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --keyword-ids <id,id,...>.\"\n  },\n  \"agent_guidance\": \"Pass the planned keyword ids from `free-tools keywords list` with `--keyword-ids <id,id,...>`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "keywords-delete-invalid-id": {
+    "argv": [
+      "free-tools",
+      "keywords",
+      "delete",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--keyword-ids",
+      "not-a-uuid"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--keyword-ids must be a UUID.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create": {
+    "argv": [
+      "free-tools",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "cccccccc-0000-4000-8000-000000000003"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword_id": "cccccccc-0000-4000-8000-000000000003"
+        }
+      }
+    ]
+  },
+  "create-missing-keyword-id": {
+    "argv": [
+      "free-tools",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <keyword-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "create-gateway-502": {
+    "argv": [
+      "free-tools",
+      "create",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "cccccccc-0000-4000-8000-000000000003"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 502 without an error envelope.\",\n    \"details\": {\n      \"status\": 502,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools\",\n      \"body\": \"<html>Bad gateway</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli free-tools keywords list until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword_id": "cccccccc-0000-4000-8000-000000000003"
+        }
+      }
+    ]
+  },
+  "list": {
+    "argv": [
+      "free-tools",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-paged": {
+    "argv": [
+      "free-tools",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limit",
+      "20",
+      "--offset",
+      "20"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools?limit=20&offset=20",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "list-limit-too-high": {
+    "argv": [
+      "free-tools",
+      "list",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "--limit",
+      "101"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be <= 100.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "get": {
+    "argv": [
+      "free-tools",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "get-missing-tool-id": {
+    "argv": [
+      "free-tools",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <tool-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "get-invalid-tool-id": {
+    "argv": [
+      "free-tools",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "not-a-uuid"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"<tool-id> must be a UUID.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "get-not-found": {
+    "argv": [
+      "free-tools",
+      "get",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "history": {
+    "argv": [
+      "free-tools",
+      "history",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/messages",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "edit": {
+    "argv": [
+      "free-tools",
+      "edit",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--prompt",
+      "Add a copy-to-clipboard button for the results"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/messages",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "prompt": "Add a copy-to-clipboard button for the results"
+        }
+      }
+    ]
+  },
+  "edit-with-attachments": {
+    "argv": [
+      "free-tools",
+      "edit",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--prompt",
+      "Add a copy-to-clipboard button for the results",
+      "--attachment-ids",
+      "cccccccc-0000-4000-8000-000000000003,bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/messages",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "prompt": "Add a copy-to-clipboard button for the results",
+          "attachment_ids": [
+            "cccccccc-0000-4000-8000-000000000003",
+            "bbbbbbbb-0000-4000-8000-000000000002"
+          ]
+        }
+      }
+    ]
+  },
+  "edit-missing-prompt": {
+    "argv": [
+      "free-tools",
+      "edit",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --prompt <text>.\"\n  },\n  \"agent_guidance\": \"Describe the change in plain words, e.g. `--prompt \\\"Add a copy-to-clipboard button for the results\\\"`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "edit-invalid-attachment-id": {
+    "argv": [
+      "free-tools",
+      "edit",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--prompt",
+      "Add a copy-to-clipboard button for the results",
+      "--attachment-ids",
+      "not-a-uuid"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--attachment-ids must be a UUID.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "edit-gateway-timeout": {
+    "argv": [
+      "free-tools",
+      "edit",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--prompt",
+      "Add a copy-to-clipboard button for the results"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_OPERATION_MAY_STILL_BE_RUNNING\",\n    \"message\": \"Outrank returned HTTP 504 without an error envelope.\",\n    \"details\": {\n      \"status\": 504,\n      \"url\": \"https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/messages\",\n      \"body\": \"<html>Gateway timeout</html>\"\n    }\n  },\n  \"agent_guidance\": \"The request did not complete, but the server may still be processing it. Do not retry; poll outrank-cli free-tools get until the work shows up, then continue from there.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/messages",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "prompt": "Add a copy-to-clipboard button for the results"
+        }
+      }
+    ]
+  },
+  "preview": {
+    "argv": [
+      "free-tools",
+      "preview",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/preview",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "preview-wake": {
+    "argv": [
+      "free-tools",
+      "preview",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--wake"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/preview?wake=true",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "publish": {
+    "argv": [
+      "free-tools",
+      "publish",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/publish",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "publish-missing-tool-id": {
+    "argv": [
+      "free-tools",
+      "publish",
+      "aaaaaaaa-0000-4000-8000-000000000001"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <tool-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "discard": {
+    "argv": [
+      "free-tools",
+      "discard",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/discard",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "rollback": {
+    "argv": [
+      "free-tools",
+      "rollback",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/rollback",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "attachments-add": {
+    "argv": [
+      "free-tools",
+      "attachments",
+      "add",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--file",
+      "tests/golden/fixtures/payloads/tiny.png"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/attachments",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "file_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+          "file_name": "tiny.png",
+          "file_type": "image/png"
+        }
+      }
+    ]
+  },
+  "attachments-add-missing-file": {
+    "argv": [
+      "free-tools",
+      "attachments",
+      "add",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --file <path>.\"\n  },\n  \"agent_guidance\": \"Pass a local image path with `--file <path>`.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "attachments-add-not-an-image": {
+    "argv": [
+      "free-tools",
+      "attachments",
+      "add",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "--file",
+      "tests/golden/fixtures/payloads/not-an-image.txt"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unsupported image file extension: .txt.\"\n  },\n  \"agent_guidance\": \"Use one of: .jpg, .jpeg, .png, .webp, .gif.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "attachments-remove": {
+    "argv": [
+      "free-tools",
+      "attachments",
+      "remove",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002",
+      "cccccccc-0000-4000-8000-000000000003"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "DELETE",
+        "url": "https://www.outrank.so/api/agent/v1/products/aaaaaaaa-0000-4000-8000-000000000001/free-tools/bbbbbbbb-0000-4000-8000-000000000002/attachments/cccccccc-0000-4000-8000-000000000003",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>"
+        }
+      }
+    ]
+  },
+  "attachments-remove-missing-attachment-id": {
+    "argv": [
+      "free-tools",
+      "attachments",
+      "remove",
+      "aaaaaaaa-0000-4000-8000-000000000001",
+      "bbbbbbbb-0000-4000-8000-000000000002"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <attachment-id>.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

@@ -38,7 +38,12 @@ const KNOWLEDGE_ROUTES_PENDING_CLI = Object.freeze([
   'DELETE /products/{id}/knowledge/sources/{sourceId}',
 ]);
 const ROUTES_KEPT_FOR_OLDER_CLIENTS = Object.freeze(['GET /products/{id}/ai-cited-lists/mailbox/connect']);
-const SERVER_ROUTES_WITHOUT_TOOL = [...KNOWLEDGE_ROUTES_PENDING_CLI, ...ROUTES_KEPT_FOR_OLDER_CLIENTS];
+const ROUTES_SERVED_BY_CHATGPT_SURFACE = Object.freeze(['POST /articles/start']);
+const SERVER_ROUTES_WITHOUT_TOOL = [
+  ...KNOWLEDGE_ROUTES_PENDING_CLI,
+  ...ROUTES_KEPT_FOR_OLDER_CLIENTS,
+  ...ROUTES_SERVED_BY_CHATGPT_SURFACE,
+];
 const ROUTE_KEY_SEPARATOR = ' ';
 const NO_UPLOADS = Object.freeze({ dir: null, problem: null });
 const SERVER_CHECKOUT = '/server-checkout';

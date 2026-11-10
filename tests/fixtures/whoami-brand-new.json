@@ -26,7 +26,8 @@
         "articles": false,
         "marketplace_buyer": false,
         "marketplace_seller": false,
-        "ai_cited_lists": false
+        "ai_cited_lists": false,
+        "free_tools": false
       },
       "disabled_products_with_services": 0
     }
