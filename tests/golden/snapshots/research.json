@@ -1,0 +1,492 @@
+{
+  "help": {
+    "argv": [
+      "research",
+      "--help"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"usage\": \"Usage:\\n  outrank-cli research domain-overview <domain> [--region <code>] [--language <code>]\\n  outrank-cli research domain-keywords <domain> [--region <code>] [--language <code>] [--sort volume|traffic|position] [--min-volume <n>] [--max-position <n>] [--limit <n>] [--offset <n>]\\n  outrank-cli research competitors <domain> [--region <code>] [--language <code>] [--limit <n>]\\n  outrank-cli research keyword-gap <domain> --competitor <domain> [--region <code>] [--language <code>] [--min-volume <n>] [--max-competitor-position <n>] [--limit <n>] [--offset <n>]\\n  outrank-cli research backlinks <domain> [--dofollow-only] [--all-links] [--limit <n>] [--offset <n>]\\n  outrank-cli research keywords-overview --keyword \\\"<text>\\\" [--keyword \\\"<text>\\\" ...] [--region <code>] [--language <code>]\\n  outrank-cli research serp \\\"<keyword>\\\" [--region <code>] [--language <code>] [--depth <n>] [--resolve-urls]\\n\\nCommands:\\n  domain-overview     Organic keywords, estimated traffic, position spread, domain rank and backlink totals of any domain.\\n  domain-keywords     The Google keywords a domain ranks for, with position, URL, volume, difficulty and traffic.\\n  competitors         The domains that rank for the most of the same keywords.\\n  keyword-gap         Keywords a competitor ranks for and the domain does not.\\n  backlinks           Backlinks of any domain, strongest linking domains first (one per domain by default).\\n  keywords-overview   Search volume, difficulty, CPC, intent and 12-month trend for up to 100 keywords.\\n  serp                Live Google organic results for a keyword, with the other SERP features on the page.\\n\\nResearch works on any domain or keyword, not only your products. It needs a paid Outrank plan or trial. Each\\norganization has a daily number of research calls; the same call repeated within 24 hours is served from cache\\nand does not count.\\n\\nExamples:\\n  outrank-cli research domain-overview ahrefs.com\\n  outrank-cli research domain-keywords outrank.so --max-position 10 --limit 50\\n  outrank-cli research keyword-gap outrank.so --competitor surferseo.com --max-competitor-position 10\\n  outrank-cli research keywords-overview --keyword \\\"seo tools\\\" --keyword \\\"keyword gap tool\\\" --region uk\\n  outrank-cli research serp \\\"backlink checker\\\" --region us\"\n  },\n  \"agent_guidance\": \"Choose one of: domain-overview, domain-keywords, competitors, keyword-gap, backlinks, keywords-overview, serp. They work on any domain or keyword.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "unknown-command": {
+    "argv": [
+      "research",
+      "nonsense"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Unknown research command: nonsense.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli research --help` to see the available SEO research commands.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "domain-overview": {
+    "argv": [
+      "research",
+      "domain-overview",
+      "outrank.so"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/domain-overview",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "outrank.so"
+        }
+      }
+    ]
+  },
+  "domain-overview-region": {
+    "argv": [
+      "research",
+      "domain-overview",
+      "outrank.so",
+      "--region",
+      "uk",
+      "--language",
+      "en"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/domain-overview",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "outrank.so",
+          "region": "uk",
+          "language": "en"
+        }
+      }
+    ]
+  },
+  "domain-overview-missing-domain": {
+    "argv": [
+      "research",
+      "domain-overview"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <domain>.\"\n  },\n  \"agent_guidance\": \"Pass a domain such as example.com. A full URL also works; only its host is used.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "domain-overview-no-key": {
+    "argv": [
+      "research",
+      "domain-overview",
+      "outrank.so"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_AUTH_REQUIRED\",\n    \"message\": \"No Outrank API key is configured.\"\n  },\n  \"agent_guidance\": \"Run `outrank-cli auth login <api-key>` to store a key locally, or set OUTRANK_API_KEY in the environment before retrying.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "domain-overview-network-error": {
+    "argv": [
+      "research",
+      "domain-overview",
+      "outrank.so"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_NETWORK_ERROR\",\n    \"message\": \"Request failed: fetch failed\",\n    \"details\": {\n      \"outcome_unknown\": true,\n      \"long_running\": false\n    }\n  },\n  \"agent_guidance\": \"The connection to https://www.outrank.so failed after the request may have been sent, so its outcome is unknown: the change may have been applied. Inspect the current state with a read command before repeating it.\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/domain-overview",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "outrank.so"
+        }
+      }
+    ]
+  },
+  "domain-keywords": {
+    "argv": [
+      "research",
+      "domain-keywords",
+      "outrank.so",
+      "--max-position",
+      "10",
+      "--min-volume",
+      "100",
+      "--limit",
+      "50"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/domain-keywords",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "outrank.so",
+          "min_volume": 100,
+          "max_position": 10,
+          "limit": 50
+        }
+      }
+    ]
+  },
+  "domain-keywords-sort": {
+    "argv": [
+      "research",
+      "domain-keywords",
+      "outrank.so",
+      "--sort",
+      "traffic",
+      "--offset",
+      "50"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/domain-keywords",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "outrank.so",
+          "sort": "traffic",
+          "offset": 50
+        }
+      }
+    ]
+  },
+  "domain-keywords-invalid-sort": {
+    "argv": [
+      "research",
+      "domain-keywords",
+      "outrank.so",
+      "--sort",
+      "random"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--sort must be one of: volume, traffic, position.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "domain-keywords-limit-too-high": {
+    "argv": [
+      "research",
+      "domain-keywords",
+      "outrank.so",
+      "--limit",
+      "101"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be <= 100.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "competitors": {
+    "argv": [
+      "research",
+      "competitors",
+      "outrank.so",
+      "--limit",
+      "10"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/competitors",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "outrank.so",
+          "limit": 10
+        }
+      }
+    ]
+  },
+  "competitors-limit-too-high": {
+    "argv": [
+      "research",
+      "competitors",
+      "outrank.so",
+      "--limit",
+      "51"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--limit must be <= 50.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "keyword-gap": {
+    "argv": [
+      "research",
+      "keyword-gap",
+      "outrank.so",
+      "--competitor",
+      "surferseo.com",
+      "--max-competitor-position",
+      "10"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/keyword-gap",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "outrank.so",
+          "competitor": "surferseo.com",
+          "max_competitor_position": 10
+        }
+      }
+    ]
+  },
+  "keyword-gap-missing-competitor": {
+    "argv": [
+      "research",
+      "keyword-gap",
+      "outrank.so"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --competitor <domain>.\"\n  },\n  \"agent_guidance\": \"Pass the competitor domain whose keywords you want to compare with <domain>.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "backlinks": {
+    "argv": [
+      "research",
+      "backlinks",
+      "outrank.so"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/backlinks",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "outrank.so"
+        }
+      }
+    ]
+  },
+  "backlinks-flags": {
+    "argv": [
+      "research",
+      "backlinks",
+      "outrank.so",
+      "--dofollow-only",
+      "--all-links",
+      "--limit",
+      "5"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/backlinks",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "outrank.so",
+          "dofollow_only": true,
+          "one_per_domain": false,
+          "limit": 5
+        }
+      }
+    ]
+  },
+  "backlinks-not-found": {
+    "argv": [
+      "research",
+      "backlinks",
+      "outrank.so"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Not found.\"\n  },\n  \"agent_guidance\": \"stub guidance\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/backlinks",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "domain": "outrank.so"
+        }
+      }
+    ]
+  },
+  "keywords-overview": {
+    "argv": [
+      "research",
+      "keywords-overview",
+      "--keyword",
+      "seo tools",
+      "--keyword",
+      "loan calculator, uk",
+      "--region",
+      "uk"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/keywords-overview",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keywords": [
+            "seo tools",
+            "loan calculator, uk"
+          ],
+          "region": "uk"
+        }
+      }
+    ]
+  },
+  "keywords-overview-missing-keyword": {
+    "argv": [
+      "research",
+      "keywords-overview"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required option: --keyword <text>.\"\n  },\n  \"agent_guidance\": \"Repeat --keyword for each keyword, up to 100.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "serp": {
+    "argv": [
+      "research",
+      "serp",
+      "backlink checker"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/serp",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword": "backlink checker"
+        }
+      }
+    ]
+  },
+  "serp-resolve-urls": {
+    "argv": [
+      "research",
+      "serp",
+      "backlink checker",
+      "--resolve-urls",
+      "--depth",
+      "20",
+      "--region",
+      "fr"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"data\": {\n    \"stub\": true\n  },\n  \"agent_guidance\": \"stub\"\n}\n",
+    "stderr": "",
+    "requests": [
+      {
+        "method": "POST",
+        "url": "https://www.outrank.so/api/agent/v1/research/serp",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer <API_KEY-1>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "keyword": "backlink checker",
+          "region": "fr",
+          "depth": 20,
+          "resolve_urls": true
+        }
+      }
+    ]
+  },
+  "serp-missing-keyword": {
+    "argv": [
+      "research",
+      "serp"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"Missing required argument: <keyword>.\"\n  },\n  \"agent_guidance\": \"Pass the search query in quotes, for example \\\"backlink checker\\\".\"\n}\n",
+    "stderr": "",
+    "requests": []
+  },
+  "serp-depth-too-low": {
+    "argv": [
+      "research",
+      "serp",
+      "backlink checker",
+      "--depth",
+      "5"
+    ],
+    "exitCode": 1,
+    "stdout": "{\n  \"ok\": false,\n  \"error\": {\n    \"code\": \"CLI_INVALID_USAGE\",\n    \"message\": \"--depth must be >= 10.\"\n  },\n  \"agent_guidance\": \"Run the current command again with --help to see the required arguments and input format.\"\n}\n",
+    "stderr": "",
+    "requests": []
+  }
+}

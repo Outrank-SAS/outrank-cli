@@ -27,7 +27,8 @@
         "linking": "read",
         "backlinks": "read",
         "billing": "read",
-        "improvements": "read"
+        "improvements": "read",
+        "seo-research": "read"
       },
       "unverified_toolsets": {},
       "flows": {

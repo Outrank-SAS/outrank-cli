@@ -25,6 +25,7 @@ export const Toolset = Object.freeze({
   BLOG: 'blog',
   AI_CITED_LISTS: 'ai-cited-lists',
   FREE_TOOLS: 'free-tools',
+  SEO_RESEARCH: 'seo-research',
 });
 
 export const BodyMode = Object.freeze({

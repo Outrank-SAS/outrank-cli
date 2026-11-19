@@ -259,6 +259,13 @@
   "products_target_audiences_list",
   "products_target_audiences_replace",
   "products_update",
+  "research_backlinks",
+  "research_competitors",
+  "research_domain_keywords",
+  "research_domain_overview",
+  "research_keyword_gap",
+  "research_keywords_overview",
+  "research_serp",
   "subscription_status",
   "usage_stats"
 ]

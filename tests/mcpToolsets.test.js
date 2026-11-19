@@ -7,7 +7,7 @@ import { registry } from '../src/commands/index.js';
 import { toolName } from '../src/commands/registry.js';
 import { readWhoamiFixture } from './helpers/mcpHarness.js';
 
-const ALL_TOOL_COUNT = 262;
+const ALL_TOOL_COUNT = 269;
 const CORE_TOOL_COUNT = 16;
 const ENTRY_POINT_COUNT = 20;
 const BRAND_NEW_TOOL_COUNT = CORE_TOOL_COUNT + ENTRY_POINT_COUNT;
@@ -15,9 +15,9 @@ const SUBSCRIBED_NO_PRODUCT_TOOL_COUNT = 37;
 const BUYER_ONLY_TOOL_COUNT = 60;
 const SELLER_ONLY_TOOL_COUNT = 84;
 const BASIC_PLAN_TOOL_COUNT = 113;
-const READ_ONLY_ARTICLES_TOOL_COUNT = 78;
-const SELLER_WITH_ARTICLES_TOOL_COUNT = 146;
-const READ_ONLY_ALL_TOOL_COUNT = 110;
+const READ_ONLY_ARTICLES_TOOL_COUNT = 85;
+const SELLER_WITH_ARTICLES_TOOL_COUNT = 153;
+const READ_ONLY_ALL_TOOL_COUNT = 117;
 const KEYWORDS_AND_ARTICLES_TOOL_COUNT = 28;
 const IMPROVEMENTS_PREFIX = 'improvements_';
 const IMPROVEMENTS_TOOL_COUNT = 16;
@@ -111,6 +111,7 @@ test('a brand-new organization gets the core tools and every setup entry point, 
     'blog',
     'ai-cited-lists',
     'free-tools',
+    'seo-research',
   ]);
   assert.equal(names.some((name) => name.startsWith(BLOG_PREFIX)), false);
   assert.deepEqual(

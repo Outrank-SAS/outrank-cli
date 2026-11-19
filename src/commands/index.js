@@ -7,6 +7,7 @@ import { improvementsGroup } from './improvements.js';
 import { keywordsGroup } from './keywords.js';
 import { marketplaceGroup } from './marketplace/index.js';
 import { productsGroup } from './products/index.js';
+import { researchGroup } from './research.js';
 import { createRegistry } from './registry.js';
 import { subscriptionGroup } from './subscription.js';
 import { usageGroup } from './usage.js';
@@ -23,4 +24,5 @@ export const registry = createRegistry([
   marketplaceGroup,
   aiCitedListsGroup,
   freeToolsGroup,
+  researchGroup,
 ]);

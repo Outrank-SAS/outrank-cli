@@ -53,6 +53,7 @@ This repo currently targets the agent endpoints that already exist in `outrank`:
 - `marketplace buyer status|billing-status|subscription|subscribe-quote|checkout|change-plan|target-pages|participation|placements|article|credits`
 - `ai-cited-lists status|overview|lists|outreach|offers|wins|questions|settings|mailbox|top-up-consent|entry|setup|citations` for AI-Cited Lists (Backlinks Enterprise)
 - `free-tools status|keywords|create|list|get|history|edit|preview|publish|discard|rollback|attachments` for the Free Tools Builder
+- `research domain-overview|domain-keywords|competitors|keyword-gap|backlinks|keywords-overview|serp` for SEO research on any domain or keyword
 - `subscription status`
 - `usage stats`
 - `billing portal-url`
@@ -232,9 +233,9 @@ The examples use the `latest` tag, so the server picks up each new release the n
 
 ### Toolsets
 
-Tools are grouped into toolsets: `core`, `integrations`, `gsc`, `linking`, `backlinks`, `keywords`, `articles`, `improvements`, `marketplace-seller`, `marketplace-buyer`, `billing`, `blog`, `ai-cited-lists`, `free-tools`.
+Tools are grouped into toolsets: `core`, `integrations`, `gsc`, `linking`, `backlinks`, `keywords`, `articles`, `improvements`, `marketplace-seller`, `marketplace-buyer`, `billing`, `blog`, `ai-cited-lists`, `free-tools`, `seo-research`.
 
-With the default `auto`, the server asks Outrank at startup which toolsets the organization can use (`entitlements` in `auth whoami`) and lists only those, so a marketplace buyer without an Articles subscription does not see dozens of tools that would only return errors. A toolset the organization can only read (for example after a subscription ended) lists its read tools only. A toolset Outrank could not verify (`unverified_toolsets`) stays listed. The tools that start a new area (marketplace seller and buyer setup, backlink subscription quotes, the billing portal link, the product-slot quote, the AI-Cited Lists status and the Free Tools Builder status) are always listed. Typical sizes: 36 tools for a new organization, 262 with everything enabled. `ai-cited-lists` is listed only for organizations with a product on the Backlinks Enterprise plan, and `free-tools` only for organizations with a product on a Free Tools Builder plan (its read tools only once that plan has ended).
+With the default `auto`, the server asks Outrank at startup which toolsets the organization can use (`entitlements` in `auth whoami`) and lists only those, so a marketplace buyer without an Articles subscription does not see dozens of tools that would only return errors. A toolset the organization can only read (for example after a subscription ended) lists its read tools only. A toolset Outrank could not verify (`unverified_toolsets`) stays listed. The tools that start a new area (marketplace seller and buyer setup, backlink subscription quotes, the billing portal link, the product-slot quote, the AI-Cited Lists status and the Free Tools Builder status) are always listed. Typical sizes: 36 tools for a new organization, 269 with everything enabled. `ai-cited-lists` is listed only for organizations with a product on the Backlinks Enterprise plan, and `free-tools` only for organizations with a product on a Free Tools Builder plan (its read tools only once that plan has ended). `seo-research` is listed for organizations with a paid plan or trial (Articles, Marketplace buyer or Free Tools Builder).
 
 `auto` is a noise filter, not a permission system: Outrank checks access on every request whatever the tool list says. If the lookup fails or takes longer than three seconds, the server starts with `core` plus the setup tools, says so in its instructions, and refreshes the list as soon as a lookup succeeds. After a tool that changes what the organization can use succeeds (`products_create`, `products_pause`, `products_resume`, `billing_purchase_products_buy`, `marketplace_buyer_checkout`, `marketplace_buyer_change_plan` and the seller onboarding tools), the server re-reads the organization in the background and tells the client when the tool list changed; `auth_whoami` refreshes it on demand. A service the human buys in the dashboard shows up on the next `auth_whoami` or restart.
 
@@ -294,7 +295,7 @@ Tools that take a JSON `body` describe its fields in their description; `product
 Generated from the command registry with `npm run docs:tools`. The registry is checked against the Outrank server's route list in `tests/fixtures/agentApiSurface.json`, refreshed from a checkout of the Outrank app with `npm run surface:extract -- <path-to-outrank-repo>`: a server route without a tool, a tool without a server route, a guidance sentence naming an endpoint the server cannot map to a tool, or a rewritten argument the named tool would refuse fails the tests. The fixture records the server commit and, as `sourceDirty`, whether that checkout had uncommitted changes in the files it reads; extract again from a clean checkout before a release. To see whether the fixture is stale, run `node scripts/extractAgentApiSurface.js --check <path-to-outrank-repo>`, or run the tests with `OUTRANK_SERVER_DIR=<path-to-outrank-repo>`: both list the routes and guidance mentions that differ, and without the variable that one test is skipped. Kinds: `read` changes nothing; `write` changes Outrank or the connected site; `destructive` deletes or cannot be undone; `money` changes what the organization pays; `local` makes no request. Tools marked ★ are always listed in `auto` mode.
 
 <!-- mcp-tools:start -->
-262 tools.
+269 tools.
 
 | Tool | CLI command | Kind | Toolset | What it does |
 | --- | --- | --- | --- | --- |
@@ -560,6 +561,13 @@ Generated from the command registry with `npm run docs:tools`. The registry is c
 | `free_tools_rollback` | `free-tools rollback` | destructive | free-tools | Put the previous published version of a free tool back live. |
 | `free_tools_attachments_add` | `free-tools attachments add` | write | free-tools | Upload an image for the AI builder of a free tool, such as a screenshot or a mockup. |
 | `free_tools_attachments_remove` | `free-tools attachments remove` | destructive | free-tools | Remove a builder attachment of a free tool that was not sent with a change yet. |
+| `research_domain_overview` | `research domain-overview` | read | seo-research | Get the SEO overview of any domain: ranking keywords, estimated organic traffic and its value, position spread, domain rank (0-100, like Ahrefs DR), backlinks and referring domains. |
+| `research_domain_keywords` | `research domain-keywords` | read | seo-research | List the Google keywords any domain ranks for, with position, ranking URL, search volume, difficulty, CPC, intent, trend and estimated traffic. |
+| `research_competitors` | `research competitors` | read | seo-research | Find the organic competitors of any domain: the domains ranking for the most of the same keywords. |
+| `research_keyword_gap` | `research keyword-gap` | read | seo-research | List the keywords a competitor ranks for and the domain does not, with volume, difficulty and the competitor's position and URL. |
+| `research_backlinks` | `research backlinks` | read | seo-research | List the backlinks of any domain, strongest linking domains first, with source URL, domain rank (0-100), anchor, dofollow and first seen date. |
+| `research_keywords_overview` | `research keywords-overview` | read | seo-research | Get search volume, difficulty, CPC, intent and 12-month trend for up to 100 keywords at once. |
+| `research_serp` | `research serp` | read | seo-research | Get the live Google organic results for a keyword (position, title, URL, domain) and the other SERP features on the page, such as AI Overviews. |
 <!-- mcp-tools:end -->
 
 ## Examples

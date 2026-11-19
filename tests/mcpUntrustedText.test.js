@@ -42,6 +42,8 @@ const WRAPPED_TOOL_IDS = [
   'ai-cited-lists.offers.get',
   'ai-cited-lists.wins.get',
   'ai-cited-lists.citations.summary',
+  'research.backlinks',
+  'research.serp',
 ];
 const HOSTED_ARTICLE_TITLE = 'Ten ways to plan a kitchen';
 const HOSTED_ARTICLE_KEYWORD = 'kitchen planning';

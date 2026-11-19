@@ -75,6 +75,15 @@ export const FREE_TOOLS_KEYWORD_SOURCES = Object.freeze(['competitors', 'audienc
 export const FREE_TOOLS_KEYWORDS_GENERATE_MIN_COUNT = 5;
 export const FREE_TOOLS_KEYWORDS_GENERATE_MAX_COUNT = 24;
 
+export const RESEARCH_MAX_LIMIT = 100;
+export const RESEARCH_COMPETITORS_MAX_LIMIT = 50;
+export const RESEARCH_MAX_OFFSET = 10000;
+export const RESEARCH_MAX_POSITION = 100;
+export const RESEARCH_KEYWORDS_OVERVIEW_MAX = 100;
+export const RESEARCH_SERP_MIN_DEPTH = 10;
+export const RESEARCH_SERP_MAX_DEPTH = 100;
+export const RESEARCH_KEYWORD_SORTS = Object.freeze(['volume', 'traffic', 'position']);
+
 export const BILLING_MIN_ADDITIONAL_PRODUCTS = 1;
 export const BILLING_MAX_ADDITIONAL_PRODUCTS = 30;
 export const BILLING_MIN_CONFIRM_CHARGE_CENTS = 0;

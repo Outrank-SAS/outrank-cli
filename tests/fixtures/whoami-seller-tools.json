@@ -28,7 +28,8 @@
         "articles": "full",
         "linking": "full",
         "backlinks": "full",
-        "improvements": "full"
+        "improvements": "full",
+        "seo-research": "full"
       },
       "unverified_toolsets": {},
       "flows": {

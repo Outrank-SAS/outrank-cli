@@ -37,10 +37,12 @@ const KNOWLEDGE_ROUTES_PENDING_CLI = Object.freeze([
   'GET /products/{id}/knowledge/sources/{sourceId}',
   'DELETE /products/{id}/knowledge/sources/{sourceId}',
 ]);
+const INTEGRATION_ROUTES_PENDING_CLI = Object.freeze(['POST /products/{id}/integrations/{integrationId}/default']);
 const ROUTES_KEPT_FOR_OLDER_CLIENTS = Object.freeze(['GET /products/{id}/ai-cited-lists/mailbox/connect']);
 const ROUTES_SERVED_BY_CHATGPT_SURFACE = Object.freeze(['POST /articles/start']);
 const SERVER_ROUTES_WITHOUT_TOOL = [
   ...KNOWLEDGE_ROUTES_PENDING_CLI,
+  ...INTEGRATION_ROUTES_PENDING_CLI,
   ...ROUTES_KEPT_FOR_OLDER_CLIENTS,
   ...ROUTES_SERVED_BY_CHATGPT_SURFACE,
 ];

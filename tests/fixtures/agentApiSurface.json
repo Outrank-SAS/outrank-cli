@@ -1,6 +1,6 @@
 {
   "apiBasePath": "/api/agent/v1",
-  "sourceCommit": "9a62cf248c1b9293c55a8446e124a88c23fda7e8",
+  "sourceCommit": "ae86f393a80f12d2eb3d5af0f0d35cb2d4e82b9f",
   "sourceDirty": false,
   "routes": [
     {
@@ -760,6 +760,10 @@
       "path": "/products/{id}/improvements/tasks"
     },
     {
+      "method": "POST",
+      "path": "/products/{id}/integrations/{integrationId}/default"
+    },
+    {
       "method": "GET",
       "path": "/products/{id}/integrations/{integrationId}/notion/databases/{databaseId}/schema"
     },
@@ -1022,6 +1026,34 @@
     {
       "method": "POST",
       "path": "/products"
+    },
+    {
+      "method": "POST",
+      "path": "/research/backlinks"
+    },
+    {
+      "method": "POST",
+      "path": "/research/competitors"
+    },
+    {
+      "method": "POST",
+      "path": "/research/domain-keywords"
+    },
+    {
+      "method": "POST",
+      "path": "/research/domain-overview"
+    },
+    {
+      "method": "POST",
+      "path": "/research/keyword-gap"
+    },
+    {
+      "method": "POST",
+      "path": "/research/keywords-overview"
+    },
+    {
+      "method": "POST",
+      "path": "/research/serp"
     },
     {
       "method": "GET",
@@ -1288,6 +1320,10 @@
     {
       "text": "POST /api/agent/v1/integration-providers/webflow/validate",
       "route": "/integration-providers/{provider}/validate"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<productId>/integrations/<integrationId>/default",
+      "route": "/integration-providers"
     },
     {
       "text": "GET /api/agent/v1/keywords",
@@ -2262,6 +2298,14 @@
       "route": "/products/{id}/improvements/tasks"
     },
     {
+      "text": "GET /api/agent/v1/products/<interpolated>/integrations",
+      "route": "/products/{id}/integrations/{integrationId}/default"
+    },
+    {
+      "text": "PATCH /api/agent/v1/products/<interpolated>/integrations/<interpolated>",
+      "route": "/products/{id}/integrations/{integrationId}/default"
+    },
+    {
       "text": "GET /api/agent/v1/products",
       "route": "/products/{id}/integrations/{integrationId}/notion/databases/{databaseId}/schema"
     },
@@ -2295,6 +2339,10 @@
     },
     {
       "text": "GET /api/agent/v1/products/<productId>/integrations",
+      "route": "/products/{id}/integrations/{integrationId}"
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/<integrationId>/default",
       "route": "/products/{id}/integrations/{integrationId}"
     },
     {
@@ -2366,11 +2414,11 @@
       "route": "/products/{id}/integrations/prepare/{provider}"
     },
     {
-      "text": "GET /api/agent/v1/products",
-      "route": "/products/{id}/integrations"
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/<integrationId>/default",
+      "route": "/products/{id}/integrations/prepare/{provider}"
     },
     {
-      "text": "GET /api/agent/v1/products/<interpolated>/integrations",
+      "text": "GET /api/agent/v1/products",
       "route": "/products/{id}/integrations"
     },
     {
@@ -2966,11 +3014,11 @@
       "route": null
     },
     {
-      "text": "/api/agent/v1/products/<interpolated>/free-tools/status",
+      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/keywords",
       "route": null
     },
     {
-      "text": "GET /api/agent/v1/products/<interpolated>/free-tools/keywords",
+      "text": "/api/agent/v1/products/<interpolated>/free-tools/status",
       "route": null
     },
     {
@@ -3038,11 +3086,19 @@
       "route": null
     },
     {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/<integrationId>/default",
+      "route": null
+    },
+    {
       "text": "GET /api/agent/v1/products/<interpolated>/integrations/<integrationId>",
       "route": null
     },
     {
       "text": "DELETE /api/agent/v1/products/<interpolated>/integrations/<integrationId>",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/<interpolated>/integrations/<interpolated>/default",
       "route": null
     },
     {
@@ -3163,6 +3219,10 @@
     },
     {
       "text": "GET /api/agent/v1/products/<id>/free-tools/<toolId>",
+      "route": null
+    },
+    {
+      "text": "POST /api/agent/v1/products/{id}/integrations/{integrationId}/default",
       "route": null
     },
     {

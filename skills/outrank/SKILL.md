@@ -1,6 +1,6 @@
 ---
 name: outrank
-description: Drive Outrank, the SEO content platform, through its MCP server or outrank-cli. Use when the user asks to manage Outrank products, publishing integrations, keyword plans or articles; refresh existing posts with article improvements; change article settings, target audiences or competitors; read Google Search Console data or internal linking; buy product slots; work with the Outrank Marketplace (seller onboarding, eligibility, placements, earnings, Stripe payouts, buyer target pages and placements); create and run a hosted Outrank Blog (posts, publishing, theme, pages, categories, authors, custom domain, redirects, snippets, subscribers, webhooks); run AI-Cited Lists for a Backlinks Enterprise product (ChatGPT-cited lists, offers, won spots, buyer questions, outreach, AI Citations); or build free tools with the Free Tools Builder (tool keyword planner, building a tool, editing it with the AI builder, preview, publish, rollback). Uses the Outrank MCP server when it is connected; otherwise requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
+description: Drive Outrank, the SEO content platform, through its MCP server or outrank-cli. Use when the user asks to manage Outrank products, publishing integrations, keyword plans or articles; refresh existing posts with article improvements; change article settings, target audiences or competitors; read Google Search Console data or internal linking; buy product slots; work with the Outrank Marketplace (seller onboarding, eligibility, placements, earnings, Stripe payouts, buyer target pages and placements); create and run a hosted Outrank Blog (posts, publishing, theme, pages, categories, authors, custom domain, redirects, snippets, subscribers, webhooks); run AI-Cited Lists for a Backlinks Enterprise product (ChatGPT-cited lists, offers, won spots, buyer questions, outreach, AI Citations); build free tools with the Free Tools Builder (tool keyword planner, building a tool, editing it with the AI builder, preview, publish, rollback); or research any domain or keyword like Semrush or Ahrefs (organic keywords and traffic of a domain, competitors, keyword gap, backlinks and domain rank, bulk keyword volume and difficulty, live Google results). Uses the Outrank MCP server when it is connected; otherwise requires outrank-cli on PATH and an Outrank API key (env OUTRANK_API_KEY or stored via auth login).
 ---
 
 # Outrank Skill
@@ -628,6 +628,20 @@ Week to week:
 - `wins get <productId> <offerId>` is the proof page: the ChatGPT answers naming the product and the daily position checks
 - `settings update --json '{"outreach_paused":true}'` pauses new emails; live spots and open offers stay visible
 - `citations check <productId>` asks ChatGPT now; it is idempotent (`has_data` or `in_progress` means nothing was started)
+
+## SEO research workflow
+
+`research ...` (MCP tools `research_*`) answers Semrush- and Ahrefs-style questions about any domain or keyword, not only the user's products. It needs a paid plan or trial (`SEO_RESEARCH_PLAN_REQUIRED` otherwise) and each organization has a daily number of uncached calls (`SEO_RESEARCH_DAILY_LIMIT`); the same call within 24 hours is served from cache (`data.cached: true`) and is free. Default region is `us`; pass `--region uk|de|fr|...`.
+
+- `outrank-cli research domain-overview <domain>` — ranking keywords, estimated traffic and its value, position spread, `domain_rank` (0-100, comparable to Ahrefs DR), backlinks and referring domains
+- `outrank-cli research domain-keywords <domain> [--max-position 10] [--min-volume <n>] [--sort volume|traffic|position]` — the keywords it ranks for, with ranking URL
+- `outrank-cli research competitors <domain>` — domains sharing the most keywords; skip generic giants (youtube, reddit, quora)
+- `outrank-cli research keyword-gap <domain> --competitor <domain> [--max-competitor-position 10]` — keywords the competitor ranks for and the domain does not: the best source of content and free tool ideas
+- `outrank-cli research backlinks <domain> [--dofollow-only] [--all-links]` — strongest linking domains first, one link per domain by default
+- `outrank-cli research keywords-overview --keyword "<text>" [--keyword ...]` — volume, difficulty, CPC, intent and trend for up to 100 keywords; use it to pick the wording of titles and tool descriptions
+- `outrank-cli research serp "<keyword>" [--resolve-urls]` — live Google top results and SERP features. Google hides result links, so some `url` values are null (the `domain` is still set); `--resolve-urls` returns every URL but takes about a minute
+
+Typical flow for finding ideas: `domain-overview` on the user's site, `competitors`, then `keyword-gap` against two or three real competitors, check the shortlist with `keywords-overview`, and add the chosen ones with `keywords add` (articles) or `free-tools keywords add` (free tools).
 
 ## Free Tools Builder workflow
 
